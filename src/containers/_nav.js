@@ -30,6 +30,20 @@ export default [
       },
       {
         _name: 'CSidebarNavTitle',
+        _children: ['Admin']
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Colors',
+        to: '/theme/admin'
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Typography',
+        to: '/theme/typography'
+      },
+      {
+        _name: 'CSidebarNavTitle',
         _children: ['Components']
       },
       {
@@ -49,7 +63,7 @@ export default [
           {
             name: 'Carousels',
             to: '/base/carousels'
-          }, 
+          },
           {
             name: 'Collapses',
             to: '/base/collapses'
