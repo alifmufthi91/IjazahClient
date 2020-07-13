@@ -4,13 +4,9 @@ export default [
     _children: [
       {
         _name: 'CSidebarNavItem',
-        name: 'Dashboard',
-        to: '/dashboard',
-        icon: 'cil-speedometer',
-        badge: {
-          color: 'primary',
-          text: 'NEW'
-        }
+        name: 'Home',
+        to: '/home',
+        icon: 'cil-layers'
       },
       {
         _name: 'CSidebarNavTitle',
@@ -35,12 +31,14 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Colors',
-        to: '/theme/admin'
+        to: '/theme/admin',
+		icon: 'cil-pencil'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Typography',
-        to: '/theme/typography'
+        to: '/theme/typography',
+		icon: 'cil-pencil'
       },
       {
         _name: 'CSidebarNavTitle',

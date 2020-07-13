@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import web3 from './js/web3';
 export default {
   name: 'App'
 }
