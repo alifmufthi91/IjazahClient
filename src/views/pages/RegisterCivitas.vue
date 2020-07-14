@@ -2,6 +2,19 @@
   <div class="d-flex align-items-center min-vh-100">
     <CContainer fluid>
       <CRow class="justify-content-center">
+        <CCol md="2">
+          <CCard class="align-items-center">
+            <CCardBody>
+              <div>
+                <h3>Jenis Akun :</h3>
+                <CButton block variant="ghost" color="primary" @click="isMahasiswa = false">Civitas</CButton>
+                <CButton block variant="ghost" color="primary" @click="isMahasiswa = true">Mahasiswa</CButton>
+              </div>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+      <CRow class="justify-content-center">
         <CCol md="8">
           <CAlert
             :show.sync="dismissSuccess"
@@ -23,16 +36,50 @@
         <CCol md="6">
           <CCard class="mx-4 mb-0">
             <CCardBody class="p-4" >
-              <CForm>
-                <h1>Daftar DIKTI</h1>
-                <p class="text-muted">Create your DIKTI account</p>
+              <CForm
+              v-show="isMahasiswa">
+                <h1>Daftar Mahasiswa Polban</h1>
+                <p class="text-muted">Create your Mahasiswa account</p>
                 <CInput
                   placeholder="Full Name"
-                  autocomplete="username"
+                  autocomplete="name"
                   v-model="fullName"
                 >
                   <template #prepend-content><CIcon name="cil-user"/></template>
                 </CInput>
+                <CInput
+                  placeholder="NIM"
+                  autocomplete="nim"
+                  v-model="nim"
+                >
+                  <template #prepend-content><CIcon name="cil-user"/></template>
+                </CInput>
+                <CButton color="success" block @click="showAlert(true)">Create Account</CButton>
+              </CForm>
+              <CForm
+              v-show="!isMahasiswa">
+                <h1>Daftar Civitas Polban</h1>
+                <p class="text-muted">Create your Civitas account</p>
+                <CInput
+                  placeholder="Full Name"
+                  autocomplete="name"
+                  v-model="fullName"
+                >
+                  <template #prepend-content><CIcon name="cil-user"/></template>
+                </CInput>
+                <CInput
+                  placeholder="NIP"
+                  autocomplete="nim"
+                  v-model="nim"
+                >
+                  <template #prepend-content><CIcon name="cil-user"/></template>
+                </CInput>
+                <CSelect
+                  label="Pilih Role"
+                  horizontal
+                  :options="options"
+                  placeholder="Silahkan Pilih Role"
+                />
                 <CButton color="success" block @click="showAlert(true)">Create Account</CButton>
               </CForm>
             </CCardBody>
@@ -72,10 +119,13 @@
 <script>
 import AccountManager from '../../contracts/AccountManager'
 export default {
-  name: 'Register',
+  name: 'RegisterCivitas',
   data () {
     return {
-      fullName:null,
+      fullName: null,
+      options: ['Dosen', 'Admin', 'Rektor'],
+      nim: null,
+      isMahasiswa: false,
       confirmModal: false,
       successModal: false,
       dismissSuccess: 0,

@@ -53,6 +53,7 @@ const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/Login')
 const Register = () => import('@/views/pages/Register')
+const RegisterCivitas = () => import('@/views/pages/RegisterCivitas')
 
 // Users
 const Users = () => import('@/views/users/Users')
@@ -346,6 +347,11 @@ function configRoutes () {
           component: Register
         },
         {
+          path: 'registerCivitas',
+          name: 'Register Civitas',
+          component: RegisterCivitas
+        },
+        {
           path: 'test',
           name: 'Register',
           component: Home
@@ -354,4 +360,3 @@ function configRoutes () {
     }
   ]
 }
-
