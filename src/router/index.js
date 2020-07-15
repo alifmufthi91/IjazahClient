@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import AccountManager from '@/contracts/AccountManager'
 
 // Containers
 const TheContainer = () => import('@/containers/TheContainer')
 
 // Views
 const Dashboard = () => import('@/views/Dashboard')
-const Home = () => import('@/views/Home')
+const GetStarted = () => import('@/views/GettingStarted')
 
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
@@ -61,31 +62,15 @@ const User = () => import('@/views/users/User')
 
 Vue.use(Router)
 
-export default new Router({
-  mode: 'hash', // https://router.vuejs.org/api/#mode
-  linkActiveClass: 'active',
-  scrollBehavior: () => ({ y: 0 }),
-  routes: configRoutes()
-})
-
-function test () {
-	return '/dashboard'
-}
-
 function configRoutes () {
   return [
     {
       path: '/',
-      redirect: test(),
+      redirect: "/getStarted",
       name: 'Home',
       component: TheContainer,
       children: [
         {
-          path: 'home',
-          name: '',
-          component: Home
-        },
-		{
           path: 'dashboard',
           name: '',
           component: Dashboard
@@ -340,23 +325,54 @@ function configRoutes () {
           path: 'login',
           name: 'Login',
           component: Login
-        },
-        {
-          path: 'register',
-          name: 'Register',
-          component: Register
-        },
-        {
-          path: 'registerCivitas',
-          name: 'Register Civitas',
-          component: RegisterCivitas
-        },
-        {
-          path: 'test',
-          name: 'Register',
-          component: Home
         }
       ]
+    },
+    {
+      path: '/registerDIKTI',
+      name: 'Register DIKTI',
+      component: Register
+    },
+    {
+      path: '/registerCivitas',
+      name: 'Register Civitas',
+      component: RegisterCivitas
+    },
+    {
+      path: '/getStarted',
+      name: 'Getting Started',
+      component: GetStarted
+    },
+    {
+      path :'*',
+      component: Page404
     }
   ]
 }
+
+const router = new Router({
+  mode: 'hash', // https://router.vuejs.org/api/#mode
+  linkActiveClass: 'active',
+  scrollBehavior: () => ({ y: 0 }),
+  routes: configRoutes()
+})
+
+router.beforeEach((to,from,next) => {
+  switch(to.name){
+    case 'Getting Started': next();break;
+    case 'Register Civitas': next();break;
+    case 'Register DIKTI': next();break;
+    default : web3.eth.getAccounts().then(accounts => {
+      AccountManager.methods
+        .isAccRegistered(accounts[0])
+        .call({ from: accounts[0] })
+        .then(function(result) {
+          console.log("Result is : " + result);
+          if(!result) next('/')
+          else next()
+        })
+    })
+  }
+})
+
+export default router

@@ -50,7 +50,7 @@
                 <CInput
                   placeholder="NIM"
                   autocomplete="nim"
-                  v-model="nim"
+                  v-model="id"
                 >
                   <template #prepend-content><CIcon name="cil-user"/></template>
                 </CInput>
@@ -70,7 +70,7 @@
                 <CInput
                   placeholder="NIP"
                   autocomplete="nim"
-                  v-model="nim"
+                  v-model="id"
                 >
                   <template #prepend-content><CIcon name="cil-user"/></template>
                 </CInput>
@@ -124,7 +124,8 @@ export default {
     return {
       fullName: null,
       options: ['Dosen', 'Admin', 'Rektor'],
-      nim: null,
+      id: null,
+      role: null,
       isMahasiswa: false,
       confirmModal: false,
       successModal: false,
@@ -133,11 +134,14 @@ export default {
     }
   },
   methods: {
-    createDIKTIAccount: function() {
+    createAccount: function() {
       web3.eth.getAccounts().then((accounts) => {
         console.log(this.fullName)
-        return AccountManager.methods.createAccount('besit','','dikti')
-          .send({ from: accounts[0] });
+        return AccountManager.methods.createAccount(this.fullName,this.id,this.role)
+          .send({ from: accounts[0] })
+          .on('error', function(error, receipt) {
+            console.log(error)
+          });
       })
     },
     checkName: function() {
@@ -147,7 +151,7 @@ export default {
       console.log(confirm)
       this.confirmModal = false
       if(confirm){
-        createDIKTIAccount()
+        createAccount()
       }
     },
     showAlert: function(isSuccess) {

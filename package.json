@@ -23,6 +23,7 @@
     "@coreui/vue-chartjs": "^1.0.5",
     "@truffle/contract": "^4.2.12",
     "ipfs-http-client": "^44.3.0",
+    "regenerator-runtime": "^0.13.5",
     "vue": "~2.6.11",
     "vue-router": "~3.3.2",
     "vuex": "~3.4.0",

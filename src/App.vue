@@ -4,6 +4,7 @@
 
 <script>
 import web3 from './js/web3';
+import regeneratorRuntime from 'regenerator-runtime';
 export default {
   name: 'App'
 }
