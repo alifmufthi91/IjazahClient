@@ -313,7 +313,6 @@ function configRoutes () {
       children: [
         {
           path: '404',
-          name: 'Page404',
           component: Page404
         },
         {
@@ -345,6 +344,7 @@ function configRoutes () {
     },
     {
       path :'*',
+      name: 'Page404',
       component: Page404
     }
   ]
@@ -362,13 +362,15 @@ router.beforeEach((to,from,next) => {
     case 'Getting Started': next();break;
     case 'Register Civitas': next();break;
     case 'Register DIKTI': next();break;
+    case 'Page404': next();break;
+    case 'Page500': next();break;
     default : web3.eth.getAccounts().then(accounts => {
       AccountManager.methods
-        .isAccRegistered(accounts[0])
+        .getAccount(accounts[0])
         .call({ from: accounts[0] })
         .then(function(result) {
-          console.log("Result is : " + result);
-          if(!result) next('/')
+          console.log("Result is : " + result[1]);
+          if(!result[1]) next('/')
           else next()
         })
     })

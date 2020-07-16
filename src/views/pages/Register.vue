@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-items-center min-vh-100">
+  <div class="c-app d-flex align-items-center min-vh-100">
     <CContainer fluid>
       <CRow class="justify-content-center">
         <CCol md="8">
@@ -33,7 +33,7 @@
                 >
                   <template #prepend-content><CIcon name="cil-user"/></template>
                 </CInput>
-                <CButton color="success" block @click="showAlert(true)">Create Account</CButton>
+                <CButton color="success" block @click="confirmModal = true">Create Account</CButton>
               </CForm>
             </CCardBody>
           </CCard>
@@ -84,10 +84,19 @@ export default {
   },
   methods: {
     createDIKTIAccount: function() {
+      let self = this
       web3.eth.getAccounts().then((accounts) => {
         console.log(this.fullName)
-        return AccountManager.methods.createAccount('besit','','dikti')
-          .send({ from: accounts[0] });
+        AccountManager.methods.createAccount(this.fullName,'','dikti')
+          .send({ from: accounts[0] })
+          .on('receipt', function(rec){
+            console.log(rec)
+            self.showAlert(true)
+          })
+          .on('error', function(error, receipt) {
+            console.log(error)
+            self.showAlert(false)
+          })
       })
     },
     checkName: function() {
@@ -97,7 +106,7 @@ export default {
       console.log(confirm)
       this.confirmModal = false
       if(confirm){
-        createDIKTIAccount()
+        this.createDIKTIAccount()
       }
     },
     showAlert: function(isSuccess) {

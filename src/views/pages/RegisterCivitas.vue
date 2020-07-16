@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-items-center min-vh-100">
+  <div class="c-app d-flex align-items-center min-vh-100">
     <CContainer fluid>
       <CRow class="justify-content-center">
         <CCol md="2">
@@ -7,8 +7,8 @@
             <CCardBody>
               <div>
                 <h3>Jenis Akun :</h3>
-                <CButton block variant="ghost" color="primary" @click="isMahasiswa = false">Civitas</CButton>
-                <CButton block variant="ghost" color="primary" @click="isMahasiswa = true">Mahasiswa</CButton>
+                <CButton block variant="ghost" color="primary" @click="isMahasiswa = false" v-bind:class="{ active: !isMahasiswa }">Civitas</CButton>
+                <CButton block variant="ghost" color="primary" @click="isMahasiswa = true" v-bind:class="{ active: isMahasiswa }">Mahasiswa</CButton>
               </div>
             </CCardBody>
           </CCard>
