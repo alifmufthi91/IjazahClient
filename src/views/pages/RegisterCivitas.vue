@@ -7,8 +7,20 @@
             <CCardBody>
               <div>
                 <h3>Jenis Akun :</h3>
-                <CButton block variant="ghost" color="primary" @click="isMahasiswa = false" v-bind:class="{ active: !isMahasiswa }">Civitas</CButton>
-                <CButton block variant="ghost" color="primary" @click="isMahasiswa = true" v-bind:class="{ active: isMahasiswa }">Mahasiswa</CButton>
+                <CButton
+                  block
+                  variant="ghost"
+                  color="primary"
+                  @click="isMahasiswa = false"
+                  v-bind:class="{ active: !isMahasiswa }"
+                >Civitas</CButton>
+                <CButton
+                  block
+                  variant="ghost"
+                  color="primary"
+                  @click="isMahasiswa = true"
+                  v-bind:class="{ active: isMahasiswa }"
+                >Mahasiswa</CButton>
               </div>
             </CCardBody>
           </CCard>
@@ -21,58 +33,42 @@
             closeButton
             color="success"
             fade
-          >
-            Permintaan pembuatan akun berhasil. Silahkan kontak admin dan minta untuk memverifikasi akun anda.
-          </CAlert>
-          <CAlert
-            :show.sync="dismissFail"
-            closeButton
-            color="danger"
-            fade
-          >
-            <strong>Permintaan Gagal</strong> : {{dismissFail}}
+          >Permintaan pembuatan akun berhasil. Silahkan kontak admin dan minta untuk memverifikasi akun anda.</CAlert>
+          <CAlert :show.sync="dismissFail" closeButton color="danger" fade>
+            <strong>Permintaan Gagal</strong>
+            : {{dismissFail}}
           </CAlert>
         </CCol>
         <CCol md="6">
           <CCard class="mx-4 mb-0">
-            <CCardBody class="p-4" >
-              <CForm
-              v-show="isMahasiswa">
+            <CCardBody class="p-4">
+              <CForm v-show="isMahasiswa">
                 <h1>Daftar Mahasiswa Polban</h1>
                 <p class="text-muted">Create your Mahasiswa account</p>
-                <CInput
-                  placeholder="Full Name"
-                  autocomplete="name"
-                  v-model="fullName"
-                >
-                  <template #prepend-content><CIcon name="cil-user"/></template>
+                <CInput placeholder="Full Name" autocomplete="name" v-model="fullName">
+                  <template #prepend-content>
+                    <CIcon name="cil-user" />
+                  </template>
                 </CInput>
-                <CInput
-                  placeholder="NIM"
-                  autocomplete="nim"
-                  v-model="id"
-                >
-                  <template #prepend-content><CIcon name="cil-user"/></template>
+                <CInput placeholder="NIM" autocomplete="nim" v-model="id">
+                  <template #prepend-content>
+                    <CIcon name="cil-user" />
+                  </template>
                 </CInput>
                 <CButton color="success" block @click="showAlert(true)">Create Account</CButton>
               </CForm>
-              <CForm
-              v-show="!isMahasiswa">
+              <CForm v-show="!isMahasiswa">
                 <h1>Daftar Civitas Polban</h1>
                 <p class="text-muted">Create your Civitas account</p>
-                <CInput
-                  placeholder="Full Name"
-                  autocomplete="name"
-                  v-model="fullName"
-                >
-                  <template #prepend-content><CIcon name="cil-user"/></template>
+                <CInput placeholder="Full Name" autocomplete="name" v-model="fullName">
+                  <template #prepend-content>
+                    <CIcon name="cil-user" />
+                  </template>
                 </CInput>
-                <CInput
-                  placeholder="NIP"
-                  autocomplete="nim"
-                  v-model="id"
-                >
-                  <template #prepend-content><CIcon name="cil-user"/></template>
+                <CInput placeholder="NIP" autocomplete="nim" v-model="id">
+                  <template #prepend-content>
+                    <CIcon name="cil-user" />
+                  </template>
                 </CInput>
                 <CSelect
                   label="Pilih Role"
@@ -98,7 +94,7 @@
       Apakah data telah sesuai?
       <template #header>
         <h6 class="modal-title">Konfirmasi</h6>
-        <CButtonClose @click="confirmModal = false" class="text-white"/>
+        <CButtonClose @click="confirmModal = false" class="text-white" />
       </template>
       <template #footer>
         <CButton @click="confirmRegister(false)" color="danger">Kembali</CButton>
@@ -109,21 +105,18 @@
       title="Sukses"
       color="success"
       :show.sync="successModal"
-
-    >
-      Permintaan pembuatan akun berhasil. Silahkan kontak admin dan minta untuk memverifikasi akun anda.
-    </CModal>
+    >Permintaan pembuatan akun berhasil. Silahkan kontak admin dan minta untuk memverifikasi akun anda.</CModal>
   </div>
 </template>
 
 <script>
-import AccountManager from '../../contracts/AccountManager'
+import AccountManager from "../../contracts/AccountManager";
 export default {
-  name: 'RegisterCivitas',
-  data () {
+  name: "RegisterCivitas",
+  data() {
     return {
       fullName: null,
-      options: ['Dosen', 'Admin', 'Rektor'],
+      options: ["Dosen", "Admin", "Rektor"],
       id: null,
       role: null,
       isMahasiswa: false,
@@ -131,36 +124,37 @@ export default {
       successModal: false,
       dismissSuccess: 0,
       dismissFail: 0
-    }
+    };
   },
   methods: {
     createAccount: function() {
-      web3.eth.getAccounts().then((accounts) => {
-        console.log(this.fullName)
-        return AccountManager.methods.createAccount(this.fullName,this.id,this.role)
+      web3.eth.getAccounts().then(accounts => {
+        console.log(this.fullName);
+        return AccountManager.methods
+          .createAccount(this.fullName, this.id, this.role)
           .send({ from: accounts[0] })
-          .on('error', function(error, receipt) {
-            console.log(error)
+          .on("error", function(error, receipt) {
+            console.log(error);
           });
-      })
+      });
     },
     checkName: function() {
-      console.log(this.fullName)
+      console.log(this.fullName);
     },
     confirmRegister: function(confirm) {
-      console.log(confirm)
-      this.confirmModal = false
-      if(confirm){
-        createAccount()
+      console.log(confirm);
+      this.confirmModal = false;
+      if (confirm) {
+        createAccount();
       }
     },
     showAlert: function(isSuccess) {
-      if(isSuccess){
-        this.dismissSuccess = 5
-      }else{
-        this.dismissFail = 5
+      if (isSuccess) {
+        this.dismissSuccess = 5;
+      } else {
+        this.dismissFail = 5;
       }
     }
   }
-}
+};
 </script>

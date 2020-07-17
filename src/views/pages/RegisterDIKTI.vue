@@ -8,30 +8,22 @@
             closeButton
             color="success"
             fade
-          >
-            Permintaan pembuatan akun berhasil. Silahkan kontak admin dan minta untuk memverifikasi akun anda.
-          </CAlert>
-          <CAlert
-            :show.sync="dismissFail"
-            closeButton
-            color="danger"
-            fade
-          >
-            <strong>Permintaan Gagal</strong> : {{dismissFail}}
+          >Permintaan pembuatan akun berhasil. Silahkan kontak admin dan minta untuk memverifikasi akun anda.</CAlert>
+          <CAlert :show.sync="dismissFail" closeButton color="danger" fade>
+            <strong>Permintaan Gagal</strong>
+            : {{dismissFail}}
           </CAlert>
         </CCol>
         <CCol md="6">
           <CCard class="mx-4 mb-0">
-            <CCardBody class="p-4" >
+            <CCardBody class="p-4">
               <CForm>
                 <h1>Daftar DIKTI</h1>
                 <p class="text-muted">Create your DIKTI account</p>
-                <CInput
-                  placeholder="Full Name"
-                  autocomplete="username"
-                  v-model="fullName"
-                >
-                  <template #prepend-content><CIcon name="cil-user"/></template>
+                <CInput placeholder="Full Name" autocomplete="username" v-model="fullName">
+                  <template #prepend-content>
+                    <CIcon name="cil-user" />
+                  </template>
                 </CInput>
                 <CButton color="success" block @click="confirmModal = true">Create Account</CButton>
               </CForm>
@@ -51,7 +43,7 @@
       Apakah data telah sesuai?
       <template #header>
         <h6 class="modal-title">Konfirmasi</h6>
-        <CButtonClose @click="confirmModal = false" class="text-white"/>
+        <CButtonClose @click="confirmModal = false" class="text-white" />
       </template>
       <template #footer>
         <CButton @click="confirmRegister(false)" color="danger">Kembali</CButton>
@@ -62,60 +54,58 @@
       title="Sukses"
       color="success"
       :show.sync="successModal"
-
-    >
-      Permintaan pembuatan akun berhasil. Silahkan kontak admin dan minta untuk memverifikasi akun anda.
-    </CModal>
+    >Permintaan pembuatan akun berhasil. Silahkan kontak admin dan minta untuk memverifikasi akun anda.</CModal>
   </div>
 </template>
 
 <script>
-import AccountManager from '../../contracts/AccountManager'
+import AccountManager from "../../contracts/AccountManager";
 export default {
-  name: 'Register',
-  data () {
+  name: "RegisterDIKTI",
+  data() {
     return {
-      fullName:null,
+      fullName: null,
       confirmModal: false,
       successModal: false,
       dismissSuccess: 0,
       dismissFail: 0
-    }
+    };
   },
   methods: {
     createDIKTIAccount: function() {
-      let self = this
-      web3.eth.getAccounts().then((accounts) => {
-        console.log(this.fullName)
-        AccountManager.methods.createAccount(this.fullName,'','dikti')
+      let self = this;
+      web3.eth.getAccounts().then(accounts => {
+        console.log(this.fullName);
+        AccountManager.methods
+          .createAccount(this.fullName, "", "dikti")
           .send({ from: accounts[0] })
-          .on('receipt', function(rec){
-            console.log(rec)
-            self.showAlert(true)
+          .on("receipt", function(rec) {
+            console.log(rec);
+            self.showAlert(true);
           })
-          .on('error', function(error, receipt) {
-            console.log(error)
-            self.showAlert(false)
-          })
-      })
+          .on("error", function(error, receipt) {
+            console.log(error);
+            self.showAlert(false);
+          });
+      });
     },
     checkName: function() {
-      console.log(this.fullName)
+      console.log(this.fullName);
     },
     confirmRegister: function(confirm) {
-      console.log(confirm)
-      this.confirmModal = false
-      if(confirm){
-        this.createDIKTIAccount()
+      console.log(confirm);
+      this.confirmModal = false;
+      if (confirm) {
+        this.createDIKTIAccount();
       }
     },
     showAlert: function(isSuccess) {
-      if(isSuccess){
-        this.dismissSuccess = 5
-      }else{
-        this.dismissFail = 5
+      if (isSuccess) {
+        this.dismissSuccess = 5;
+      } else {
+        this.dismissFail = 5;
       }
     }
   }
-}
+};
 </script>

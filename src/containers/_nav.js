@@ -26,18 +26,18 @@ export default [
       },
       {
         _name: 'CSidebarNavTitle',
-        _children: ['Admin']
+        _children: ['Accounts']
       },
       {
         _name: 'CSidebarNavItem',
-        name: 'Colors',
-        to: '/theme/admin',
+        name: 'Role Management',
+        to: '/accounts/management',
 		icon: 'cil-pencil'
       },
       {
         _name: 'CSidebarNavItem',
-        name: 'Typography',
-        to: '/theme/typography',
+        name: 'Permintaan Role',
+        to: '/accounts/request',
 		icon: 'cil-pencil'
       },
       {

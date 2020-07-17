@@ -10,49 +10,60 @@
                 <CCard v-if="isRegistered">
                   <CCardBody>
                     <CCol sm="12">
-                  <div><h4>{{user.name}}</h4></div>
-                  <div class="small text-muted">
-                    <span>
-                      <template v-if="user.verified">Terverifikasi</template>
-                      <template v-else>Belum diverifikasi</template>
-                    </span> | Alamat : {{user.address}}
-                  </div>
-                </CCol>
-                <CRow class="align-items-center mt-2" v-if="user.verified">
-                <CCol sm="12">
-                  <CButton color="primary" shape="pill" to="/dashboard">Masuk</CButton>
-                </CCol>
-              </CRow>
+                      <div>
+                        <h4>{{user.name}}</h4>
+                      </div>
+                      <div class="small text-muted">
+                        <span>
+                          <template v-if="user.verified">Terverifikasi</template>
+                          <template v-else>Belum diverifikasi</template>
+                        </span>
+                        | Alamat : {{user.address}}
+                      </div>
+                    </CCol>
+                    <CRow class="align-items-center mt-2" v-if="user.verified">
+                      <CCol sm="12">
+                        <CButton color="primary" shape="pill" to="/dashboard">Masuk</CButton>
+                      </CCol>
+                    </CRow>
                   </CCardBody>
                 </CCard>
                 <CCard v-if="!isRegistered">
                   <CCardBody>
                     <CCol sm="12">
-                  <div><h4>Kamu belum membuat akun.</h4></div>
-                </CCol>
+                      <div>
+                        <h4>Kamu belum membuat akun.</h4>
+                      </div>
+                    </CCol>
                   </CCardBody>
                 </CCard>
               </CRow>
               <div v-show="!isRegistered">
-              <CRow>
-                <CCol sm="12">
-                  <small class="h4">Silahkan untuk mendaftar terlebih dahulu untuk menggunakan aplikasi.</small>
-                </CCol>
-              </CRow>
-              <CRow class="align-items-center mt-3">
-                <CCol sm="6" class="mb-3 mb-xl-0 text-center">
-                  <CButton color="success"  shape="pill">Verifikasi Sertifikat</CButton>
-                </CCol>
-                <CCol sm="6" class="mb-3 mb-xl-0 text-center">
-                  <CButton color="info"  shape="pill" to="registerCivitas">Mendaftar sebagai Civitas Polban</CButton>
-                </CCol>
-              </CRow>
-              <CRow class="align-items-r mt-2">
-                <CCol sm="6" class="mb-3 mb-xl-0 text-center"></CCol>
-                <CCol sm="6" class="mb-3 mb-xl-0 text-center">
-                  <CButton color="info"  shape="pill" to="registerDIKTI">Mendaftar sebagai DIKTI</CButton>
-                </CCol>
-              </CRow>
+                <CRow>
+                  <CCol sm="12">
+                    <small
+                      class="h4"
+                    >Silahkan untuk mendaftar terlebih dahulu untuk menggunakan aplikasi.</small>
+                  </CCol>
+                </CRow>
+                <CRow class="align-items-center mt-3">
+                  <CCol sm="6" class="mb-3 mb-xl-0 text-center">
+                    <CButton color="success" shape="pill">Verifikasi Sertifikat</CButton>
+                  </CCol>
+                  <CCol sm="6" class="mb-3 mb-xl-0 text-center">
+                    <CButton
+                      color="info"
+                      shape="pill"
+                      to="registerCivitas"
+                    >Mendaftar sebagai Civitas Polban</CButton>
+                  </CCol>
+                </CRow>
+                <CRow class="align-items-r mt-2">
+                  <CCol sm="6" class="mb-3 mb-xl-0 text-center"></CCol>
+                  <CCol sm="6" class="mb-3 mb-xl-0 text-center">
+                    <CButton color="info" shape="pill" to="registerDIKTI">Mendaftar sebagai DIKTI</CButton>
+                  </CCol>
+                </CRow>
               </div>
             </CCardBody>
           </CCard>
@@ -66,9 +77,8 @@
 import MainChartExample from "./charts/MainChartExample";
 import WidgetsDropdown from "./widgets/WidgetsDropdown";
 import WidgetsBrand from "./widgets/WidgetsBrand";
-import AccountManager from"@/contracts/AccountManager";
-import AppVue from '../App.vue';
-
+import AccountManager from "@/contracts/AccountManager";
+import AppVue from "../App.vue";
 
 export default {
   name: "Home",
@@ -84,31 +94,31 @@ export default {
       user: {
         name: null,
         verified: null,
-        address:null
+        address: null
       }
     };
   },
   methods: {
     getAccount() {
-      let self = this
+      let self = this;
       web3.eth.getAccounts().then(accounts => {
-      AccountManager.methods
-        .getAccount(accounts[0])
-        .call({ from: accounts[0] })
-        .then(function(result) {
-          console.log("Result is : " + result[0]);
-          if(result) {
-            self.user.address = result[0]
-            self.user.name = result[2]
-            self.user.verified = result[1]
-            self.isRegistered = true
-          }
-        })
-      })
+        AccountManager.methods
+          .getAccount(accounts[0])
+          .call({ from: accounts[0] })
+          .then(function(result) {
+            console.log("Result is : " + result[0]);
+            if (result) {
+              self.user.address = result[0];
+              self.user.name = result[2];
+              self.user.verified = result[1];
+              self.isRegistered = true;
+            }
+          });
+      });
     }
   },
   beforeMount() {
-    this.getAccount()
+    this.getAccount();
   }
 };
 </script>

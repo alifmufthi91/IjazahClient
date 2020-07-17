@@ -53,12 +53,17 @@ const Modals = () => import('@/views/notifications/Modals')
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/pages/Login')
-const Register = () => import('@/views/pages/Register')
+const RegisterDIKTI = () => import('@/views/pages/RegisterDIKTI')
 const RegisterCivitas = () => import('@/views/pages/RegisterCivitas')
 
 // Users
 const Users = () => import('@/views/users/Users')
 const User = () => import('@/views/users/User')
+
+//Roles
+const ManageRole = () => import('@/views/admin/ManageRole')
+const RoleRequest = () => import('@/views/admin/RoleRequest')
+const AccountDetail= () => import('@/views/admin/Account')
 
 Vue.use(Router)
 
@@ -74,6 +79,38 @@ function configRoutes () {
           path: 'dashboard',
           name: '',
           component: Dashboard
+        },
+        {
+          path: 'accounts',
+          redirect: '/accounts/management',
+          meta: {
+            label: 'Accounts'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: 'management',
+              name: 'Role Management',
+              component: ManageRole
+            },
+            {
+              path: 'request',
+              name: 'Role Request',
+              component: RoleRequest
+            },
+            {
+              path: 'account/:id',
+              meta: {
+                label: 'Account Details'
+              },
+              name: 'Account',
+              component: AccountDetail
+            }
+          ]
         },
         {
           path: 'theme',
@@ -119,7 +156,7 @@ function configRoutes () {
             {
               path: '',
               name: 'Users',
-              component: Users
+              component: ManageRole
             },
             {
               path: ':id',
@@ -330,7 +367,7 @@ function configRoutes () {
     {
       path: '/registerDIKTI',
       name: 'Register DIKTI',
-      component: Register
+      component: RegisterDIKTI
     },
     {
       path: '/registerCivitas',
