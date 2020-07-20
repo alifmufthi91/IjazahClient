@@ -2,7 +2,7 @@
   <CFooter :fixed="false">
     <div>
       <a href="#" target="_blank">Ijazah-Client</a>
-      <span class="ml-1">&copy; {{new Date().getFullYear()}} KienzStudio.</span>
+      <span class="ml-1">by KienzStudio.</span>
     </div>
     <div class="ml-auto">
       <span class="mr-1">Powered by</span>

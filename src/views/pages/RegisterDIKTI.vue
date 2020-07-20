@@ -20,7 +20,15 @@
               <CForm>
                 <h1>Daftar DIKTI</h1>
                 <p class="text-muted">Create your DIKTI account</p>
-                <CInput placeholder="Full Name" autocomplete="username" v-model="fullName">
+                <CInput
+                  placeholder="Full Name"
+                  autocomplete="username"
+                  v-model="fullName"
+                  :is-valid="validator"
+                  required
+                  invalid-feedback="Please provide at between 4-32 characters without symbols."
+                  valid-feedback="Okay!"
+                >
                   <template #prepend-content>
                     <CIcon name="cil-user" />
                   </template>
@@ -59,7 +67,7 @@
 </template>
 
 <script>
-import AccountManager from "../../contracts/AccountManager";
+import AccountManager from "@/contracts/AccountManager";
 export default {
   name: "RegisterDIKTI",
   data() {
@@ -77,7 +85,11 @@ export default {
       web3.eth.getAccounts().then(accounts => {
         console.log(this.fullName);
         AccountManager.methods
-          .createAccount(this.fullName, "", "dikti")
+          .createAccount(
+            web3.utils.toHex(this.fullName),
+            web3.utils.toHex(""),
+            web3.utils.toHex("dikti")
+          )
           .send({ from: accounts[0] })
           .on("receipt", function(rec) {
             console.log(rec);
@@ -89,8 +101,10 @@ export default {
           });
       });
     },
-    checkName: function() {
-      console.log(this.fullName);
+    validator (val) {
+      var letters = /^[A-Za-z]([-']?[A-Za-z]+)*( [A-Za-z]([-']?[A-Za-z]+)*){0,3}$/gm;
+      if(val == null || !val.match(letters)) return false
+      else return val ? val.length >= 4 && val.length <=32 : false
     },
     confirmRegister: function(confirm) {
       console.log(confirm);

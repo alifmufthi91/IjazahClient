@@ -45,27 +45,59 @@
               <CForm v-show="isMahasiswa">
                 <h1>Daftar Mahasiswa Polban</h1>
                 <p class="text-muted">Create your Mahasiswa account</p>
-                <CInput placeholder="Full Name" autocomplete="name" v-model="fullName">
+                <CInput
+                  placeholder="Full Name"
+                  autocomplete="name"
+                  v-model="fullName"
+                  :is-valid="validatorNama"
+                  required
+                  invalid-feedback="Please provide at between 4-32 characters without symbols."
+                  valid-feedback="Okay!"
+                >
                   <template #prepend-content>
                     <CIcon name="cil-user" />
                   </template>
                 </CInput>
-                <CInput placeholder="NIM" autocomplete="nim" v-model="id">
+                <CInput
+                  placeholder="NIM"
+                  autocomplete="nim"
+                  v-model="id"
+                  :is-valid="validatorId"
+                  required
+                  invalid-feedback="Please provide at under 21 characters of id numbers."
+                  valid-feedback="Okay!"
+                >
                   <template #prepend-content>
                     <CIcon name="cil-user" />
                   </template>
                 </CInput>
-                <CButton color="success" block @click="showAlert(true)">Create Account</CButton>
+                <CButton color="success" block @click="confirmModal = true">Create Account</CButton>
               </CForm>
               <CForm v-show="!isMahasiswa">
                 <h1>Daftar Civitas Polban</h1>
                 <p class="text-muted">Create your Civitas account</p>
-                <CInput placeholder="Full Name" autocomplete="name" v-model="fullName">
+                <CInput
+                  placeholder="Full Name"
+                  autocomplete="name"
+                  v-model="fullName"
+                  :is-valid="validatorNama"
+                  required
+                  invalid-feedback="Please provide at between 4-32 characters without symbols."
+                  valid-feedback="Okay!"
+                >
                   <template #prepend-content>
                     <CIcon name="cil-user" />
                   </template>
                 </CInput>
-                <CInput placeholder="NIP" autocomplete="nim" v-model="id">
+                <CInput
+                  placeholder="NIP"
+                  autocomplete="nim"
+                  v-model="id"
+                  :is-valid="validatorId"
+                  required
+                  invalid-feedback="Please provide at under 21 characters of id numbers."
+                  valid-feedback="Okay!"
+                >
                   <template #prepend-content>
                     <CIcon name="cil-user" />
                   </template>
@@ -75,8 +107,10 @@
                   horizontal
                   :options="options"
                   placeholder="Silahkan Pilih Role"
+                  :value.sync=role
+                  required
                 />
-                <CButton color="success" block @click="showAlert(true)">Create Account</CButton>
+                <CButton color="success" block @click="confirmModal = true">Create Account</CButton>
               </CForm>
             </CCardBody>
           </CCard>
@@ -128,24 +162,42 @@ export default {
   },
   methods: {
     createAccount: function() {
+      let self = this;
       web3.eth.getAccounts().then(accounts => {
-        console.log(this.fullName);
+        console.log(self.role);
+        if (self.isMahasiswa) self.role = "mahasiswa";
         return AccountManager.methods
-          .createAccount(this.fullName, this.id, this.role)
+          .createAccount(
+            web3.utils.toHex(self.fullName),
+            web3.utils.toHex(self.id),
+            web3.utils.toHex(self.role)
+          )
           .send({ from: accounts[0] })
           .on("error", function(error, receipt) {
             console.log(error);
+            self.showAlert(false);
+          })
+          .on("receipt", function(receipt) {
+            console.log(receipt.contractAddress);
+            self.showAlert(true);
           });
       });
     },
-    checkName: function() {
-      console.log(this.fullName);
+    validatorNama(val) {
+      var letters = /^[A-Za-z]([-']?[A-Za-z]+)*( [A-Za-z]([-']?[A-Za-z]+)*){0,3}$/gm;
+      if (val == null || !val.match(letters)) return false;
+      else return val ? val.length >= 4 && val.length <= 32 : false;
+    },
+    validatorId(val) {
+      var letters = /^[0-9]*$/gm;
+      if (val == null || !val.match(letters)) return false;
+      else return val ? val.length >= 1 && val.length <= 21 : false;
     },
     confirmRegister: function(confirm) {
       console.log(confirm);
       this.confirmModal = false;
       if (confirm) {
-        createAccount();
+        this.createAccount();
       }
     },
     showAlert: function(isSuccess) {

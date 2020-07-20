@@ -54,14 +54,14 @@
                     <CButton
                       color="info"
                       shape="pill"
-                      to="registerCivitas"
+                      to="register-civitas"
                     >Mendaftar sebagai Civitas Polban</CButton>
                   </CCol>
                 </CRow>
                 <CRow class="align-items-r mt-2">
                   <CCol sm="6" class="mb-3 mb-xl-0 text-center"></CCol>
                   <CCol sm="6" class="mb-3 mb-xl-0 text-center">
-                    <CButton color="info" shape="pill" to="registerDIKTI">Mendaftar sebagai DIKTI</CButton>
+                    <CButton color="info" shape="pill" to="register-DIKTI">Mendaftar sebagai DIKTI</CButton>
                   </CCol>
                 </CRow>
               </div>
@@ -107,9 +107,9 @@ export default {
           .call({ from: accounts[0] })
           .then(function(result) {
             console.log("Result is : " + result[0]);
-            if (result) {
+            if (result[0] != 0) {
               self.user.address = result[0];
-              self.user.name = result[2];
+              self.user.name = web3.utils.hexToAscii(result[2]);
               self.user.verified = result[1];
               self.isRegistered = true;
             }

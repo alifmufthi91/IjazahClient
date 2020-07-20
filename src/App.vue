@@ -1,12 +1,24 @@
 <template>
-  <router-view></router-view>
+  <router-view :key="componentKey"></router-view>
 </template>
 
 <script>
 import web3 from './js/web3';
-import regeneratorRuntime from 'regenerator-runtime';
+// import regeneratorRuntime from 'regenerator-runtime';
+
 export default {
-  name: 'App'
+  name: 'App',
+  data() {
+    return {
+      componentKey: 0,
+    };
+  },
+  created() {
+    window.ethereum.on('accountsChanged', (accounts) => {
+      console.log(accounts[0])
+      this.componentKey += 1
+    })
+  }
 }
 </script>
 

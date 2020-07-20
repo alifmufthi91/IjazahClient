@@ -1,20 +1,9 @@
-import web3 from '../js/web3';
-const address = '0x06c4103CFD3f554F5858Db38D3b692018282f122';
+import web3 from '@/js/web3';
+const address = '0x45bb90E156DBe6D9eDaddEa3BbA459f417f2a77b';
 const abi =
 [
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "ownerName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "idNumber",
-				"type": "string"
-			}
-		],
+		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
@@ -35,21 +24,21 @@ const abi =
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
+				"internalType": "bytes9",
 				"name": "role",
-				"type": "string"
+				"type": "bytes9"
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
+				"internalType": "bytes32",
 				"name": "fullName",
-				"type": "string"
+				"type": "bytes32"
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
+				"internalType": "bytes21",
 				"name": "nomorInduk",
-				"type": "string"
+				"type": "bytes21"
 			},
 			{
 				"indexed": false,
@@ -84,15 +73,40 @@ const abi =
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
-				"name": "oldName",
-				"type": "string"
+				"internalType": "uint256",
+				"name": "timeDeleted",
+				"type": "uint256"
+			}
+		],
+		"name": "AccountDeleted",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "oldName",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes32",
 				"name": "newName",
-				"type": "string"
+				"type": "bytes32"
 			},
 			{
 				"indexed": false,
@@ -121,21 +135,21 @@ const abi =
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
+				"internalType": "bytes9",
 				"name": "role",
-				"type": "string"
+				"type": "bytes9"
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
+				"internalType": "bytes32",
 				"name": "fullName",
-				"type": "string"
+				"type": "bytes32"
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
+				"internalType": "bytes21",
 				"name": "nomorInduk",
-				"type": "string"
+				"type": "bytes21"
 			},
 			{
 				"indexed": false,
@@ -239,9 +253,9 @@ const abi =
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
+				"internalType": "bytes9",
 				"name": "role",
-				"type": "string"
+				"type": "bytes9"
 			},
 			{
 				"indexed": false,
@@ -372,22 +386,35 @@ const abi =
 	{
 		"inputs": [
 			{
-				"internalType": "string",
+				"internalType": "bytes32",
 				"name": "_fullName",
-				"type": "string"
+				"type": "bytes32"
 			},
 			{
-				"internalType": "string",
+				"internalType": "bytes21",
 				"name": "_idNumber",
-				"type": "string"
+				"type": "bytes21"
 			},
 			{
-				"internalType": "string",
+				"internalType": "bytes9",
 				"name": "_role",
-				"type": "string"
+				"type": "bytes9"
 			}
 		],
 		"name": "createAccount",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "accountAddress",
+				"type": "address"
+			}
+		],
+		"name": "deleteAccount",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -413,9 +440,9 @@ const abi =
 				"type": "bool"
 			},
 			{
-				"internalType": "string",
+				"internalType": "bytes32",
 				"name": "",
-				"type": "string"
+				"type": "bytes32"
 			}
 		],
 		"stateMutability": "view",
@@ -424,9 +451,9 @@ const abi =
 	{
 		"inputs": [
 			{
-				"internalType": "string",
+				"internalType": "bytes9",
 				"name": "role",
-				"type": "string"
+				"type": "bytes9"
 			}
 		],
 		"name": "getBytesOfRole",
@@ -451,9 +478,9 @@ const abi =
 		"name": "getRole",
 		"outputs": [
 			{
-				"internalType": "string",
+				"internalType": "bytes9",
 				"name": "",
-				"type": "string"
+				"type": "bytes9"
 			}
 		],
 		"stateMutability": "view",
@@ -571,25 +598,6 @@ const abi =
 				"type": "address"
 			}
 		],
-		"name": "isAccRegistered",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
 		"name": "isAdmin",
 		"outputs": [
 			{
@@ -609,9 +617,9 @@ const abi =
 				"type": "address"
 			},
 			{
-				"internalType": "string",
+				"internalType": "bytes9",
 				"name": "_role",
-				"type": "string"
+				"type": "bytes9"
 			}
 		],
 		"name": "lepasRole",
@@ -691,9 +699,9 @@ const abi =
 	{
 		"inputs": [
 			{
-				"internalType": "string",
+				"internalType": "bytes32",
 				"name": "_fullName",
-				"type": "string"
+				"type": "bytes32"
 			}
 		],
 		"name": "updateAccountName",
@@ -709,14 +717,14 @@ const abi =
 				"type": "address"
 			},
 			{
-				"internalType": "string",
+				"internalType": "bytes21",
 				"name": "_nip",
-				"type": "string"
+				"type": "bytes21"
 			},
 			{
-				"internalType": "string",
+				"internalType": "bytes9",
 				"name": "_role",
-				"type": "string"
+				"type": "bytes9"
 			},
 			{
 				"internalType": "address",
@@ -756,9 +764,9 @@ const abi =
 				"type": "address"
 			},
 			{
-				"internalType": "string",
+				"internalType": "bytes12",
 				"name": "_nim",
-				"type": "string"
+				"type": "bytes12"
 			},
 			{
 				"internalType": "address",

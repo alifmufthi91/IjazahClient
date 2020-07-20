@@ -4,8 +4,8 @@ export default [
     _children: [
       {
         _name: 'CSidebarNavItem',
-        name: 'Home',
-        to: '/home',
+        name: 'Dashboard',
+        to: '/dashboard',
         icon: 'cil-layers'
       },
       {
@@ -39,6 +39,50 @@ export default [
         name: 'Permintaan Role',
         to: '/accounts/request',
 		icon: 'cil-pencil'
+      },
+      {
+        _name: 'CSidebarNavTitle',
+        _children: ['Perguruan Tinggi']
+      },
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Mahasiswa',
+        route: '/mahasiswa',
+        icon: 'cil-puzzle',
+        items: [
+          {
+            name: 'Info Mahasiswa',
+            to: '/mahasiswa/info-mahasiswa'
+          },
+          {
+            name: 'Tambah Mahasiswa',
+            to: '/mahasiswa/tambah-mahasiswa'
+          },
+          {
+            name: 'Mahasiswa Lulus',
+            to: '/mahasiswa/mahasiswa-mulus'
+          },
+          {
+            name: 'Antrian NINA',
+            to: '/mahasiswa/antrian-nina'
+          }
+        ]
+      },
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Civitas',
+        route: '/civitas',
+        icon: 'cil-puzzle',
+        items: [
+          {
+            name: 'Info Civitas',
+            to: '/civitas/info-civitas'
+          },
+          {
+            name: 'Tambah Civitas',
+            to: '/civitas/tambah-civitas'
+          }
+        ]
       },
       {
         _name: 'CSidebarNavTitle',

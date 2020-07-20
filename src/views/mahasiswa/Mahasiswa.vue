@@ -2,23 +2,17 @@
   <CRow>
     <CCol col="12" xl="12">
       <CCard>
-        <CCardHeader>Role Management</CCardHeader>
+        <CCardHeader>Info Mahasiswa</CCardHeader>
         <CCardBody>
           <CDataTable
             hover
-            :items="visibleData"
+            :items="accounts"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
             @page-change="pageChange"
-            :key="accounts"
           >
-            <template #verified="data">
-              <td>
-                <CBadge :color="getBadge(data.item.verified)">{{ getVerified(data.item.verified) }}</CBadge>
-              </td>
-            </template>
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
@@ -43,27 +37,26 @@
 import gql from "graphql-tag";
 
 export default {
-  name: "RoleManagement",
-  apollo: {
-    accounts: gql`
-      query {
-        accounts {
-          id
-          address
-          name
-          verified
-          role
-        }
-      }
-    `
-  },
+  name: "InfoMahasiswa",
+  //   apollo: {
+  //     accounts: gql`
+  //       query {
+  //         accounts {
+  //           id
+  //           name
+  //           verified
+  //           role
+  //         }
+  //       }
+  //     `
+  //   },
   data() {
     return {
       fields: [
-        { key: "name", label: "Name", _classes: "font-weight-bold" },
-        { key: "address", label: "Alamat" },
-        { key: "role" },
-        { key: "verified", label: "Verified" },
+        { key: "NIM" },
+        { key: "Nama" },
+        { key: "Prodi" },
+        { key: "Status Kelulusan" },
         { key: "action", label: "Aksi" }
       ],
       activePage: 1
@@ -80,31 +73,11 @@ export default {
     }
   },
   methods: {
-    getBadge(status) {
-      if (status) return "success";
-      return "warning";
-    },
-    getVerified(status) {
-      if (status) return "Terverifikasi";
-      return "Belum Diverifikasi";
-    },
     pageChange(val) {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "account/" + `${item.id}` });
-    }
-  },
-  computed: {
-    visibleData() {
-      return this.accounts.filter(account => {
-        Object.keys(account).forEach(function(attribute) {
-          if(web3.utils.isHex(account[attribute])){
-            account[attribute] = web3.utils.hexToAscii(account[attribute])
-          }
-        })
-        return account
-      })
+      this.$router.replace({ path: "mahasiswa/" + `${item.id}` });
     }
   }
 };

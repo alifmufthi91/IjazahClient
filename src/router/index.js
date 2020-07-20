@@ -52,18 +52,28 @@ const Modals = () => import('@/views/notifications/Modals')
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
-const Login = () => import('@/views/pages/Login')
+// const Login = () => import('@/views/pages/Login')
 const RegisterDIKTI = () => import('@/views/pages/RegisterDIKTI')
 const RegisterCivitas = () => import('@/views/pages/RegisterCivitas')
 
 // Users
-const Users = () => import('@/views/users/Users')
-const User = () => import('@/views/users/User')
+// const Users = () => import('@/views/users/Users')
+// const User = () => import('@/views/users/User')
 
-//Roles
+// Views Admin/Account
 const ManageRole = () => import('@/views/admin/ManageRole')
 const RoleRequest = () => import('@/views/admin/RoleRequest')
-const AccountDetail= () => import('@/views/admin/Account')
+
+// Views - Account
+const AccountDetail= () => import('@/views/account/Account')
+const EditAccount= () => import('@/views/account/EditAccount')
+
+// Views - Mahasiswa
+const Mahasiswa = () => import('@/views/mahasiswa/Mahasiswa')
+const AntrianNINA = () => import('@/views/mahasiswa/AntrianNINA')
+
+// Views - Civitas
+const Civitas = () => import('@/views/civitas/Civitas')
 
 Vue.use(Router)
 
@@ -71,7 +81,7 @@ function configRoutes () {
   return [
     {
       path: '/',
-      redirect: "/getStarted",
+      redirect: "/get-started",
       name: 'Home',
       component: TheContainer,
       children: [
@@ -79,6 +89,11 @@ function configRoutes () {
           path: 'dashboard',
           name: '',
           component: Dashboard
+        },
+        {
+          path: 'edit-account',
+          name: 'Edit Account',
+          component: EditAccount
         },
         {
           path: 'accounts',
@@ -113,6 +128,65 @@ function configRoutes () {
           ]
         },
         {
+          path: 'mahasiswa',
+          redirect: '/mahasiswa/list-info',
+          meta: {
+            label: 'Mahasiswa'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: 'mahasiswa',
+              name: 'Info Mahasiswa',
+              component: Mahasiswa
+            },
+            {
+              path: 'antrian-NINA',
+              name: 'Antrian NINA',
+              component: AntrianNINA
+            },
+            {
+              path: 'mahasiswa/:id',
+              meta: {
+                label: 'Mahasiswa Details'
+              },
+              name: 'Info Mahasiswa',
+              component: AccountDetail
+            }
+          ]
+        },
+        {
+          path: 'civitas',
+          redirect: '/civitas/list-info',
+          meta: {
+            label: 'Civitas'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: 'civitas',
+              name: 'Info Civitas',
+              component: Civitas
+            },
+            {
+              path: 'civitas/:id',
+              meta: {
+                label: 'Civitas Details'
+              },
+              name: 'Info Civitas',
+              component: AccountDetail
+            }
+          ]
+        },
+        {
           path: 'theme',
           redirect: '/theme/colors',
           name: 'Theme',
@@ -142,32 +216,32 @@ function configRoutes () {
           name: 'Widgets',
           component: Widgets
         },
-        {
-          path: 'users',
-          meta: {
-            label: 'Users'
-          },
-          component: {
-            render(c) {
-              return c('router-view')
-            }
-          },
-          children: [
-            {
-              path: '',
-              name: 'Users',
-              component: ManageRole
-            },
-            {
-              path: ':id',
-              meta: {
-                label: 'User Details'
-              },
-              name: 'User',
-              component: User
-            }
-          ]
-        },
+        // {
+        //   path: 'users',
+        //   meta: {
+        //     label: 'Users'
+        //   },
+        //   component: {
+        //     render(c) {
+        //       return c('router-view')
+        //     }
+        //   },
+        //   children: [
+        //     {
+        //       path: '',
+        //       name: 'Users',
+        //       component: ManageRole
+        //     },
+        //     {
+        //       path: ':id',
+        //       meta: {
+        //         label: 'User Details'
+        //       },
+        //       name: 'User',
+        //       component: User
+        //     }
+        //   ]
+        // },
         {
           path: 'base',
           redirect: '/base/cards',
@@ -357,25 +431,25 @@ function configRoutes () {
           name: 'Page500',
           component: Page500
         },
-        {
-          path: 'login',
-          name: 'Login',
-          component: Login
-        }
+        // {
+        //   path: 'login',
+        //   name: 'Login',
+        //   component: Login
+        // }
       ]
     },
     {
-      path: '/registerDIKTI',
+      path: '/register-DIKTI',
       name: 'Register DIKTI',
       component: RegisterDIKTI
     },
     {
-      path: '/registerCivitas',
+      path: '/register-civitas',
       name: 'Register Civitas',
       component: RegisterCivitas
     },
     {
-      path: '/getStarted',
+      path: '/get-started',
       name: 'Getting Started',
       component: GetStarted
     },
@@ -413,5 +487,24 @@ router.beforeEach((to,from,next) => {
     })
   }
 })
+
+// router.afterEach((to, from) => {
+//   switch(to.name){
+//     case 'Getting Started': next();break;
+//     case 'Register Civitas': next();break;
+//     case 'Register DIKTI': next();break;
+//     case 'Page404': next();break;
+//     case 'Page500': next();break;
+//     default : web3.eth.getAccounts().then(accounts => {
+//       AccountManager.methods
+//         .getAccount(accounts[0])
+//         .call({ from: accounts[0] })
+//         .then(function(result) {
+//           console.log("Result is : " + result[1]);
+//           if(!result[1]) router.push('')
+//         })
+//     })
+//   }
+// })
 
 export default router
