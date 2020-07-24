@@ -71,6 +71,7 @@ const EditAccount= () => import('@/views/account/EditAccount')
 // Views - Mahasiswa
 const Mahasiswa = () => import('@/views/mahasiswa/Mahasiswa')
 const AntrianNINA = () => import('@/views/mahasiswa/AntrianNINA')
+const TambahMahasiswa = () => import('@/views/mahasiswa/TambahMahasiswa')
 
 // Views - Civitas
 const Civitas = () => import('@/views/civitas/Civitas')
@@ -140,21 +141,26 @@ function configRoutes () {
           },
           children: [
             {
-              path: 'mahasiswa',
+              path: 'list-info',
               name: 'Info Mahasiswa',
               component: Mahasiswa
             },
             {
-              path: 'antrian-NINA',
+              path: 'antrian-nina',
               name: 'Antrian NINA',
               component: AntrianNINA
+            },
+            {
+              path: 'tambah-mahasiswa',
+              name: 'Tambah Mahasiswa',
+              component: TambahMahasiswa
             },
             {
               path: 'mahasiswa/:id',
               meta: {
                 label: 'Mahasiswa Details'
               },
-              name: 'Info Mahasiswa',
+              name: 'Detail Mahasiswa',
               component: AccountDetail
             }
           ]
@@ -172,7 +178,7 @@ function configRoutes () {
           },
           children: [
             {
-              path: 'civitas',
+              path: 'list-info',
               name: 'Info Civitas',
               component: Civitas
             },
@@ -181,7 +187,7 @@ function configRoutes () {
               meta: {
                 label: 'Civitas Details'
               },
-              name: 'Info Civitas',
+              name: 'Detail Civitas',
               component: AccountDetail
             }
           ]

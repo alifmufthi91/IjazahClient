@@ -15,13 +15,11 @@
               />
               <CInput
                 label="Name"
-                placeholder="Enter Name..."
                 required
                 horizontal
-                :value.sync="user.name"
+                :placeholder="user.name"
                 invalid-feedback="Please provide at between 4-32 characters without symbols."
                 :is-valid="validator"
-                @click="user.name = ''"
               />
               <CInput
                 label="Status"
@@ -85,9 +83,10 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.push(this.usersOpened)
+      this.usersOpened ? this.$router.push(this.usersOpened) : this.$router.push('/dashboard')
     },
     validator (val) {
+      if(val == null) return false
       var letters = /^[A-Za-z]([-']?[A-Za-z]+)*( [A-Za-z]([-']?[A-Za-z]+)*){0,3}$/gm;
       if(!val.match(letters)) return false
       else return val ? val.length >= 4 && val.length <=32 : false

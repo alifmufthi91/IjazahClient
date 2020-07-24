@@ -52,15 +52,11 @@ export default [
         items: [
           {
             name: 'Info Mahasiswa',
-            to: '/mahasiswa/info-mahasiswa'
+            to: '/mahasiswa/list-info'
           },
           {
             name: 'Tambah Mahasiswa',
             to: '/mahasiswa/tambah-mahasiswa'
-          },
-          {
-            name: 'Mahasiswa Lulus',
-            to: '/mahasiswa/mahasiswa-mulus'
           },
           {
             name: 'Antrian NINA',
@@ -76,7 +72,7 @@ export default [
         items: [
           {
             name: 'Info Civitas',
-            to: '/civitas/info-civitas'
+            to: '/civitas/list-info'
           },
           {
             name: 'Tambah Civitas',

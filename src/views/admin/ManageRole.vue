@@ -12,7 +12,6 @@
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
             @page-change="pageChange"
-            :key="accounts"
           >
             <template #verified="data">
               <td>
@@ -47,9 +46,8 @@ export default {
   apollo: {
     accounts: gql`
       query {
-        accounts {
+        accounts(where:{ isDeleted:false }, orderBy:name) {
           id
-          address
           name
           verified
           role
@@ -61,7 +59,7 @@ export default {
     return {
       fields: [
         { key: "name", label: "Name", _classes: "font-weight-bold" },
-        { key: "address", label: "Alamat" },
+        { key: "id", label: "Alamat" },
         { key: "role" },
         { key: "verified", label: "Verified" },
         { key: "action", label: "Aksi" }
@@ -97,10 +95,11 @@ export default {
   },
   computed: {
     visibleData() {
+      if(this.accounts == null) return null
       return this.accounts.filter(account => {
         Object.keys(account).forEach(function(attribute) {
-          if(web3.utils.isHex(account[attribute])){
-            account[attribute] = web3.utils.hexToAscii(account[attribute])
+          if(account[attribute] != "" && attribute != "id" && web3.utils.isHex(account[attribute])){
+            account[attribute] = web3.utils.hexToUtf8(account[attribute])
           }
         })
         return account

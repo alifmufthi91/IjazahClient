@@ -61,12 +61,16 @@ export default {
     },
     visibleData() {
       return this.userData.filter(param => {
-        console.log(param);
-        if (param.value == null || param.key == "__typename") {
-          return null;
+        console.log(param.key);
+        if (param.key == "timeCreated" || param.key == "lastUpdated") {
+          param.value = new Date(param.value * 1000)
+          return param
         }
-        if (param.key == "timeCreated") {
-          param.value = new Date(param.value * 1000);
+        if(param.value != "" && param.key != "id" && web3.utils.isHex(param.value)){
+          param.value = web3.utils.hexToAscii(param.value)
+        }
+        if (param.value == null || param.key == "__typename") {
+          return null
         }
         return param;
       });
@@ -74,7 +78,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.push(this.usersOpened)
+      this.usersOpened ? this.$router.push(this.usersOpened) : this.$router.push('/dashboard')
     }
   },
   beforeMount() {
@@ -91,6 +95,6 @@ export default {
         this.account = response.data.account;
         this.data = this.visibleData;
       });
-  }
+  } 
 };
 </script>

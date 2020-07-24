@@ -22,12 +22,12 @@
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
                   <CButton
-                    color="primary"
+                    color="success"
                     class="mr-3"
                     size="sm"
                     @click="openConfirmModal(data.item)"
                   >Terima</CButton>
-                  <CButton color="success" class="mr-3" size="sm">Edit</CButton>
+                  <CButton color="danger" class="mr-3" size="sm">Tolak</CButton>
                 </CCol>
               </td>
             </template>
@@ -45,15 +45,15 @@
     >
       <CRow>
         <CCol>
-          <CInput label="Alamat" horizontal readonly v-model="selectedUser.id" />
-          <CInput label="Name" horizontal readonly v-model="selectedUser.name" />
-          <CInput label="Status" horizontal readonly v-model="selectedUser.verified" />
+          <CInput label="Alamat" horizontal readonly :value="selectedUser.id" />
+          <CInput label="Name" horizontal readonly :value="selectedUser.name" />
+          <CInput label="Status" horizontal readonly :value="getVerified(selectedUser.verified)" />
           <CSelect
-                label="Select"
+                label="Role"
                 horizontal
-                :options="options"
+                :options="selectOptions"
+                :value="selectedUser.role"
                 placeholder="Please select"
-                :value.sync=selectedUser.role
               />
         </CCol>
       </CRow>
@@ -78,10 +78,10 @@ export default {
   apollo: {
     accounts: gql`
       query {
-        accounts(where: { verified: false }) {
+        accounts(where: { verified: false , isDeleted:false }, orderBy:name) {
           id
-          address
           name
+          nomorInduk
           verified
           role
         }
@@ -92,8 +92,9 @@ export default {
     return {
       fields: [
         { key: "name", label: "Name", _classes: "font-weight-bold" },
-        { key: "address", label: "Alamat" },
+        { key: "id", label: "Alamat" },
         { key: "role" },
+        { key: "nomorInduk", label: "Nomor Induk"},
         { key: "verified", label: "Verified" },
         { key: "action", label: "Aksi" }
       ],
@@ -102,14 +103,32 @@ export default {
       selectedUser: {
         id: null,
         name: null,
-        verified: null
+        verified: null,
+        role: null
       },
       verify: {
         mahasiswa: AccountManager.methods.verifyMahasiswa,
         dikti: AccountManager.methods.verifyDIKTI,
         civitas: AccountManager.methods.verifyCivitas
       },
-      options: [{value:'mahasiswa', label:'Mahasiswa'}, {value:'dikti', label:'Dikti'}, {value:'admin', label:'Admin'}]
+      selectOptions: [
+        { 
+          value: 'mahasiswa', 
+          label: 'Mahasiswa'
+        }, 
+        { 
+          value: 'admin', 
+          label: 'Admin'
+        }, 
+        { 
+          value: 'dosen', 
+          label: 'Dosen'
+        },
+        { 
+          value: 'dikti', 
+          label: 'Dikti'
+        }
+      ]
     };
   },
   watch: {
@@ -147,7 +166,12 @@ export default {
     verifyAccount: function() {
       let self = this;
       web3.eth.getAccounts().then(accounts => {
-        self.verify["civitas"](web3.utils.toHex(self.selectedUser.name))
+        self.verify["civitas"](
+          web3.utils.toHex(self.selectedUser.id),
+          web3.utils.toHex(self.selectedUser.nomorInduk),
+          web3.utils.toHex(self.selectedUser.role),
+          accounts[0]
+          )
           .send({ from: accounts[0] })
           .on("error", function(error, receipt) {
             console.log(error);
@@ -160,16 +184,17 @@ export default {
       });
     },
     openConfirmModal: function(user) {
-      this.confirmModal = true;
-      this.selectedUser = user;
+      this.confirmModal = true
+      this.selectedUser = user
     }
   },
   computed: {
     visibleData() {
+      if(this.accounts == null) return null
       return this.accounts.filter(account => {
         Object.keys(account).forEach(function(attribute) {
-          if(web3.utils.isHex(account[attribute])){
-            account[attribute] = web3.utils.hexToAscii(account[attribute])
+          if(account[attribute] != "" && attribute != "id" && web3.utils.isHex(account[attribute])){
+            account[attribute] = web3.utils.hexToUtf8(account[attribute])
           }
         })
         return account
