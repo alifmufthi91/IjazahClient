@@ -2,7 +2,7 @@
   <CRow>
     <CCol col="12" xl="12">
       <CCard>
-        <CCardHeader>Info Mahasiswa</CCardHeader>
+        <CCardHeader>Info Mata Kuliah</CCardHeader>
         <CCardBody>
           <CDataTable
             hover
@@ -37,14 +37,14 @@
 import gql from "graphql-tag";
 
 export default {
-  name: "InfoMahasiswa",
+  name: "InfoMatkul",
     apollo: {
-      mahasiswas: gql`
+      mataKuliahs: gql`
         query {
-          mahasiswas {
+          mataKuliahs {
             id
-            name
-            prodi
+            namaMatkul
+            timeCreated
           }
         }
       `
@@ -53,8 +53,8 @@ export default {
     return {
       fields: [
         { key: "id" },
-        { key: "name" },
-        { key: "prodi" },
+        { key: "namaMatkul" },
+        { key: "timeCreated", label:"Waktu Dibuat"},
         { key: "action", label: "Aksi" }
       ],
       activePage: 1
@@ -75,22 +75,25 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "mahasiswa/" + `${item.id}` });
+      this.$router.replace({ path: "matkul/" + `${item.id}` });
     }
   },
   computed: {
     visibleData() {
-      console.log(this.mahasiswas)
-      if(this.mahasiswas == null) return null
-      return this.mahasiswas.filter(mhs => {
-        let mahasiswa = mhs
-        Object.keys(mhs).forEach(function(attribute) {
-          if(mhs[attribute] != "" && mhs[attribute].startsWith('0x') && web3.utils.isHex(mhs[attribute])){
-            console.log(mhs[attribute])
-            mahasiswa[attribute] = web3.utils.hexToAscii(mhs[attribute])
+      if(this.mataKuliahs == null) return null
+      return this.mataKuliahs.filter(matkul => {
+        let course = matkul
+        Object.keys(matkul).forEach(function(attribute) {
+          if(matkul[attribute] != "" && attribute != "id" && web3.utils.isHex(matkul[attribute]) && matkul[attribute].startsWith('0x')){
+            console.log(matkul[attribute])
+            course[attribute] = web3.utils.hexToUtf8(matkul[attribute])
+          }
+          if(attribute == "timeCreated"){
+            console.log(matkul[attribute])
+            course[attribute] = new Date(matkul[attribute] * 1000)
           }
         })
-        return mahasiswa
+        return course
       })
     }
   }

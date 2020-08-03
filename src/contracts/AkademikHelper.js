@@ -1,5 +1,5 @@
 import web3 from '@/js/web3';
-const address = '0xCC0C165f4d02293A5e8589d8B89976a3149F2de0';
+const address = '0xa481951A6c28fE45151eb18bA6237b8f18FaD11E';
 const abi =
 [
 	{
@@ -43,6 +43,108 @@ const abi =
 		],
 		"name": "AccountManagerUpdated",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes9",
+				"name": "_tahunAjar",
+				"type": "bytes9"
+			},
+			{
+				"internalType": "bool",
+				"name": "_ganjil",
+				"type": "bool"
+			}
+		],
+		"name": "createKalendarAkademik",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "_namaMatkul",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_ipfsHash",
+				"type": "bytes"
+			}
+		],
+		"name": "createMatkul",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "_namaProdi",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_namaJurusan",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_ipfsHash",
+				"type": "bytes"
+			}
+		],
+		"name": "createProdi",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint8",
+				"name": "_semesterKe",
+				"type": "uint8"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_ipfsHash",
+				"type": "bytes"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_listIdDosen",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_listMatkul",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint8[]",
+				"name": "_listSKS",
+				"type": "uint8[]"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_prodi",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes9",
+				"name": "_kelas",
+				"type": "bytes9"
+			}
+		],
+		"name": "createSemester",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -465,190 +567,6 @@ const abi =
 	{
 		"inputs": [
 			{
-				"internalType": "bytes9",
-				"name": "_tahunAjar",
-				"type": "bytes9"
-			},
-			{
-				"internalType": "bool",
-				"name": "_ganjil",
-				"type": "bool"
-			}
-		],
-		"name": "createKalendarAkademik",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes",
-				"name": "_namaMatkul",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_ipfsHash",
-				"type": "bytes"
-			}
-		],
-		"name": "createMatkul",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes",
-				"name": "_namaProdi",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_namaJurusan",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_ipfsHash",
-				"type": "bytes"
-			}
-		],
-		"name": "createProdi",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint8",
-				"name": "_semesterKe",
-				"type": "uint8"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_ipfsHash",
-				"type": "bytes"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "_listIdDosen",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "_listMatkul",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint8[]",
-				"name": "_listSKS",
-				"type": "uint8[]"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_prodi",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bytes9",
-				"name": "_kelas",
-				"type": "bytes9"
-			}
-		],
-		"name": "createSemester",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "getKalendarAkademik",
-		"outputs": [
-			{
-				"internalType": "bytes9",
-				"name": "",
-				"type": "bytes9"
-			},
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "getProgram",
-		"outputs": [
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "getSemester",
-		"outputs": [
-			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			},
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "id",
 				"type": "uint256"
@@ -775,6 +693,112 @@ const abi =
 		"name": "updateTahunAjarKalendar",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "getKalendarAkademik",
+		"outputs": [
+			{
+				"internalType": "bytes9",
+				"name": "",
+				"type": "bytes9"
+			},
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "getProgram",
+		"outputs": [
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "getSemester",
+		"outputs": [
+			{
+				"internalType": "uint8",
+				"name": "",
+				"type": "uint8"
+			},
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint8",
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes9",
+				"name": "_tahunAjar",
+				"type": "bytes9"
+			},
+			{
+				"internalType": "bool",
+				"name": "_ganjil",
+				"type": "bool"
+			}
+		],
+		"name": "isKalendarAkademikExist",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ];

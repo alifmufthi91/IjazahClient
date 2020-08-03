@@ -97,12 +97,14 @@ export default {
     visibleData() {
       if(this.accounts == null) return null
       return this.accounts.filter(account => {
+        let akun = account
         Object.keys(account).forEach(function(attribute) {
-          if(account[attribute] != "" && attribute != "id" && web3.utils.isHex(account[attribute])){
-            account[attribute] = web3.utils.hexToUtf8(account[attribute])
+          if(account[attribute] != "" && attribute != "id" && account[attribute].startsWith('0x')){
+            console.log(account[attribute])
+            akun[attribute] = web3.utils.hexToUtf8(account[attribute])
           }
         })
-        return account
+        return akun
       })
     }
   }

@@ -86,9 +86,9 @@ export default {
         console.log(this.fullName);
         AccountManager.methods
           .createAccount(
-            web3.utils.toHex(this.fullName),
-            web3.utils.toHex(""),
-            web3.utils.toHex("dikti")
+            web3.utils.utf8ToHex(this.fullName),
+            web3.utils.utf8ToHex(""),
+            web3.utils.utf8ToHex("dikti")
           )
           .send({ from: accounts[0] })
           .on("receipt", function(rec) {

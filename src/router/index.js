@@ -75,6 +75,19 @@ const TambahMahasiswa = () => import('@/views/mahasiswa/TambahMahasiswa')
 
 // Views - Civitas
 const Civitas = () => import('@/views/civitas/Civitas')
+const TambahCivitas = () => import('@/views/civitas/TambahCivitas')
+
+// Views - Prodi
+const TambahProdi = () => import('@/views/prodi/TambahProdi')
+const Prodi = () => import('@/views/prodi/Prodi')
+
+// Views = Matkul
+const TambahMatkul = () => import('@/views/mata kuliah/TambahMatkul')
+const Matkul = () => import('@/views/mata kuliah/Matkul')
+
+// Views - Kalendar Akademik
+const TambahKalendarAkademik = () => import('@/views/kalendar akademik/TambahKalendarAkademik')
+const KalendarAkademik = () => import('@/views/kalendar akademik/KalendarAkademik')
 
 Vue.use(Router)
 
@@ -130,7 +143,7 @@ function configRoutes () {
         },
         {
           path: 'mahasiswa',
-          redirect: '/mahasiswa/list-info',
+          redirect: '/mahasiswa',
           meta: {
             label: 'Mahasiswa'
           },
@@ -141,7 +154,7 @@ function configRoutes () {
           },
           children: [
             {
-              path: 'list-info',
+              path: '',
               name: 'Info Mahasiswa',
               component: Mahasiswa
             },
@@ -151,7 +164,7 @@ function configRoutes () {
               component: AntrianNINA
             },
             {
-              path: 'tambah-mahasiswa',
+              path: 'tambah',
               name: 'Tambah Mahasiswa',
               component: TambahMahasiswa
             },
@@ -167,7 +180,7 @@ function configRoutes () {
         },
         {
           path: 'civitas',
-          redirect: '/civitas/list-info',
+          redirect: '/civitas',
           meta: {
             label: 'Civitas'
           },
@@ -178,9 +191,110 @@ function configRoutes () {
           },
           children: [
             {
-              path: 'list-info',
+              path: '',
               name: 'Info Civitas',
               component: Civitas
+            },
+            {
+              path: 'tambah',
+              name: 'Tambah Civitas',
+              component: TambahCivitas
+            },
+            {
+              path: 'civitas/:id',
+              meta: {
+                label: 'Civitas Details'
+              },
+              name: 'Detail Civitas',
+              component: AccountDetail
+            }
+          ]
+        },
+        {
+          path: 'prodi',
+          redirect: '/prodi',
+          meta: {
+            label: 'Prodi'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: '',
+              name: 'Info Prodi',
+              component: Prodi
+            },
+            {
+              path: 'tambah',
+              name: 'Tambah Prodi',
+              component: TambahProdi
+            },
+            {
+              path: 'civitas/:id',
+              meta: {
+                label: 'Civitas Details'
+              },
+              name: 'Detail Civitas',
+              component: AccountDetail
+            }
+          ]
+        },
+        {
+          path: 'matkul',
+          redirect: '/matkul',
+          meta: {
+            label: 'Mata Kuliah'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: '',
+              name: 'Info Mata Kuliah',
+              component: Matkul
+            },
+            {
+              path: 'tambah',
+              name: 'Tambah Mata Kuliah',
+              component: TambahMatkul
+            },
+            {
+              path: 'civitas/:id',
+              meta: {
+                label: 'Civitas Details'
+              },
+              name: 'Detail Civitas',
+              component: AccountDetail
+            }
+          ]
+        },
+        {
+          path: 'kalendar-akademik',
+          redirect: '/kalendar-akademik',
+          meta: {
+            label: 'Kalendar Akademik'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: '',
+              name: 'Info Kalendar Akademik',
+              component: KalendarAkademik
+            },
+            {
+              path: 'tambah',
+              name: 'Tambah Kalendar Akademik',
+              component: TambahKalendarAkademik
             },
             {
               path: 'civitas/:id',

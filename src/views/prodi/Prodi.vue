@@ -2,7 +2,7 @@
   <CRow>
     <CCol col="12" xl="12">
       <CCard>
-        <CCardHeader>Info Mahasiswa</CCardHeader>
+        <CCardHeader>Info Prodi</CCardHeader>
         <CCardBody>
           <CDataTable
             hover
@@ -37,14 +37,14 @@
 import gql from "graphql-tag";
 
 export default {
-  name: "InfoMahasiswa",
+  name: "InfoProdi",
     apollo: {
-      mahasiswas: gql`
+      prodis: gql`
         query {
-          mahasiswas {
+          prodis {
             id
-            name
-            prodi
+            namaProdi
+            namaJurusan
           }
         }
       `
@@ -53,8 +53,8 @@ export default {
     return {
       fields: [
         { key: "id" },
-        { key: "name" },
-        { key: "prodi" },
+        { key: "namaProdi" },
+        { key: "namaJurusan" },
         { key: "action", label: "Aksi" }
       ],
       activePage: 1
@@ -75,22 +75,21 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "mahasiswa/" + `${item.id}` });
+      this.$router.replace({ path: "prodi/" + `${item.id}` });
     }
   },
   computed: {
     visibleData() {
-      console.log(this.mahasiswas)
-      if(this.mahasiswas == null) return null
-      return this.mahasiswas.filter(mhs => {
-        let mahasiswa = mhs
-        Object.keys(mhs).forEach(function(attribute) {
-          if(mhs[attribute] != "" && mhs[attribute].startsWith('0x') && web3.utils.isHex(mhs[attribute])){
-            console.log(mhs[attribute])
-            mahasiswa[attribute] = web3.utils.hexToAscii(mhs[attribute])
+      if(this.prodis == null) return null
+      return this.prodis.filter(prodi => {
+        let program = prodi
+        Object.keys(prodi).forEach(function(attribute) {
+          if(prodi[attribute] != "" && attribute != "id" && prodi[attribute].startsWith('0x') && web3.utils.isHex(prodi[attribute])){
+            console.log(prodi[attribute])
+            program[attribute] = web3.utils.hexToUtf8(prodi[attribute])
           }
         })
-        return mahasiswa
+        return program
       })
     }
   }

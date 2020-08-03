@@ -52,7 +52,7 @@
                 label="Role"
                 horizontal
                 :options="selectOptions"
-                :value="selectedUser.role"
+                :value.sync="selectedUser.role"
                 placeholder="Please select"
               />
         </CCol>
@@ -161,15 +161,16 @@ export default {
       this.confirmModal = false;
       if (confirm) {
         this.verifyAccount();
+        console.log(this.selectedUser)
       }
     },
     verifyAccount: function() {
       let self = this;
       web3.eth.getAccounts().then(accounts => {
         self.verify["civitas"](
-          web3.utils.toHex(self.selectedUser.id),
-          web3.utils.toHex(self.selectedUser.nomorInduk),
-          web3.utils.toHex(self.selectedUser.role),
+          self.selectedUser.id,
+          web3.utils.utf8ToHex(self.selectedUser.nomorInduk),
+          web3.utils.utf8ToHex(self.selectedUser.role),
           accounts[0]
           )
           .send({ from: accounts[0] })
@@ -192,12 +193,14 @@ export default {
     visibleData() {
       if(this.accounts == null) return null
       return this.accounts.filter(account => {
+        let akun = account
         Object.keys(account).forEach(function(attribute) {
-          if(account[attribute] != "" && attribute != "id" && web3.utils.isHex(account[attribute])){
-            account[attribute] = web3.utils.hexToUtf8(account[attribute])
+          if(account[attribute] != "" && attribute != "id" && account[attribute].startsWith('0x')){
+            console.log(account[attribute])
+            akun[attribute] = web3.utils.hexToUtf8(account[attribute])
           }
         })
-        return account
+        return akun
       })
     }
   }

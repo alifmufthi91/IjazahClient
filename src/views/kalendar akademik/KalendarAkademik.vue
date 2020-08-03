@@ -2,7 +2,7 @@
   <CRow>
     <CCol col="12" xl="12">
       <CCard>
-        <CCardHeader>Info Mahasiswa</CCardHeader>
+        <CCardHeader>Info Kalendar AKademik</CCardHeader>
         <CCardBody>
           <CDataTable
             hover
@@ -37,14 +37,14 @@
 import gql from "graphql-tag";
 
 export default {
-  name: "InfoMahasiswa",
+  name: "InfoKalendarAkademik",
     apollo: {
-      mahasiswas: gql`
+      kalendars: gql`
         query {
-          mahasiswas {
+          kalendarAkademiks {
             id
-            name
-            prodi
+            tahunAjar
+            ganjil
           }
         }
       `
@@ -53,8 +53,8 @@ export default {
     return {
       fields: [
         { key: "id" },
-        { key: "name" },
-        { key: "prodi" },
+        { key: "tahunAjar" },
+        { key: "semester" },
         { key: "action", label: "Aksi" }
       ],
       activePage: 1
@@ -75,22 +75,21 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "mahasiswa/" + `${item.id}` });
+      this.$router.replace({ path: "kalendar-akademik/" + `${item.id}` });
     }
   },
   computed: {
     visibleData() {
-      console.log(this.mahasiswas)
-      if(this.mahasiswas == null) return null
-      return this.mahasiswas.filter(mhs => {
-        let mahasiswa = mhs
-        Object.keys(mhs).forEach(function(attribute) {
-          if(mhs[attribute] != "" && mhs[attribute].startsWith('0x') && web3.utils.isHex(mhs[attribute])){
-            console.log(mhs[attribute])
-            mahasiswa[attribute] = web3.utils.hexToAscii(mhs[attribute])
+      if(this.kalendars == null) return null
+      return this.kalendars.filter(kalendar => {
+        let calendar = kalendar
+        Object.keys(kalendar).forEach(function(attribute) {
+          if(kalendar[attribute] != "" && attribute != "id" && kalendar[attribute].startsWith('0x') && web3.utils.isHex(kalendar[attribute])){
+            console.log(kalendar[attribute])
+            calendar[attribute] = web3.utils.hexToUtf8(kalendar[attribute])
           }
         })
-        return mahasiswa
+        return calendar
       })
     }
   }

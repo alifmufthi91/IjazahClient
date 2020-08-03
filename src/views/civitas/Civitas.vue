@@ -6,7 +6,7 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="accounts"
+            :items="visibleData"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
@@ -37,25 +37,22 @@
 import gql from "graphql-tag";
 
 export default {
-  name: "InfoMahasiswa",
-  //   apollo: {
-  //     accounts: gql`
-  //       query {
-  //         accounts {
-  //           id
-  //           name
-  //           verified
-  //           role
-  //         }
-  //       }
-  //     `
-  //   },
+  name: "InfoCivitas",
+    apollo: {
+      civitas: gql`
+        query {
+          civitas {
+            id
+            name
+          }
+        }
+      `
+    },
   data() {
     return {
       fields: [
-        { key: "NIP" },
-        { key: "Nama" },
-        { key: "Jabatan" },
+        { key: "id" },
+        { key: "name" },
         { key: "action", label: "Aksi" }
       ],
       activePage: 1
@@ -77,6 +74,22 @@ export default {
     },
     detailClicked(item) {
       this.$router.replace({ path: "civitas/" + `${item.id}` });
+    }
+  },
+  computed: {
+    visibleData() {
+      console.log(this.civitas)
+      if(this.civitas == null) return null
+      return this.civitas.filter(civita => {
+        let pegawai = civita
+        Object.keys(civita).forEach(function(attribute) {
+          if(civita[attribute] != "" && civita[attribute].startsWith('0x') && web3.utils.isHex(civita[attribute])){
+            console.log(civita[attribute])
+            pegawai[attribute] = web3.utils.hexToUtf8(civita[attribute])
+          }
+        })
+        return pegawai
+      })
     }
   }
 };

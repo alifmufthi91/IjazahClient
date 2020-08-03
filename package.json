@@ -24,7 +24,7 @@
     "@truffle/contract": "^4.2.12",
     "apollo-boost": "^0.4.9",
     "graphql": "^15.3.0",
-    "ipfs-http-client": "^44.3.0",
+    "ipfs-http-client": "^33.1.1",
     "regenerator-runtime": "^0.13.5",
     "vue": "~2.6.11",
     "vue-apollo": "^3.0.3",

@@ -150,7 +150,24 @@ export default {
   data() {
     return {
       fullName: null,
-      options: ["Dosen", "Admin", "Rektor"],
+      options: [
+        { 
+          value: 'mahasiswa', 
+          label: 'Mahasiswa'
+        }, 
+        { 
+          value: 'admin', 
+          label: 'Admin'
+        }, 
+        { 
+          value: 'dosen', 
+          label: 'Dosen'
+        },
+        { 
+          value: 'dikti', 
+          label: 'Dikti'
+        }
+      ],
       id: null,
       role: null,
       isMahasiswa: false,
@@ -168,9 +185,9 @@ export default {
         if (self.isMahasiswa) self.role = "mahasiswa";
         return AccountManager.methods
           .createAccount(
-            web3.utils.toHex(self.fullName),
-            web3.utils.toHex(self.id),
-            web3.utils.toHex(self.role)
+            web3.utils.utf8ToHex(self.fullName),
+            web3.utils.utf8ToHex(self.id),
+            web3.utils.utf8ToHex(self.role)
           )
           .send({ from: accounts[0] })
           .on("error", function(error, receipt) {
@@ -198,6 +215,7 @@ export default {
       this.confirmModal = false;
       if (confirm) {
         this.createAccount();
+        // console.log(this.fullName+this.role)
       }
     },
     showAlert: function(isSuccess) {

@@ -26,6 +26,22 @@ export default [
       },
       {
         _name: 'CSidebarNavTitle',
+        _children: ['Akademik']
+      },
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Kalendar Akademik',
+        route: '/kalendar-akademik',
+        icon: 'cil-puzzle',
+        items: [
+          {
+            name: 'Daftar Kalendar Akademik',
+            to: '/kalendar-akademik'
+          },
+        ]
+      },
+      {
+        _name: 'CSidebarNavTitle',
         _children: ['Accounts']
       },
       {
@@ -52,11 +68,11 @@ export default [
         items: [
           {
             name: 'Info Mahasiswa',
-            to: '/mahasiswa/list-info'
+            to: '/mahasiswa'
           },
           {
             name: 'Tambah Mahasiswa',
-            to: '/mahasiswa/tambah-mahasiswa'
+            to: '/mahasiswa/tambah'
           },
           {
             name: 'Antrian NINA',
@@ -72,11 +88,43 @@ export default [
         items: [
           {
             name: 'Info Civitas',
-            to: '/civitas/list-info'
+            to: '/civitas'
           },
           {
             name: 'Tambah Civitas',
-            to: '/civitas/tambah-civitas'
+            to: '/civitas/tambah'
+          }
+        ]
+      },
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Program Studi',
+        route: '/prodi',
+        icon: 'cil-puzzle',
+        items: [
+          {
+            name: 'Info Prodi',
+            to: '/prodi'
+          },
+          {
+            name: 'Tambah Prodi',
+            to: '/prodi/tambah'
+          }
+        ]
+      },
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Mata Kuliah',
+        route: '/matkul',
+        icon: 'cil-puzzle',
+        items: [
+          {
+            name: 'Daftar Mata Kuliah',
+            to: '/matkul'
+          },
+          {
+            name: 'Tambah Mata Kuliah',
+            to: '/matkul/tambah'
           }
         ]
       },
