@@ -101,10 +101,10 @@ export default {
       activePage: 1,
       confirmModal: false,
       selectedUser: {
-        id: null,
-        name: null,
+        id: String(),
+        name: String(),
         verified: null,
-        role: null
+        role: String()
       },
       verify: {
         mahasiswa: AccountManager.methods.verifyMahasiswa,

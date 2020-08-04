@@ -67,7 +67,7 @@ export default {
           return param
         }
         if(param.value != "" && param.key != "id" && web3.utils.isHex(param.value)){
-          param.value = web3.utils.hexToAscii(param.value)
+          param.value = web3.utils.hexToUtf8(param.value)
         }
         if (param.value == null || param.key == "__typename") {
           return null

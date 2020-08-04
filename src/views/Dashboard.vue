@@ -87,7 +87,7 @@ export default {
             console.log("Result is : " + result[0]);
             if (result) {
               self.user.address = result[0];
-              self.user.name = web3.utils.hexToAscii(result[2]);
+              self.user.name = web3.utils.hexToUtf8(result[2]);
               self.user.verified = result[1];
               self.isRegistered = true;
             }

@@ -149,7 +149,7 @@ export default {
   name: "RegisterCivitas",
   data() {
     return {
-      fullName: null,
+      fullName: String(),
       options: [
         { 
           value: 'mahasiswa', 
@@ -168,8 +168,8 @@ export default {
           label: 'Dikti'
         }
       ],
-      id: null,
-      role: null,
+      id: String(),
+      role: String(),
       isMahasiswa: false,
       confirmModal: false,
       successModal: false,
@@ -181,7 +181,7 @@ export default {
     createAccount: function() {
       let self = this;
       web3.eth.getAccounts().then(accounts => {
-        console.log(self.role);
+        console.log(web3.utils.utf8ToHex(self.id));
         if (self.isMahasiswa) self.role = "mahasiswa";
         return AccountManager.methods
           .createAccount(

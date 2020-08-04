@@ -72,7 +72,7 @@ export default {
   name: "RegisterDIKTI",
   data() {
     return {
-      fullName: null,
+      fullName: String(),
       confirmModal: false,
       successModal: false,
       dismissSuccess: 0,

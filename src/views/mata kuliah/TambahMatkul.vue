@@ -121,10 +121,10 @@ export default {
       dismissSuccess: 0,
       dismissFail: 0,
       matkul: {
-        nama: null,
+        nama: String(),
         idProdi: null,
-        kodeMatkul: null,
-        jumlahSKS: null,
+        kodeMatkul: String(),
+        jumlahSKS: String(),
       },
     };
   },

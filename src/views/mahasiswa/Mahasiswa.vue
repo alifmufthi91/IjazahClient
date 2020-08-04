@@ -87,7 +87,7 @@ export default {
         Object.keys(mhs).forEach(function(attribute) {
           if(mhs[attribute] != "" && mhs[attribute].startsWith('0x') && web3.utils.isHex(mhs[attribute])){
             console.log(mhs[attribute])
-            mahasiswa[attribute] = web3.utils.hexToAscii(mhs[attribute])
+            mahasiswa[attribute] = web3.utils.hexToUtf8(mhs[attribute])
           }
         })
         return mahasiswa

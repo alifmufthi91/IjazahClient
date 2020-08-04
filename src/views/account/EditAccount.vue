@@ -69,9 +69,9 @@ export default {
     return {
       usersOpened: null,
       user: {
-        name: null,
+        name: String(),
         verified: null,
-        address: null
+        address: String()
       },
       confirmModal: false
     };
@@ -95,7 +95,7 @@ export default {
       let self = this;
       web3.eth.getAccounts().then(accounts => {
         AccountManager.methods
-          .updateAccountName(web3.utils.toHex(self.user.name))
+          .updateAccountName(web3.utils.utf8ToHex(self.user.name))
           .send({ from: accounts[0] })
           .on("error", function(error, receipt) {
             console.log(error);
@@ -124,7 +124,7 @@ export default {
           .then(function(result) {
             if (result) {
               self.user.address = result[0];
-              self.user.name = web3.utils.hexToAscii(result[2]);
+              self.user.name = web3.utils.hexToUtf8(result[2]);
               self.user.verified = result[1] ? "Terverifikasi" : "Belum diverifikasi";
             }
           })

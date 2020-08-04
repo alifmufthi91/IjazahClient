@@ -103,7 +103,7 @@ export default {
       dismissSuccess: 0,
       dismissFail: 0,
       kalendarAkademik: {
-        tahunAjar: null,
+        tahunAjar: String(),
         ganjil: null,
       },
     };
