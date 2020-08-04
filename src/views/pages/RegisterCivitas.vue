@@ -164,8 +164,16 @@ export default {
           label: 'Dosen'
         },
         { 
-          value: 'dikti', 
-          label: 'Dikti'
+          value: 'pd2', 
+          label: 'PD II'
+        },
+		{ 
+          value: 'rektor', 
+          label: 'Rektor'
+        },
+		{ 
+          value: 'kajur', 
+          label: 'Kepala Jurusan'
         }
       ],
       id: String(),
