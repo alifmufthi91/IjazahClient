@@ -91,6 +91,7 @@ export default {
       return val.ganjil? 'Ganjil' : 'Genap'
     },
     hexToString(str) {
+      if(web3.utils.isHexStrict(str))
       return web3.utils.hexToUtf8(str)
     }
   }

@@ -57,7 +57,12 @@
           <CInput label="Alamat" horizontal readonly :value="selectedUser.id" />
           <CInput label="Name" horizontal readonly :value="hexToString(selectedUser.name)" />
           <CInput label="Status" horizontal readonly :value="getVerified(selectedUser.verified)" />
-          <CInput label="No. Induk" horizontal readonly :value="hexToString(selectedUser.nomorInduk)" />
+          <CInput
+            label="No. Induk"
+            horizontal
+            readonly
+            :value="hexToString(selectedUser.nomorInduk)"
+          />
           <CInput label="Role Diminta" horizontal readonly :value="hexToString(selectedUser.role)" />
           <CSelect
             label="Role"
@@ -116,7 +121,7 @@ export default {
         name: String(),
         verified: null,
         role: String(),
-        givenRole: String()
+        givenRole: String(),
       },
       verify: {
         mahasiswa: AccountManager.methods.verifyMahasiswa,
@@ -151,7 +156,7 @@ export default {
         {
           value: "kajur",
           label: "Kepala Jurusan",
-        }
+        },
       ],
     };
   },
@@ -166,14 +171,17 @@ export default {
     },
   },
   computed: {
-    jenisVerify(){
-      console.log('role :'+this.selectedUser.givenRole)
-      switch(this.selectedUser.givenRole){
-        case "mahasiswa": return "mahasiswa";
-        case "dikti": return "dikti";
-        default: return "civitas";
+    jenisVerify() {
+      console.log("role :" + this.selectedUser.givenRole);
+      switch (this.selectedUser.givenRole) {
+        case "mahasiswa":
+          return "mahasiswa";
+        case "dikti":
+          return "dikti";
+        default:
+          return "civitas";
       }
-    }
+    },
   },
   methods: {
     getBadge(status) {
@@ -201,21 +209,34 @@ export default {
     verifyAccount: function () {
       let self = this;
       web3.eth.getAccounts().then((accounts) => {
-        self.verify[self.jenisVerify](
-          self.selectedUser.id,
-          self.selectedUser.nomorInduk,
-          web3.utils.utf8ToHex(self.selectedUser.givenRole),
-          accounts[0]
-        )
-          .send({ from: accounts[0] })
-          .on("error", function (error, receipt) {
-            console.log(error);
-            self.goBack();
-          })
-          .on("receipt", function (receipt) {
-            console.log(receipt.contractAddress);
-            self.goBack();
-          });
+        if (self.selectedUser.givenRole == "mahasiswa") {
+          self.verify[self.jenisVerify](
+            self.selectedUser.id,
+            web3.utils.utf8ToHex(web3.utils.hexToUtf8(self.selectedUser.nomorInduk)),
+            accounts[0]
+          )
+            .send({ from: accounts[0] })
+            .on("error", function (error, receipt) {
+              console.log(error);
+            })
+            .on("receipt", function (receipt) {
+              console.log(receipt.contractAddress);
+            });
+        } else {
+          self.verify[self.jenisVerify](
+            self.selectedUser.id,
+            web3.utils.utf8ToHex(web3.utils.hexToUtf8(self.selectedUser.nomorInduk)),
+            web3.utils.utf8ToHex(self.selectedUser.givenRole),
+            accounts[0]
+          )
+            .send({ from: accounts[0] })
+            .on("error", function (error, receipt) {
+              console.log(error);
+            })
+            .on("receipt", function (receipt) {
+              console.log(receipt.contractAddress);
+            });
+        }
       });
     },
     openConfirmModal: function (user) {
@@ -223,8 +244,7 @@ export default {
       this.selectedUser = user;
     },
     hexToString(str) {
-      if(web3.utils.isHexStrict(str))
-      return web3.utils.hexToUtf8(str);
+      if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);
     },
   },
 };

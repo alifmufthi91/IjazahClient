@@ -102,6 +102,7 @@ export default {
       this.$router.replace({ path: "account/" + `${item.id}` });
     },
     hexToString(str) {
+      if(web3.utils.isHexStrict(str))
       return web3.utils.hexToUtf8(str);
     },
   },
