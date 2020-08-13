@@ -118,7 +118,7 @@
                     </CCard>
                   </CCol>
                 </CRow>
-                <CButton color="success" block @click="confirmModal = true">Create Account</CButton>
+                <CButton color="success" block @click="confirmModal = true">Buat Mahasiswa</CButton>
               </CForm>
             </CCardBody>
           </CCard>

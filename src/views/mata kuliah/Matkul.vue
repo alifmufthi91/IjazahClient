@@ -6,13 +6,23 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="visibleData"
+            :items="this.mataKuliahs"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
             @page-change="pageChange"
           >
+          <template #namaMatkul="data">
+              <td>
+                {{ hexToString(data.item.namaMatkul) }}
+              </td>
+            </template>
+            <template #timeCreated="data">
+              <td>
+                {{ timestampToDate(data.item.timeCreated) }}
+              </td>
+            </template>
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
@@ -76,25 +86,12 @@ export default {
     },
     detailClicked(item) {
       this.$router.replace({ path: "matkul/" + `${item.id}` });
-    }
-  },
-  computed: {
-    visibleData() {
-      if(this.mataKuliahs == null) return null
-      return this.mataKuliahs.filter(matkul => {
-        let course = matkul
-        Object.keys(matkul).forEach(function(attribute) {
-          if(matkul[attribute] != "" && attribute != "id" && web3.utils.isHex(matkul[attribute]) && matkul[attribute].startsWith('0x')){
-            console.log(matkul[attribute])
-            course[attribute] = web3.utils.hexToUtf8(matkul[attribute])
-          }
-          if(attribute == "timeCreated"){
-            console.log(matkul[attribute])
-            course[attribute] = new Date(matkul[attribute] * 1000)
-          }
-        })
-        return course
-      })
+    },
+    hexToString(str) {
+      return web3.utils.hexToUtf8(str)
+    },
+    timestampToDate(time) {
+      return new Date(time * 1000)
     }
   }
 };

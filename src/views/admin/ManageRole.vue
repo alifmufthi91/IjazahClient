@@ -6,13 +6,22 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="visibleData"
+            :items="this.accounts"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
             @page-change="pageChange"
           >
+            <template #name="data">
+              <td class="font-weight-bold">{{ hexToString(data.item.name) }}</td>
+            </template>
+            <template #role="data">
+              <td>{{ hexToString(data.item.role) }}</td>
+            </template>
+            <template #nomorInduk="data">
+              <td>{{ hexToString(data.item.nomorInduk) }}</td>
+            </template>
             <template #verified="data">
               <td>
                 <CBadge :color="getBadge(data.item.verified)">{{ getVerified(data.item.verified) }}</CBadge>
@@ -46,25 +55,25 @@ export default {
   apollo: {
     accounts: gql`
       query {
-        accounts(where:{ isDeleted:false }, orderBy:name) {
+        accounts(where: { isDeleted: false }, orderBy: name) {
           id
           name
           verified
           role
         }
       }
-    `
+    `,
   },
   data() {
     return {
       fields: [
-        { key: "name", label: "Name", _classes: "font-weight-bold" },
+        { key: "name", label: "Name" },
         { key: "id", label: "Alamat" },
         { key: "role" },
         { key: "verified", label: "Verified" },
-        { key: "action", label: "Aksi" }
+        { key: "action", label: "Aksi" },
       ],
-      activePage: 1
+      activePage: 1,
     };
   },
   watch: {
@@ -74,8 +83,8 @@ export default {
         if (route.query && route.query.page) {
           this.activePage = Number(route.query.page);
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     getBadge(status) {
@@ -91,22 +100,10 @@ export default {
     },
     detailClicked(item) {
       this.$router.replace({ path: "account/" + `${item.id}` });
-    }
+    },
+    hexToString(str) {
+      return web3.utils.hexToUtf8(str);
+    },
   },
-  computed: {
-    visibleData() {
-      if(this.accounts == null) return null
-      return this.accounts.filter(account => {
-        let akun = account
-        Object.keys(account).forEach(function(attribute) {
-          if(account[attribute] != "" && attribute != "id" && web3.utils.isHex(account[attribute]) && account[attribute].startsWith('0x')){
-            console.log(account[attribute])
-            akun[attribute] = web3.utils.hexToUtf8(account[attribute])
-          }
-        })
-        return akun
-      })
-    }
-  }
 };
 </script>

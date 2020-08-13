@@ -6,13 +6,23 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="visibleData"
+            :items="this.prodis"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
             @page-change="pageChange"
           >
+            <template #namaProdi="data">
+              <td>
+                {{ hexToString(data.item.namaProdi) }}
+              </td>
+            </template>
+            <template #namaJurusan="data">
+              <td>
+                {{ hexToString(data.item.namaJurusan) }}
+              </td>
+            </template>
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
@@ -38,26 +48,26 @@ import gql from "graphql-tag";
 
 export default {
   name: "InfoProdi",
-    apollo: {
-      prodis: gql`
-        query {
-          prodis {
-            id
-            namaProdi
-            namaJurusan
-          }
+  apollo: {
+    prodis: gql`
+      query {
+        prodis {
+          id
+          namaProdi
+          namaJurusan
         }
-      `
-    },
+      }
+    `,
+  },
   data() {
     return {
       fields: [
         { key: "id" },
         { key: "namaProdi" },
         { key: "namaJurusan" },
-        { key: "action", label: "Aksi" }
+        { key: "action", label: "Aksi" },
       ],
-      activePage: 1
+      activePage: 1,
     };
   },
   watch: {
@@ -67,8 +77,8 @@ export default {
         if (route.query && route.query.page) {
           this.activePage = Number(route.query.page);
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     pageChange(val) {
@@ -76,21 +86,9 @@ export default {
     },
     detailClicked(item) {
       this.$router.replace({ path: "prodi/" + `${item.id}` });
-    }
-  },
-  computed: {
-    visibleData() {
-      if(this.prodis == null) return null
-      return this.prodis.filter(prodi => {
-        let program = prodi
-        Object.keys(prodi).forEach(function(attribute) {
-          if(prodi[attribute] != "" && attribute != "id" && prodi[attribute].startsWith('0x') && web3.utils.isHex(prodi[attribute])){
-            console.log(prodi[attribute])
-            program[attribute] = web3.utils.hexToUtf8(prodi[attribute])
-          }
-        })
-        return program
-      })
+    },
+    hexToString(str) {
+      return web3.utils.hexToUtf8(str)
     }
   }
 };

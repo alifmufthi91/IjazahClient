@@ -45,6 +45,9 @@ export default {
     toKebabCase (str) {
       return str.replace(/([a-z])([A-Z0-9])/g, '$1-$2').toLowerCase()
     }
+  },
+  beforeMount() {
+    console.log(freeSet.cil3d[1])
   }
 }
 </script>

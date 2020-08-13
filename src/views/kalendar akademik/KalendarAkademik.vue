@@ -6,13 +6,23 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="visibleData"
+            :items="this.kalendarAkademiks"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
             @page-change="pageChange"
           >
+          <template #tahunAjar="data" >
+              <td class="font-weight-bold" >
+                {{ hexToString(data.item.tahunAjar) }}
+              </td>
+            </template>
+          <template #semester="data">
+              <td>
+                {{ semester(data.item) }}
+              </td>
+            </template>
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
@@ -39,7 +49,7 @@ import gql from "graphql-tag";
 export default {
   name: "InfoKalendarAkademik",
     apollo: {
-      kalendars: gql`
+      kalendarAkademiks: gql`
         query {
           kalendarAkademiks {
             id
@@ -76,21 +86,12 @@ export default {
     },
     detailClicked(item) {
       this.$router.replace({ path: "kalendar-akademik/" + `${item.id}` });
-    }
-  },
-  computed: {
-    visibleData() {
-      if(this.kalendars == null) return null
-      return this.kalendars.filter(kalendar => {
-        let calendar = kalendar
-        Object.keys(kalendar).forEach(function(attribute) {
-          if(kalendar[attribute] != "" && attribute != "id" && kalendar[attribute].startsWith('0x') && web3.utils.isHex(kalendar[attribute])){
-            console.log(kalendar[attribute])
-            calendar[attribute] = web3.utils.hexToUtf8(kalendar[attribute])
-          }
-        })
-        return calendar
-      })
+    },
+    semester(val){
+      return val.ganjil? 'Ganjil' : 'Genap'
+    },
+    hexToString(str) {
+      return web3.utils.hexToUtf8(str)
     }
   }
 };

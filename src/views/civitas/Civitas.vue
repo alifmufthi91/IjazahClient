@@ -6,23 +6,30 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="visibleData"
+            :items="this.civitas"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
             @page-change="pageChange"
           >
+            <template #id="data">
+              <td>{{ hexToString(data.item.id) }}</td>
+            </template>
+            <template #name="data">
+              <td>{{ hexToString(data.item.name) }}</td>
+            </template>
             <template #action="data">
               <td>
-                <CCol class="mb-3 mb-xl-0 text-center">
+                <CCol class="mb-3 mb-xl-0 text-right">
                   <CButton
                     color="primary"
                     class="mr-3"
                     size="sm"
                     @click="detailClicked(data.item)"
                   >Detail</CButton>
-                  <CButton color="success" class="mr-3" size="sm">Edit</CButton>
+                  <CButton color="info" class="mr-3" size="sm">Edit</CButton>
+                  <CButton color="success" class="mr-3" size="sm">Link</CButton>
                 </CCol>
               </td>
             </template>
@@ -38,24 +45,24 @@ import gql from "graphql-tag";
 
 export default {
   name: "InfoCivitas",
-    apollo: {
-      civitas: gql`
-        query {
-          civitas {
-            id
-            name
-          }
+  apollo: {
+    civitas: gql`
+      query {
+        civitas {
+          id
+          name
         }
-      `
-    },
+      }
+    `,
+  },
   data() {
     return {
       fields: [
         { key: "id" },
         { key: "name" },
-        { key: "action", label: "Aksi" }
+        { key: "action", label: "Aksi" },
       ],
-      activePage: 1
+      activePage: 1,
     };
   },
   watch: {
@@ -65,8 +72,8 @@ export default {
         if (route.query && route.query.page) {
           this.activePage = Number(route.query.page);
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     pageChange(val) {
@@ -74,23 +81,10 @@ export default {
     },
     detailClicked(item) {
       this.$router.replace({ path: "civitas/" + `${item.id}` });
-    }
+    },
+    hexToString(str) {
+      return web3.utils.hexToUtf8(str);
+    },
   },
-  computed: {
-    visibleData() {
-      console.log(this.civitas)
-      if(this.civitas == null) return null
-      return this.civitas.filter(civita => {
-        let pegawai = civita
-        Object.keys(civita).forEach(function(attribute) {
-          if(civita[attribute] != "" && civita[attribute].startsWith('0x') && web3.utils.isHex(civita[attribute])){
-            console.log(civita[attribute])
-            pegawai[attribute] = web3.utils.hexToUtf8(civita[attribute])
-          }
-        })
-        return pegawai
-      })
-    }
-  }
 };
 </script>

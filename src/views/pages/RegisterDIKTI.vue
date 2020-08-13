@@ -33,7 +33,7 @@
                     <CIcon name="cil-user" />
                   </template>
                 </CInput>
-                <CButton color="success" block @click="confirmModal = true">Create Account</CButton>
+                <CButton color="success" block @click="confirmModal = true">Buat Akun</CButton>
               </CForm>
             </CCardBody>
           </CCard>

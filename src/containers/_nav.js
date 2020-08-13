@@ -1,326 +1,377 @@
-export default [
-  {
-    _name: 'CSidebarNav',
-    _children: [
+const def = {
+  'def':
+    [
       {
-        _name: 'CSidebarNavItem',
-        name: 'Dashboard',
-        to: '/dashboard',
-        icon: 'cil-layers'
-      },
-      {
-        _name: 'CSidebarNavTitle',
-        _children: ['Theme']
-      },
-      {
-        _name: 'CSidebarNavItem',
-        name: 'Colors',
-        to: '/theme/colors',
-        icon: 'cil-drop'
-      },
-      {
-        _name: 'CSidebarNavItem',
-        name: 'Typography',
-        to: '/theme/typography',
-        icon: 'cil-pencil'
-      },
-      {
-        _name: 'CSidebarNavTitle',
-        _children: ['Akademik']
-      },
-      {
-        _name: 'CSidebarNavDropdown',
-        name: 'Kalendar Akademik',
-        route: '/kalendar-akademik',
-        icon: 'cil-puzzle',
-        items: [
+        _name: 'CSidebarNav',
+        _children: [
           {
-            name: 'Daftar Kalendar Akademik',
-            to: '/kalendar-akademik'
-          },
-        ]
-      },
-      {
-        _name: 'CSidebarNavTitle',
-        _children: ['Accounts']
-      },
-      {
-        _name: 'CSidebarNavItem',
-        name: 'Role Management',
-        to: '/accounts/management',
-		icon: 'cil-pencil'
-      },
-      {
-        _name: 'CSidebarNavItem',
-        name: 'Permintaan Role',
-        to: '/accounts/request',
-		icon: 'cil-pencil'
-      },
-      {
-        _name: 'CSidebarNavTitle',
-        _children: ['Perguruan Tinggi']
-      },
-      {
-        _name: 'CSidebarNavDropdown',
-        name: 'Mahasiswa',
-        route: '/mahasiswa',
-        icon: 'cil-puzzle',
-        items: [
-          {
-            name: 'Info Mahasiswa',
-            to: '/mahasiswa'
+            _name: 'CSidebarNavItem',
+            name: 'Dashboard',
+            to: '/dashboard',
+            icon: 'cil-home'
           },
           {
-            name: 'Tambah Mahasiswa',
-            to: '/mahasiswa/tambah'
+            _name: 'CSidebarNavTitle',
+            _children: ['Theme']
           },
           {
-            name: 'Antrian NINA',
-            to: '/mahasiswa/antrian-nina'
-          }
-        ]
-      },
-      {
-        _name: 'CSidebarNavDropdown',
-        name: 'Civitas',
-        route: '/civitas',
-        icon: 'cil-puzzle',
-        items: [
-          {
-            name: 'Info Civitas',
-            to: '/civitas'
+            _name: 'CSidebarNavItem',
+            name: 'Colors',
+            to: '/theme/colors',
+            icon: 'cil-drop'
           },
           {
-            name: 'Tambah Civitas',
-            to: '/civitas/tambah'
-          }
-        ]
-      },
-      {
-        _name: 'CSidebarNavDropdown',
-        name: 'Program Studi',
-        route: '/prodi',
-        icon: 'cil-puzzle',
-        items: [
-          {
-            name: 'Info Prodi',
-            to: '/prodi'
+            _name: 'CSidebarNavItem',
+            name: 'Typography',
+            to: '/theme/typography',
+            icon: 'cil-pencil'
           },
           {
-            name: 'Tambah Prodi',
-            to: '/prodi/tambah'
-          }
-        ]
-      },
-      {
-        _name: 'CSidebarNavDropdown',
-        name: 'Mata Kuliah',
-        route: '/matkul',
-        icon: 'cil-puzzle',
-        items: [
-          {
-            name: 'Daftar Mata Kuliah',
-            to: '/matkul'
+            _name: 'CSidebarNavTitle',
+            _children: ['Akademik']
           },
           {
-            name: 'Tambah Mata Kuliah',
-            to: '/matkul/tambah'
-          }
-        ]
-      },
-      {
-        _name: 'CSidebarNavTitle',
-        _children: ['Components']
-      },
-      {
-        _name: 'CSidebarNavDropdown',
-        name: 'Base',
-        route: '/base',
-        icon: 'cil-puzzle',
-        items: [
-          {
-            name: 'Breadcrumbs',
-            to: '/base/breadcrumbs'
+            _name: 'CSidebarNavDropdown',
+            name: 'Kalendar Akademik',
+            route: '/kalendar-akademik',
+            icon: 'cil-3d',
+            items: [
+              {
+                name: 'Daftar Kalendar Akademik',
+                to: '/kalendar-akademik'
+              },
+              {
+                name: 'Tambah Kalendar Akademik',
+                to: '/kalendar-akademik/tambah'
+              }
+            ]
           },
           {
-            name: 'Cards',
-            to: '/base/cards'
+            _name: 'CSidebarNavDropdown',
+            name: 'Semester',
+            route: '/semester',
+            icon: 'cil-3d',
+            items: [
+              {
+                name: 'Daftar Kalendar Akademik',
+                to: '/kalendar-akademik'
+              },
+              {
+                name: 'Tambah Semester',
+                to: '/semester/tambah'
+              }
+            ]
           },
           {
-            name: 'Carousels',
-            to: '/base/carousels'
+            _name: 'CSidebarNavDropdown',
+            name: 'Sertifikat',
+            route: '/sertifikat',
+            icon: 'cil-3d',
+            items: [
+              {
+                name: 'Tambah Sertifikat',
+                to: '/sertifikat/tambah'
+              }
+            ]
           },
           {
-            name: 'Collapses',
-            to: '/base/collapses'
+            _name: 'CSidebarNavTitle',
+            _children: ['Accounts']
           },
           {
-            name: 'Forms',
-            to: '/base/forms'
+            _name: 'CSidebarNavItem',
+            name: 'Role Management',
+            to: '/accounts/management',
+            icon: 'cil-pencil'
           },
           {
-            name: 'Jumbotrons',
-            to: '/base/jumbotrons'
+            _name: 'CSidebarNavItem',
+            name: 'Permintaan Role',
+            to: '/accounts/request',
+            icon: 'cil-pencil'
           },
           {
-            name: 'List Groups',
-            to: '/base/list-groups'
+            _name: 'CSidebarNavTitle',
+            _children: ['Perguruan Tinggi']
           },
           {
-            name: 'Navs',
-            to: '/base/navs'
+            _name: 'CSidebarNavDropdown',
+            name: 'Mahasiswa',
+            route: '/mahasiswa',
+            icon: 'cil-puzzle',
+            items: [
+              {
+                name: 'Info Mahasiswa',
+                to: '/mahasiswa'
+              },
+              {
+                name: 'Tambah Mahasiswa',
+                to: '/mahasiswa/tambah'
+              },
+              {
+                name: 'Antrian NINA',
+                to: '/mahasiswa/antrian-nina'
+              }
+            ]
           },
           {
-            name: 'Navbars',
-            to: '/base/navbars'
+            _name: 'CSidebarNavDropdown',
+            name: 'Civitas',
+            route: '/civitas',
+            icon: 'cil-puzzle',
+            items: [
+              {
+                name: 'Info Civitas',
+                to: '/civitas'
+              },
+              {
+                name: 'Tambah Civitas',
+                to: '/civitas/tambah'
+              }
+            ]
           },
           {
-            name: 'Paginations',
-            to: '/base/paginations'
+            _name: 'CSidebarNavDropdown',
+            name: 'Program Studi',
+            route: '/prodi',
+            icon: 'cil-puzzle',
+            items: [
+              {
+                name: 'Info Prodi',
+                to: '/prodi'
+              },
+              {
+                name: 'Tambah Prodi',
+                to: '/prodi/tambah'
+              }
+            ]
           },
           {
-            name: 'Popovers',
-            to: '/base/popovers'
+            _name: 'CSidebarNavDropdown',
+            name: 'Mata Kuliah',
+            route: '/matkul',
+            icon: 'cil-puzzle',
+            items: [
+              {
+                name: 'Daftar Mata Kuliah',
+                to: '/matkul'
+              },
+              {
+                name: 'Tambah Mata Kuliah',
+                to: '/matkul/tambah'
+              }
+            ]
           },
           {
-            name: 'Progress Bars',
-            to: '/base/progress-bars'
+            _name: 'CSidebarNavTitle',
+            _children: ['Components']
           },
           {
-            name: 'Switches',
-            to: '/base/switches'
+            _name: 'CSidebarNavDropdown',
+            name: 'Base',
+            route: '/base',
+            icon: 'cil-puzzle',
+            items: [
+              {
+                name: 'Breadcrumbs',
+                to: '/base/breadcrumbs'
+              },
+              {
+                name: 'Cards',
+                to: '/base/cards'
+              },
+              {
+                name: 'Carousels',
+                to: '/base/carousels'
+              },
+              {
+                name: 'Collapses',
+                to: '/base/collapses'
+              },
+              {
+                name: 'Forms',
+                to: '/base/forms'
+              },
+              {
+                name: 'Jumbotrons',
+                to: '/base/jumbotrons'
+              },
+              {
+                name: 'List Groups',
+                to: '/base/list-groups'
+              },
+              {
+                name: 'Navs',
+                to: '/base/navs'
+              },
+              {
+                name: 'Navbars',
+                to: '/base/navbars'
+              },
+              {
+                name: 'Paginations',
+                to: '/base/paginations'
+              },
+              {
+                name: 'Popovers',
+                to: '/base/popovers'
+              },
+              {
+                name: 'Progress Bars',
+                to: '/base/progress-bars'
+              },
+              {
+                name: 'Switches',
+                to: '/base/switches'
+              },
+              {
+                name: 'Tables',
+                to: '/base/tables'
+              },
+              {
+                name: 'Tabs',
+                to: '/base/tabs'
+              },
+              {
+                name: 'Tooltips',
+                to: '/base/tooltips'
+              }
+            ]
           },
           {
-            name: 'Tables',
-            to: '/base/tables'
-          },
-          {
-            name: 'Tabs',
-            to: '/base/tabs'
-          },
-          {
-            name: 'Tooltips',
-            to: '/base/tooltips'
-          }
-        ]
-      },
-      {
-        _name: 'CSidebarNavDropdown',
-        name: 'Buttons',
-        route: '/buttons',
-        icon: 'cil-cursor',
-        items: [
-          {
+            _name: 'CSidebarNavDropdown',
             name: 'Buttons',
-            to: '/buttons/standard-buttons'
+            route: '/buttons',
+            icon: 'cil-cursor',
+            items: [
+              {
+                name: 'Buttons',
+                to: '/buttons/standard-buttons'
+              },
+              {
+                name: 'Button Dropdowns',
+                to: '/buttons/dropdowns'
+              },
+              {
+                name: 'Button Groups',
+                to: '/buttons/button-groups'
+              },
+              {
+                name: 'Brand Buttons',
+                to: '/buttons/brand-buttons'
+              }
+            ]
           },
           {
-            name: 'Button Dropdowns',
-            to: '/buttons/dropdowns'
+            _name: 'CSidebarNavItem',
+            name: 'Charts',
+            to: '/charts',
+            icon: 'cil-chart-pie'
           },
           {
-            name: 'Button Groups',
-            to: '/buttons/button-groups'
+            _name: 'CSidebarNavDropdown',
+            name: 'Icons',
+            route: '/icons',
+            icon: 'cil-star',
+            items: [
+              {
+                name: 'CoreUI Icons',
+                to: '/icons/coreui-icons',
+                badge: {
+                  color: 'info',
+                  text: 'NEW'
+                }
+              },
+              {
+                name: 'Brands',
+                to: '/icons/brands'
+              },
+              {
+                name: 'Flags',
+                to: '/icons/flags'
+              }
+            ]
           },
           {
-            name: 'Brand Buttons',
-            to: '/buttons/brand-buttons'
-          }
-        ]
-      },
-      {
-        _name: 'CSidebarNavItem',
-        name: 'Charts',
-        to: '/charts',
-        icon: 'cil-chart-pie'
-      },
-      {
-        _name: 'CSidebarNavDropdown',
-        name: 'Icons',
-        route: '/icons',
-        icon: 'cil-star',
-        items: [
+            _name: 'CSidebarNavDropdown',
+            name: 'Notifications',
+            route: '/notifications',
+            icon: 'cil-bell',
+            items: [
+              {
+                name: 'Alerts',
+                to: '/notifications/alerts'
+              },
+              {
+                name: 'Badges',
+                to: '/notifications/badges'
+              },
+              {
+                name: 'Modals',
+                to: '/notifications/modals'
+              }
+            ]
+          },
           {
-            name: 'CoreUI Icons',
-            to: '/icons/coreui-icons',
+            _name: 'CSidebarNavItem',
+            name: 'Widgets',
+            to: '/widgets',
+            icon: 'cil-calculator',
             badge: {
-              color: 'info',
-              text: 'NEW'
+              color: 'primary',
+              text: 'NEW',
+              shape: 'pill'
             }
           },
           {
-            name: 'Brands',
-            to: '/icons/brands'
+            _name: 'CSidebarNavDivider',
+            _class: 'm-2'
           },
           {
-            name: 'Flags',
-            to: '/icons/flags'
+            _name: 'CSidebarNavTitle',
+            _children: ['Extras']
+          },
+          {
+            _name: 'CSidebarNavDropdown',
+            name: 'Pages',
+            route: '/pages',
+            icon: 'cil-star',
+            items: [
+              {
+                name: 'Login',
+                to: '/pages/login'
+              },
+              {
+                name: 'Register',
+                to: '/pages/register'
+              },
+              {
+                name: 'Error 404',
+                to: '/pages/404'
+              },
+              {
+                name: 'Error 500',
+                to: '/pages/500'
+              }
+            ]
           }
         ]
-      },
+      }
+    ],
+    'tes':
+    [
       {
-        _name: 'CSidebarNavDropdown',
-        name: 'Notifications',
-        route: '/notifications',
-        icon: 'cil-bell',
-        items: [
+        _name: 'CSidebarNav',
+        _children: [
           {
-            name: 'Alerts',
-            to: '/notifications/alerts'
-          },
-          {
-            name: 'Badges',
-            to: '/notifications/badges'
-          },
-          {
-            name: 'Modals',
-            to: '/notifications/modals'
-          }
-        ]
-      },
-      {
-        _name: 'CSidebarNavItem',
-        name: 'Widgets',
-        to: '/widgets',
-        icon: 'cil-calculator',
-        badge: {
-          color: 'primary',
-          text: 'NEW',
-          shape: 'pill'
-        }
-      },
-      {
-        _name: 'CSidebarNavDivider',
-        _class: 'm-2'
-      },
-      {
-        _name: 'CSidebarNavTitle',
-        _children: ['Extras']
-      },
-      {
-        _name: 'CSidebarNavDropdown',
-        name: 'Pages',
-        route: '/pages',
-        icon: 'cil-star',
-        items: [
-          {
-            name: 'Login',
-            to: '/pages/login'
-          },
-          {
-            name: 'Register',
-            to: '/pages/register'
-          },
-          {
-            name: 'Error 404',
-            to: '/pages/404'
-          },
-          {
-            name: 'Error 500',
-            to: '/pages/500'
+            _name: 'CSidebarNavItem',
+            name: 'Dashboard',
+            to: '/dashboard',
+            icon: 'cil-layers'
           }
         ]
       }
     ]
-  }
-]
+}
+
+export default def

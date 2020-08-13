@@ -66,7 +66,7 @@ export default {
           param.value = new Date(param.value * 1000)
           return param
         }
-        if(param.value != "" && param.key != "id" && web3.utils.isHex(param.value)){
+        if(param.value != "" && param.key != "id" && web3.utils.isHexStrict(param.value)){
           param.value = web3.utils.hexToUtf8(param.value)
         }
         if (param.value == null || param.key == "__typename") {

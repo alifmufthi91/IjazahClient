@@ -6,13 +6,22 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="visibleData"
+            :items="this.accounts"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
             @page-change="pageChange"
           >
+            <template #name="data">
+              <td class="font-weight-bold">{{ hexToString(data.item.name) }}</td>
+            </template>
+            <template #role="data">
+              <td>{{ hexToString(data.item.role) }}</td>
+            </template>
+            <template #nomorInduk="data">
+              <td>{{ hexToString(data.item.nomorInduk) }}</td>
+            </template>
             <template #verified="data">
               <td>
                 <CBadge :color="getBadge(data.item.verified)">{{ getVerified(data.item.verified) }}</CBadge>
@@ -40,21 +49,23 @@
       :no-close-on-backdrop="true"
       :centered="true"
       title="Konfirmasi"
-      size="sm"
+      md="8"
       color="success"
     >
       <CRow>
         <CCol>
           <CInput label="Alamat" horizontal readonly :value="selectedUser.id" />
-          <CInput label="Name" horizontal readonly :value="selectedUser.name" />
+          <CInput label="Name" horizontal readonly :value="hexToString(selectedUser.name)" />
           <CInput label="Status" horizontal readonly :value="getVerified(selectedUser.verified)" />
+          <CInput label="No. Induk" horizontal readonly :value="hexToString(selectedUser.nomorInduk)" />
+          <CInput label="Role Diminta" horizontal readonly :value="hexToString(selectedUser.role)" />
           <CSelect
-                label="Role"
-                horizontal
-                :options="selectOptions"
-                :value.sync="selectedUser.role"
-                placeholder="Please select"
-              />
+            label="Role"
+            horizontal
+            :options="selectOptions"
+            :value.sync="selectedUser.givenRole"
+            placeholder="Please select"
+          />
         </CCol>
       </CRow>
       <template #header>
@@ -78,7 +89,7 @@ export default {
   apollo: {
     accounts: gql`
       query {
-        accounts(where: { verified: false , isDeleted:false }, orderBy:name) {
+        accounts(where: { verified: false, isDeleted: false }, orderBy: name) {
           id
           name
           nomorInduk
@@ -86,17 +97,17 @@ export default {
           role
         }
       }
-    `
+    `,
   },
   data() {
     return {
       fields: [
-        { key: "name", label: "Name", _classes: "font-weight-bold" },
+        { key: "name", label: "Name" },
         { key: "id", label: "Alamat" },
         { key: "role" },
-        { key: "nomorInduk", label: "Nomor Induk"},
+        { key: "nomorInduk", label: "Nomor Induk" },
         { key: "verified", label: "Verified" },
-        { key: "action", label: "Aksi" }
+        { key: "action", label: "Aksi" },
       ],
       activePage: 1,
       confirmModal: false,
@@ -104,31 +115,44 @@ export default {
         id: String(),
         name: String(),
         verified: null,
-        role: String()
+        role: String(),
+        givenRole: String()
       },
       verify: {
         mahasiswa: AccountManager.methods.verifyMahasiswa,
         dikti: AccountManager.methods.verifyDIKTI,
-        civitas: AccountManager.methods.verifyCivitas
+        civitas: AccountManager.methods.verifyCivitas,
       },
       selectOptions: [
-        { 
-          value: 'mahasiswa', 
-          label: 'Mahasiswa'
-        }, 
-        { 
-          value: 'admin', 
-          label: 'Admin'
-        }, 
-        { 
-          value: 'dosen', 
-          label: 'Dosen'
+        {
+          value: "mahasiswa",
+          label: "Mahasiswa",
         },
-        { 
-          value: 'dikti', 
-          label: 'Dikti'
+        {
+          value: "admin",
+          label: "Admin",
+        },
+        {
+          value: "dosen",
+          label: "Dosen",
+        },
+        {
+          value: "dikti",
+          label: "Dikti",
+        },
+        {
+          value: "pd2",
+          label: "PD II",
+        },
+        {
+          value: "rektor",
+          label: "Rektor",
+        },
+        {
+          value: "kajur",
+          label: "Kepala Jurusan",
         }
-      ]
+      ],
     };
   },
   watch: {
@@ -138,6 +162,16 @@ export default {
         if (route.query && route.query.page) {
           this.activePage = Number(route.query.page);
         }
+      },
+    },
+  },
+  computed: {
+    jenisVerify(){
+      console.log('role :'+this.selectedUser.givenRole)
+      switch(this.selectedUser.givenRole){
+        case "mahasiswa": return "mahasiswa";
+        case "dikti": return "dikti";
+        default: return "civitas";
       }
     }
   },
@@ -156,53 +190,42 @@ export default {
     detailClicked(item) {
       this.$router.replace({ path: "account/" + `${item.id}` });
     },
-    confirmVerify: function(confirm) {
+    confirmVerify: function (confirm) {
       console.log(confirm);
       this.confirmModal = false;
       if (confirm) {
         this.verifyAccount();
-        console.log(this.selectedUser)
+        console.log(this.selectedUser);
       }
     },
-    verifyAccount: function() {
+    verifyAccount: function () {
       let self = this;
-      web3.eth.getAccounts().then(accounts => {
-        self.verify["civitas"](
+      web3.eth.getAccounts().then((accounts) => {
+        self.verify[self.jenisVerify](
           self.selectedUser.id,
-          web3.utils.utf8ToHex(self.selectedUser.nomorInduk),
-          web3.utils.utf8ToHex(self.selectedUser.role),
+          self.selectedUser.nomorInduk,
+          web3.utils.utf8ToHex(self.selectedUser.givenRole),
           accounts[0]
-          )
+        )
           .send({ from: accounts[0] })
-          .on("error", function(error, receipt) {
+          .on("error", function (error, receipt) {
             console.log(error);
             self.goBack();
           })
-          .on("receipt", function(receipt) {
+          .on("receipt", function (receipt) {
             console.log(receipt.contractAddress);
             self.goBack();
           });
       });
     },
-    openConfirmModal: function(user) {
-      this.confirmModal = true
-      this.selectedUser = user
-    }
+    openConfirmModal: function (user) {
+      this.confirmModal = true;
+      this.selectedUser = user;
+    },
+    hexToString(str) {
+      if(web3.utils.isHexStrict(str))
+      return web3.utils.hexToUtf8(str);
+    },
   },
-  computed: {
-    visibleData() {
-      if(this.accounts == null) return null
-      return this.accounts.filter(account => {
-        let akun = account
-        Object.keys(account).forEach(function(attribute) {
-          if(account[attribute] != "" && attribute != "id" && web3.utils.isHex(account[attribute]) && account[attribute].startsWith('0x')){
-            console.log(account[attribute])
-            akun[attribute] = web3.utils.hexToUtf8(account[attribute])
-          }
-        })
-        return akun
-      })
-    }
-  }
 };
 </script>

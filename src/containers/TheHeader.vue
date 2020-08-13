@@ -1,9 +1,10 @@
 <template>
   <CHeader fixed with-subheader light>
     <CToggler in-header class="ml-3 d-lg-none" @click="$store.commit('toggleSidebarMobile')" />
-    <CToggler in-header class="ml-3 d-md-down-none" @click="$store.commit('toggleSidebarDesktop')" />
+    <!-- <CToggler in-header class="ml-3 d-md-down-none" @click="$store.commit('toggleSidebarDesktop')" /> -->
     <CHeaderBrand class="mx-auto d-lg-none" to="/">
-      <CIcon name="logo" height="48" alt="Logo" />
+      <h4 color="bg-primary" class="c-sidebar-brand-full">IjazahClient</h4>
+      <!-- <CIcon name="logo" height="48" alt="Logo" /> -->
     </CHeaderBrand>
     <CHeaderNav class="d-md-down-none mr-auto">
       <CHeaderNavItem class="px-3">
@@ -46,7 +47,7 @@ import TheHeaderDropdownAccnt from "./TheHeaderDropdownAccnt";
 export default {
   name: "TheHeader",
   components: {
-    TheHeaderDropdownAccnt
-  }
+    TheHeaderDropdownAccnt,
+  },
 };
 </script>

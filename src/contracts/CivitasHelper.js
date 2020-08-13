@@ -1,5 +1,5 @@
 import web3 from '@/js/web3';
-const address = '0x0c71fb1ae02aaf2fa124003ac72a1948be6e4317';
+const address = '0x6bbfa1d7b8784235ba227f3dee3610019f26742a';
 const abi =
 [
 	{
@@ -206,6 +206,62 @@ const abi =
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "bytes21",
+				"name": "_nip",
+				"type": "bytes21"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_fullName",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_ipfsHash",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bool",
+				"name": "_isDosen",
+				"type": "bool"
+			}
+		],
+		"name": "createCivitas",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes12",
+				"name": "_nim",
+				"type": "bytes12"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_fullName",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_ipfsHash",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_prodi",
+				"type": "bytes"
+			}
+		],
+		"name": "createMahasiswa",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -241,6 +297,79 @@ const abi =
 		],
 		"name": "DosenAdded",
 		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "ID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes21",
+				"name": "nip",
+				"type": "bytes21"
+			},
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "status",
+				"type": "bool"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timeUpdated",
+				"type": "uint256"
+			}
+		],
+		"name": "DosenStatusChanged",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_address",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes21",
+				"name": "_nip",
+				"type": "bytes21"
+			}
+		],
+		"name": "linkCivitasAccount",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_address",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes12",
+				"name": "_nim",
+				"type": "bytes12"
+			}
+		],
+		"name": "linkMahasiswaAccount",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -418,6 +547,45 @@ const abi =
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "unlinkCivitasAccount",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "unlinkMahasiswaAccount",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newAddress",
+				"type": "address"
+			}
+		],
+		"name": "updateAccountManager",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "bytes21",
 				"name": "_nip",
 				"type": "bytes21"
@@ -429,16 +597,29 @@ const abi =
 			},
 			{
 				"internalType": "bytes",
-				"name": "_ipfsHash",
+				"name": "_newIpfsHash",
 				"type": "bytes"
+			}
+		],
+		"name": "updateCivitasData",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
 			},
 			{
 				"internalType": "bool",
-				"name": "_isDosen",
+				"name": "status",
 				"type": "bool"
 			}
 		],
-		"name": "createCivitas",
+		"name": "updateDosenStatus",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -457,18 +638,68 @@ const abi =
 			},
 			{
 				"internalType": "bytes",
-				"name": "_ipfsHash",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_prodi",
+				"name": "_newIpfsHash",
 				"type": "bytes"
 			}
 		],
-		"name": "createMahasiswa",
+		"name": "updateMahasiswaData",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes12",
+				"name": "_oldNIM",
+				"type": "bytes12"
+			},
+			{
+				"internalType": "bytes12",
+				"name": "_newNIM",
+				"type": "bytes12"
+			}
+		],
+		"name": "updateNIMMahasiswa",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes21",
+				"name": "_oldNIP",
+				"type": "bytes21"
+			},
+			{
+				"internalType": "bytes21",
+				"name": "_newNIP",
+				"type": "bytes21"
+			}
+		],
+		"name": "updateNIPCivitas",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "dosenAktif",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -560,163 +791,58 @@ const abi =
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_address",
-				"type": "address"
-			},
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "getNIPDosen",
+		"outputs": [
 			{
 				"internalType": "bytes21",
-				"name": "_nip",
+				"name": "",
 				"type": "bytes21"
-			},
-			{
-				"internalType": "bytes9",
-				"name": "_role",
-				"type": "bytes9"
 			}
 		],
-		"name": "linkCivitasAccount",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_address",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes12",
-				"name": "_nim",
-				"type": "bytes12"
-			}
-		],
-		"name": "linkMahasiswaAccount",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "unlinkCivitasAccount",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "unlinkMahasiswaAccount",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newAddress",
-				"type": "address"
-			}
-		],
-		"name": "updateAccountManager",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "bytes21",
-				"name": "_nip",
+				"name": "",
 				"type": "bytes21"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "_fullName",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_newIpfsHash",
-				"type": "bytes"
 			}
 		],
-		"name": "updateCivitasData",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "isCivitasExist",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "bytes12",
-				"name": "_nim",
-				"type": "bytes12"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "_fullName",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_newIpfsHash",
-				"type": "bytes"
-			}
-		],
-		"name": "updateMahasiswaData",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes12",
-				"name": "_oldNIM",
-				"type": "bytes12"
-			},
-			{
-				"internalType": "bytes12",
-				"name": "_newNIM",
+				"name": "",
 				"type": "bytes12"
 			}
 		],
-		"name": "updateNIMMahasiswa",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+		"name": "isMahasiswaExist",
+		"outputs": [
 			{
-				"internalType": "bytes21",
-				"name": "_oldNIP",
-				"type": "bytes21"
-			},
-			{
-				"internalType": "bytes21",
-				"name": "_newNIP",
-				"type": "bytes21"
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
 			}
 		],
-		"name": "updateNIPCivitas",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	}
 ];

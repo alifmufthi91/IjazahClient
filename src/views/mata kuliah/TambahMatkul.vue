@@ -44,13 +44,6 @@
                       invalid-feedback="Data tidak boleh kosong."
                       :value.sync="matkul.kodeMatkul"
                     />
-                    <CSelect
-                      label="Jumlah SKS"
-                      :options="sksOptions"
-                      placeholder="Pilih Jumlah"
-                      :value.sync="matkul.jumlahSKS"
-                      required
-                    />
                   </CCol>
                 </CRow>
               </CForm>
@@ -123,8 +116,7 @@ export default {
       matkul: {
         nama: String(),
         idProdi: null,
-        kodeMatkul: String(),
-        jumlahSKS: String(),
+        kodeMatkul: String()
       },
     };
   },
@@ -135,15 +127,9 @@ export default {
         this.prodis.forEach(prodi => {
             arrProdi.push({'label':web3.utils.hexToUtf8(prodi.namaProdi),'value':prodi.id})
         });
+        arrProdi.push({'label':'Umum','value':null})
         console.log(arrProdi)
         return arrProdi
-    },
-    sksOptions() {
-        let arrSKS = []
-        for(let i=1; i<25; i++){
-            arrSKS.push(i)
-        }
-        return arrSKS
     }
   },
   methods: {

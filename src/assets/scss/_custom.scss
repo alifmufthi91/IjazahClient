@@ -3,3 +3,11 @@
 .c-app {
 	background-color:$bg-color;
 }
+
+.was-validated .form-control:valid, .form-control.is-valid {
+    background-image: none;
+}
+
+.was-validated .form-control:invalid, .form-control.is-invalid{
+    background-image: none;
+}

@@ -89,13 +89,19 @@ const Matkul = () => import('@/views/mata kuliah/Matkul')
 const TambahKalendarAkademik = () => import('@/views/kalendar akademik/TambahKalendarAkademik')
 const KalendarAkademik = () => import('@/views/kalendar akademik/KalendarAkademik')
 
+// Views - Semester
+const TambahSemester = () => import('@/views/semester/TambahSemester')
+
+//Views - Sertifikat
+const TambahSertifikat = () => import('@/views/sertifikat/TambahSertifikat')
+
 Vue.use(Router)
 
 function configRoutes () {
   return [
     {
       path: '/',
-      redirect: "/get-started",
+      redirect: "/dashboard",
       name: 'Home',
       component: TheContainer,
       children: [
@@ -174,7 +180,7 @@ function configRoutes () {
                 label: 'Mahasiswa Details'
               },
               name: 'Detail Mahasiswa',
-              component: AccountDetail
+              component: null
             }
           ]
         },
@@ -206,7 +212,7 @@ function configRoutes () {
                 label: 'Civitas Details'
               },
               name: 'Detail Civitas',
-              component: AccountDetail
+              component: null
             }
           ]
         },
@@ -231,14 +237,6 @@ function configRoutes () {
               path: 'tambah',
               name: 'Tambah Prodi',
               component: TambahProdi
-            },
-            {
-              path: 'civitas/:id',
-              meta: {
-                label: 'Civitas Details'
-              },
-              name: 'Detail Civitas',
-              component: AccountDetail
             }
           ]
         },
@@ -263,14 +261,6 @@ function configRoutes () {
               path: 'tambah',
               name: 'Tambah Mata Kuliah',
               component: TambahMatkul
-            },
-            {
-              path: 'civitas/:id',
-              meta: {
-                label: 'Civitas Details'
-              },
-              name: 'Detail Civitas',
-              component: AccountDetail
             }
           ]
         },
@@ -295,15 +285,47 @@ function configRoutes () {
               path: 'tambah',
               name: 'Tambah Kalendar Akademik',
               component: TambahKalendarAkademik
-            },
-            {
-              path: 'civitas/:id',
-              meta: {
-                label: 'Civitas Details'
-              },
-              name: 'Detail Civitas',
-              component: AccountDetail
             }
+          ]
+        },
+        {
+          path: 'semester',
+          redirect: '/semester',
+          meta: {
+            label: 'Semester'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: 'tambah',
+              name: 'Tambah Semester',
+              component: TambahSemester
+            },
+            
+          ]
+        },
+        {
+          path: 'sertifikat',
+          redirect: '/sertifikat',
+          meta: {
+            label: 'Sertifikat'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: 'tambah',
+              name: 'Tambah Sertifikat',
+              component: TambahSertifikat
+            },
+            
           ]
         },
         {
@@ -601,7 +623,7 @@ router.beforeEach((to,from,next) => {
         .call({ from: accounts[0] })
         .then(function(result) {
           console.log("Result is : " + result[1]);
-          if(!result[1]) next('/')
+          if(!result[1]) next('/get-started')
           else next()
         })
     })

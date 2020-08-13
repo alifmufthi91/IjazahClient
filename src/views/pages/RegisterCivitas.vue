@@ -71,7 +71,7 @@
                     <CIcon name="cil-user" />
                   </template>
                 </CInput>
-                <CButton color="success" block @click="confirmModal = true">Create Account</CButton>
+                <CButton color="success" block @click="confirmModal = true">Buat Akun</CButton>
               </CForm>
               <CForm v-show="!isMahasiswa">
                 <h1>Daftar Civitas Polban</h1>
@@ -107,10 +107,10 @@
                   horizontal
                   :options="options"
                   placeholder="Silahkan Pilih Role"
-                  :value.sync=role
+                  :value.sync="role"
                   required
                 />
-                <CButton color="success" block @click="confirmModal = true">Create Account</CButton>
+                <CButton color="success" block @click="confirmModal = true">Buat Akun</CButton>
               </CForm>
             </CCardBody>
           </CCard>
@@ -151,30 +151,30 @@ export default {
     return {
       fullName: String(),
       options: [
-        { 
-          value: 'mahasiswa', 
-          label: 'Mahasiswa'
-        }, 
-        { 
-          value: 'admin', 
-          label: 'Admin'
-        }, 
-        { 
-          value: 'dosen', 
-          label: 'Dosen'
+        {
+          value: "mahasiswa",
+          label: "Mahasiswa",
         },
-        { 
-          value: 'pd2', 
-          label: 'PD II'
+        {
+          value: "admin",
+          label: "Admin",
         },
-		{ 
-          value: 'rektor', 
-          label: 'Rektor'
+        {
+          value: "dosen",
+          label: "Dosen",
         },
-		{ 
-          value: 'kajur', 
-          label: 'Kepala Jurusan'
-        }
+        {
+          value: "pd2",
+          label: "PD II",
+        },
+        {
+          value: "rektor",
+          label: "Rektor",
+        },
+        {
+          value: "kajur",
+          label: "Kepala Jurusan",
+        },
       ],
       id: String(),
       role: String(),
@@ -182,13 +182,13 @@ export default {
       confirmModal: false,
       successModal: false,
       dismissSuccess: 0,
-      dismissFail: 0
+      dismissFail: 0,
     };
   },
   methods: {
-    createAccount: function() {
+    createAccount: function () {
       let self = this;
-      web3.eth.getAccounts().then(accounts => {
+      web3.eth.getAccounts().then((accounts) => {
         console.log(web3.utils.utf8ToHex(self.id));
         if (self.isMahasiswa) self.role = "mahasiswa";
         return AccountManager.methods
@@ -198,11 +198,11 @@ export default {
             web3.utils.utf8ToHex(self.role)
           )
           .send({ from: accounts[0] })
-          .on("error", function(error, receipt) {
+          .on("error", function (error, receipt) {
             console.log(error);
             self.showAlert(false);
           })
-          .on("receipt", function(receipt) {
+          .on("receipt", function (receipt) {
             console.log(receipt.contractAddress);
             self.showAlert(true);
           });
@@ -218,7 +218,7 @@ export default {
       if (val == null || !val.match(letters)) return false;
       else return val ? val.length >= 1 && val.length <= 21 : false;
     },
-    confirmRegister: function(confirm) {
+    confirmRegister: function (confirm) {
       console.log(confirm);
       this.confirmModal = false;
       if (confirm) {
@@ -226,13 +226,13 @@ export default {
         // console.log(this.fullName+this.role)
       }
     },
-    showAlert: function(isSuccess) {
+    showAlert: function (isSuccess) {
       if (isSuccess) {
         this.dismissSuccess = 5;
       } else {
         this.dismissFail = 5;
       }
-    }
-  }
+    },
+  },
 };
 </script>

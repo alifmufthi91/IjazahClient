@@ -6,13 +6,19 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="visibleData"
+            :items="this.mahasiswas"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
             @page-change="pageChange"
           >
+            <template #name="data">
+              <td>{{ hexToString(data.item.name) }}</td>
+            </template>
+            <template #prodi="data">
+              <td>{{ hexToString(data.item.prodi) }}</td>
+            </template>
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
@@ -38,26 +44,26 @@ import gql from "graphql-tag";
 
 export default {
   name: "InfoMahasiswa",
-    apollo: {
-      mahasiswas: gql`
-        query {
-          mahasiswas {
-            id
-            name
-            prodi
-          }
+  apollo: {
+    mahasiswas: gql`
+      query {
+        mahasiswas {
+          id
+          name
+          prodi
         }
-      `
-    },
+      }
+    `,
+  },
   data() {
     return {
       fields: [
         { key: "id" },
         { key: "name" },
         { key: "prodi" },
-        { key: "action", label: "Aksi" }
+        { key: "action", label: "Aksi" },
       ],
-      activePage: 1
+      activePage: 1,
     };
   },
   watch: {
@@ -67,8 +73,8 @@ export default {
         if (route.query && route.query.page) {
           this.activePage = Number(route.query.page);
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     pageChange(val) {
@@ -76,23 +82,10 @@ export default {
     },
     detailClicked(item) {
       this.$router.replace({ path: "mahasiswa/" + `${item.id}` });
-    }
+    },
+    hexToString(str) {
+      return web3.utils.hexToUtf8(str);
+    },
   },
-  computed: {
-    visibleData() {
-      console.log(this.mahasiswas)
-      if(this.mahasiswas == null) return null
-      return this.mahasiswas.filter(mhs => {
-        let mahasiswa = mhs
-        Object.keys(mhs).forEach(function(attribute) {
-          if(mhs[attribute] != "" && mhs[attribute].startsWith('0x') && web3.utils.isHex(mhs[attribute])){
-            console.log(mhs[attribute])
-            mahasiswa[attribute] = web3.utils.hexToUtf8(mhs[attribute])
-          }
-        })
-        return mahasiswa
-      })
-    }
-  }
 };
 </script>

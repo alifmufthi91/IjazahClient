@@ -117,7 +117,7 @@
                     </CCard>
                   </CCol>
                 </CRow>
-                <CButton color="success" block @click="confirmModal = true">Create Account</CButton>
+                <CButton color="success" block @click="confirmModal = true">Buat Civitas</CButton>
               </CForm>
             </CCardBody>
           </CCard>
@@ -203,7 +203,7 @@ export default {
                 web3.utils.utf8ToHex(this.civitas.nip),
                 web3.utils.utf8ToHex(this.civitas.nama),
                 web3.utils.utf8ToHex(hash),
-                web3.utils.utf8ToHex(this.civitas.isDosen)
+                this.civitas.isDosen
               )
               .send({ from: accounts[0] })
               .on("error", function (error, receipt) {
