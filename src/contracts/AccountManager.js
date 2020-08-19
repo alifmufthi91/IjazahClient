@@ -1,5 +1,5 @@
 import web3 from '@/js/web3';
-const address = '0x04c039a70dff9b22aebb068a5e5b087cf8360c75';
+const address = '0xc368b9d0149aaa666ab2e1d533ca4b8f5394b4f3';
 const abi =
 [
 	{
@@ -613,6 +613,25 @@ const abi =
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "isRegistered",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "_address",
 				"type": "address"
 			},
@@ -681,6 +700,25 @@ const abi =
 		"name": "revokeRole",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes9",
+				"name": "",
+				"type": "bytes9"
+			}
+		],
+		"name": "roleToBytes32",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{

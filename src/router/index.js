@@ -65,8 +65,8 @@ const ManageRole = () => import('@/views/admin/ManageRole')
 const RoleRequest = () => import('@/views/admin/RoleRequest')
 
 // Views - Account
-const AccountDetail= () => import('@/views/account/Account')
-const EditAccount= () => import('@/views/account/EditAccount')
+const AccountDetail = () => import('@/views/account/Account')
+const EditAccount = () => import('@/views/account/EditAccount')
 
 // Views - Mahasiswa
 const Mahasiswa = () => import('@/views/mahasiswa/Mahasiswa')
@@ -97,7 +97,7 @@ const TambahSertifikat = () => import('@/views/sertifikat/TambahSertifikat')
 
 Vue.use(Router)
 
-function configRoutes () {
+function configRoutes() {
   return [
     {
       path: '/',
@@ -301,11 +301,16 @@ function configRoutes () {
           },
           children: [
             {
+              path: '',
+              name: 'Daftar Semester',
+              component: KalendarAkademik
+            },
+            {
               path: 'tambah',
               name: 'Tambah Semester',
               component: TambahSemester
             },
-            
+
           ]
         },
         {
@@ -321,11 +326,16 @@ function configRoutes () {
           },
           children: [
             {
+              path: '',
+              name: 'Daftar Sertifikat',
+              component: KalendarAkademik
+            },
+            {
               path: 'tambah',
               name: 'Tambah Sertifikat',
               component: TambahSertifikat
             },
-            
+
           ]
         },
         {
@@ -333,7 +343,7 @@ function configRoutes () {
           redirect: '/theme/colors',
           name: 'Theme',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -389,7 +399,7 @@ function configRoutes () {
           redirect: '/base/cards',
           name: 'Base',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -479,7 +489,7 @@ function configRoutes () {
           redirect: '/buttons/standard-buttons',
           name: 'Buttons',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -509,7 +519,7 @@ function configRoutes () {
           redirect: '/icons/coreui-icons',
           name: 'CoreUI Icons',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -534,7 +544,7 @@ function configRoutes () {
           redirect: '/notifications/alerts',
           name: 'Notifications',
           component: {
-            render (c) { return c('router-view') }
+            render(c) { return c('router-view') }
           },
           children: [
             {
@@ -561,7 +571,7 @@ function configRoutes () {
       redirect: '/pages/404',
       name: 'Pages',
       component: {
-        render (c) { return c('router-view') }
+        render(c) { return c('router-view') }
       },
       children: [
         {
@@ -596,7 +606,7 @@ function configRoutes () {
       component: GetStarted
     },
     {
-      path :'*',
+      path: '*',
       name: 'Page404',
       component: Page404
     }
@@ -610,43 +620,27 @@ const router = new Router({
   routes: configRoutes()
 })
 
-router.beforeEach((to,from,next) => {
-  switch(to.name){
-    case 'Getting Started': next();break;
-    case 'Register Civitas': next();break;
-    case 'Register DIKTI': next();break;
-    case 'Page404': next();break;
-    case 'Page500': next();break;
-    default : web3.eth.getAccounts().then(accounts => {
+router.beforeEach((to, from, next) => {
+  switch (to.name) {
+    case 'Getting Started': next(); break;
+    case 'Register Civitas': next(); break;
+    case 'Register DIKTI': next(); break;
+    case 'Page404': next(); break;
+    case 'Page500': next(); break;
+    default: web3.eth.getAccounts().then(accounts => {
+      if (accounts.length < 1) next('/get-started')
       AccountManager.methods
         .getAccount(accounts[0])
         .call({ from: accounts[0] })
-        .then(function(result) {
+        .then(function (result) {
           console.log("Result is : " + result[1]);
-          if(!result[1]) next('/get-started')
+          if (!result[1]) next('/get-started')
           else next()
         })
     })
   }
 })
 
-// router.afterEach((to, from) => {
-//   switch(to.name){
-//     case 'Getting Started': next();break;
-//     case 'Register Civitas': next();break;
-//     case 'Register DIKTI': next();break;
-//     case 'Page404': next();break;
-//     case 'Page500': next();break;
-//     default : web3.eth.getAccounts().then(accounts => {
-//       AccountManager.methods
-//         .getAccount(accounts[0])
-//         .call({ from: accounts[0] })
-//         .then(function(result) {
-//           console.log("Result is : " + result[1]);
-//           if(!result[1]) router.push('')
-//         })
-//     })
-//   }
-// })
+
 
 export default router

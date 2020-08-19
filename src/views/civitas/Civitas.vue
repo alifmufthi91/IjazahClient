@@ -134,6 +134,9 @@ export default {
         civitas {
           id
           name
+          linkedAccount{
+            id
+          }
         }
       }
     `,
@@ -267,7 +270,8 @@ export default {
       }
     },
     getAccountById() {
-      console.log(this.selectedCivitas.id);
+      this.accountOptions = [];
+      console.log(this.selectedCivitas);
       this.$apollo
         .query({
           query: GET_ACCOUNTS,

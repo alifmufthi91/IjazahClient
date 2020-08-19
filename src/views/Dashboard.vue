@@ -140,6 +140,7 @@ export default {
   },
   beforeMount() {
     web3.eth.getAccounts().then((accounts) => {
+      if(accounts.length < 1) return false
       this.getAccount(accounts);
       this.getCurrentCalendar(accounts);
     });

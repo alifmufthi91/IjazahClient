@@ -286,6 +286,7 @@ export default {
       }
     },
     getAccountById() {
+      this.accountOptions = [];
       console.log(this.selectedMhs.id);
       this.$apollo
         .query({

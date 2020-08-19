@@ -1,5 +1,5 @@
 import web3 from '@/js/web3';
-const address = '0x994aa2dad0f4e6551690c6b02f02c398623223b5';
+const address = '0x5d658f5ad22cf59d582fd288096ead47f660fc89';
 const abi = [
 	{
 		"inputs": [
@@ -714,6 +714,30 @@ const abi = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "idAmpu",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "idDosen",
+				"type": "uint256"
+			}
+		],
+		"name": "isDosenPengampu",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "bytes9",
 				"name": "_tahunAjar",
 				"type": "bytes9"
@@ -725,6 +749,25 @@ const abi = [
 			}
 		],
 		"name": "isKalendarAkademikExist",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "isStatusSemesterOpen",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -866,7 +909,7 @@ const abi = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-]
+];
 // THE ABI END HERE
 const instance = new web3.eth.Contract(abi, address);
 

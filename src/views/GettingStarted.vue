@@ -102,6 +102,7 @@ export default {
     getAccount() {
       let self = this;
       web3.eth.getAccounts().then(accounts => {
+        if(accounts.length < 1) return false
         AccountManager.methods
           .getAccount(accounts[0])
           .call({ from: accounts[0] })
