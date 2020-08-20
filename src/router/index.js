@@ -91,9 +91,11 @@ const KalendarAkademik = () => import('@/views/kalendar akademik/KalendarAkademi
 
 // Views - Semester
 const TambahSemester = () => import('@/views/semester/TambahSemester')
+const Semester = () => import('@/views/semester/Semester')
 
 //Views - Sertifikat
 const TambahSertifikat = () => import('@/views/sertifikat/TambahSertifikat')
+const Sertifikat = () => import('@/views/sertifikat/Sertifikat')
 
 Vue.use(Router)
 
@@ -303,7 +305,7 @@ function configRoutes() {
             {
               path: '',
               name: 'Daftar Semester',
-              component: KalendarAkademik
+              component: Semester
             },
             {
               path: 'tambah',
@@ -328,7 +330,7 @@ function configRoutes() {
             {
               path: '',
               name: 'Daftar Sertifikat',
-              component: KalendarAkademik
+              component: Sertifikat
             },
             {
               path: 'tambah',

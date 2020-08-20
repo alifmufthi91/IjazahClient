@@ -53,8 +53,8 @@ const def = {
             icon: 'cil-3d',
             items: [
               {
-                name: 'Daftar Kalendar Akademik',
-                to: '/kalendar-akademik'
+                name: 'Daftar Semester',
+                to: '/semester'
               },
               {
                 name: 'Tambah Semester',
@@ -69,6 +69,9 @@ const def = {
             icon: 'cil-3d',
             items: [
               {
+                name: 'Daftar Sertifikat',
+                to: '/sertifikat'
+              },{
                 name: 'Tambah Sertifikat',
                 to: '/sertifikat/tambah'
               }
@@ -355,6 +358,159 @@ const def = {
               }
             ]
           }
+        ]
+      }
+    ],
+    'admin':
+    [
+      {
+        _name: 'CSidebarNav',
+        _children: [
+          {
+            _name: 'CSidebarNavItem',
+            name: 'Dashboard',
+            to: '/dashboard',
+            icon: 'cil-home'
+          },
+          {
+            _name: 'CSidebarNavTitle',
+            _children: ['Akademik']
+          },
+          {
+            _name: 'CSidebarNavDropdown',
+            name: 'Kalendar Akademik',
+            route: '/kalendar-akademik',
+            icon: 'cil-3d',
+            items: [
+              {
+                name: 'Daftar Kalendar Akademik',
+                to: '/kalendar-akademik'
+              },
+              {
+                name: 'Tambah Kalendar Akademik',
+                to: '/kalendar-akademik/tambah'
+              }
+            ]
+          },
+          {
+            _name: 'CSidebarNavDropdown',
+            name: 'Semester',
+            route: '/semester',
+            icon: 'cil-3d',
+            items: [
+              {
+                name: 'Daftar Semester',
+                to: '/semester'
+              },
+              {
+                name: 'Tambah Semester',
+                to: '/semester/tambah'
+              }
+            ]
+          },
+          {
+            _name: 'CSidebarNavDropdown',
+            name: 'Sertifikat',
+            route: '/sertifikat',
+            icon: 'cil-3d',
+            items: [
+              {
+                name: 'Daftar Sertifikat',
+                to: '/sertifikat'
+              },{
+                name: 'Tambah Sertifikat',
+                to: '/sertifikat/tambah'
+              }
+            ]
+          },
+          {
+            _name: 'CSidebarNavTitle',
+            _children: ['Accounts']
+          },
+          {
+            _name: 'CSidebarNavItem',
+            name: 'Role Management',
+            to: '/accounts/management',
+            icon: 'cil-pencil'
+          },
+          {
+            _name: 'CSidebarNavItem',
+            name: 'Permintaan Role',
+            to: '/accounts/request',
+            icon: 'cil-pencil'
+          },
+          {
+            _name: 'CSidebarNavTitle',
+            _children: ['Perguruan Tinggi']
+          },
+          {
+            _name: 'CSidebarNavDropdown',
+            name: 'Mahasiswa',
+            route: '/mahasiswa',
+            icon: 'cil-puzzle',
+            items: [
+              {
+                name: 'Info Mahasiswa',
+                to: '/mahasiswa'
+              },
+              {
+                name: 'Tambah Mahasiswa',
+                to: '/mahasiswa/tambah'
+              },
+              {
+                name: 'Antrian NINA',
+                to: '/mahasiswa/antrian-nina'
+              }
+            ]
+          },
+          {
+            _name: 'CSidebarNavDropdown',
+            name: 'Civitas',
+            route: '/civitas',
+            icon: 'cil-puzzle',
+            items: [
+              {
+                name: 'Info Civitas',
+                to: '/civitas'
+              },
+              {
+                name: 'Tambah Civitas',
+                to: '/civitas/tambah'
+              }
+            ]
+          },
+          {
+            _name: 'CSidebarNavDropdown',
+            name: 'Program Studi',
+            route: '/prodi',
+            icon: 'cil-puzzle',
+            items: [
+              {
+                name: 'Info Prodi',
+                to: '/prodi'
+              },
+              {
+                name: 'Tambah Prodi',
+                to: '/prodi/tambah'
+              }
+            ]
+          },
+          {
+            _name: 'CSidebarNavDropdown',
+            name: 'Mata Kuliah',
+            route: '/matkul',
+            icon: 'cil-puzzle',
+            items: [
+              {
+                name: 'Daftar Mata Kuliah',
+                to: '/matkul'
+              },
+              {
+                name: 'Tambah Mata Kuliah',
+                to: '/matkul/tambah'
+              }
+            ]
+          },
         ]
       }
     ],

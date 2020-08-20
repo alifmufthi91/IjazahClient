@@ -14,13 +14,13 @@ import VueApollo from "vue-apollo"
 const httpLink = new HttpLink({
   uri: 'https://api.thegraph.com/subgraphs/name/alifmufthi91/penerbitan-ijazah'
 })
-    
+
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: httpLink,
   connectToDevTools: true
 })
-    
+
 Vue.use(VueApollo)
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient
@@ -31,14 +31,14 @@ Vue.use(CoreuiVue)
 Vue.prototype.$log = console.log.bind(console)
 
 window.Event =
-new Vue({
-  el: '#app',
-  router,
-  store,
-  icons,
-  apolloProvider,
-  template: '<App/>',
-  components: {
-    App
-  }
-})
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    icons,
+    apolloProvider,
+    template: '<App/>',
+    components: {
+      App
+    }
+  })

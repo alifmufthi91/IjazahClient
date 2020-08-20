@@ -1,5 +1,5 @@
 import web3 from '@/js/web3';
-const address = '0xea5Cb0382C54A21b6680C2351B9498462613601a';
+const address = '0xd8a0f29096c484b7e68592b677f18a6df9b996b0';
 const abi =
 [
 	{
@@ -104,12 +104,6 @@ const abi =
 				"internalType": "uint8",
 				"name": "signRequired",
 				"type": "uint8"
-			},
-			{
-				"indexed": false,
-				"internalType": "bytes",
-				"name": "ipfsHash",
-				"type": "bytes"
 			},
 			{
 				"indexed": false,
@@ -243,6 +237,12 @@ const abi =
 			},
 			{
 				"indexed": false,
+				"internalType": "bool",
+				"name": "isUpdateNINAData",
+				"type": "bool"
+			},
+			{
+				"indexed": false,
 				"internalType": "uint256",
 				"name": "timeUpdated",
 				"type": "uint256"
@@ -271,12 +271,6 @@ const abi =
 				"internalType": "bytes17",
 				"name": "noIjazah",
 				"type": "bytes17"
-			},
-			{
-				"indexed": false,
-				"internalType": "bytes",
-				"name": "ipfsHash",
-				"type": "bytes"
 			},
 			{
 				"indexed": false,
@@ -398,7 +392,7 @@ const abi =
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "timeCreated",
+				"name": "timeUpdated",
 				"type": "uint256"
 			}
 		],
@@ -753,11 +747,6 @@ const abi =
 				"internalType": "bytes17",
 				"name": "noIjazah",
 				"type": "bytes17"
-			},
-			{
-				"internalType": "bytes",
-				"name": "ipfsHash",
-				"type": "bytes"
 			}
 		],
 		"name": "penomoranIjazah",
@@ -856,6 +845,11 @@ const abi =
 				"internalType": "bytes",
 				"name": "newIpfsHash",
 				"type": "bytes"
+			},
+			{
+				"internalType": "bool",
+				"name": "isUpdateNINAData",
+				"type": "bool"
 			}
 		],
 		"name": "updateCertificateData",
