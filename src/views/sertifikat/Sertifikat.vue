@@ -170,7 +170,7 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "sertifikat/" + `${item.id}` });
+      this.$router.replace({ path: "sertifikat/detail/" + `${item.id}` });
     },
     hexToString(str) {
       if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);

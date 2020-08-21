@@ -12,32 +12,32 @@ const GetStarted = () => import('@/views/GettingStarted')
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
 
-const Charts = () => import('@/views/charts/Charts')
-const Widgets = () => import('@/views/widgets/Widgets')
+// const Charts = () => import('@/views/charts/Charts')
+// const Widgets = () => import('@/views/widgets/Widgets')
 
 // Views - Components
-const Cards = () => import('@/views/base/Cards')
-const Forms = () => import('@/views/base/Forms')
-const Switches = () => import('@/views/base/Switches')
-const Tables = () => import('@/views/base/Tables')
-const Tabs = () => import('@/views/base/Tabs')
-const Breadcrumbs = () => import('@/views/base/Breadcrumbs')
-const Carousels = () => import('@/views/base/Carousels')
-const Collapses = () => import('@/views/base/Collapses')
-const Jumbotrons = () => import('@/views/base/Jumbotrons')
-const ListGroups = () => import('@/views/base/ListGroups')
-const Navs = () => import('@/views/base/Navs')
-const Navbars = () => import('@/views/base/Navbars')
-const Paginations = () => import('@/views/base/Paginations')
-const Popovers = () => import('@/views/base/Popovers')
-const ProgressBars = () => import('@/views/base/ProgressBars')
-const Tooltips = () => import('@/views/base/Tooltips')
+// const Cards = () => import('@/views/base/Cards')
+// const Forms = () => import('@/views/base/Forms')
+// const Switches = () => import('@/views/base/Switches')
+// const Tables = () => import('@/views/base/Tables')
+// const Tabs = () => import('@/views/base/Tabs')
+// const Breadcrumbs = () => import('@/views/base/Breadcrumbs')
+// const Carousels = () => import('@/views/base/Carousels')
+// const Collapses = () => import('@/views/base/Collapses')
+// const Jumbotrons = () => import('@/views/base/Jumbotrons')
+// const ListGroups = () => import('@/views/base/ListGroups')
+// const Navs = () => import('@/views/base/Navs')
+// const Navbars = () => import('@/views/base/Navbars')
+// const Paginations = () => import('@/views/base/Paginations')
+// const Popovers = () => import('@/views/base/Popovers')
+// const ProgressBars = () => import('@/views/base/ProgressBars')
+// const Tooltips = () => import('@/views/base/Tooltips')
 
 // Views - Buttons
-const StandardButtons = () => import('@/views/buttons/StandardButtons')
-const ButtonGroups = () => import('@/views/buttons/ButtonGroups')
-const Dropdowns = () => import('@/views/buttons/Dropdowns')
-const BrandButtons = () => import('@/views/buttons/BrandButtons')
+// const StandardButtons = () => import('@/views/buttons/StandardButtons')
+// const ButtonGroups = () => import('@/views/buttons/ButtonGroups')
+// const Dropdowns = () => import('@/views/buttons/Dropdowns')
+// const BrandButtons = () => import('@/views/buttons/BrandButtons')
 
 // Views - Icons
 const CoreUIIcons = () => import('@/views/icons/CoreUIIcons')
@@ -72,30 +72,40 @@ const EditAccount = () => import('@/views/account/EditAccount')
 const Mahasiswa = () => import('@/views/mahasiswa/Mahasiswa')
 const AntrianNINA = () => import('@/views/mahasiswa/AntrianNINA')
 const TambahMahasiswa = () => import('@/views/mahasiswa/TambahMahasiswa')
+const DetailMahasiswa = () => import('@/views/mahasiswa/DetailMahasiswa')
 
 // Views - Civitas
 const Civitas = () => import('@/views/civitas/Civitas')
 const TambahCivitas = () => import('@/views/civitas/TambahCivitas')
+const DetailCivitas = () => import('@/views/civitas/DetailCivitas')
 
 // Views - Prodi
 const TambahProdi = () => import('@/views/prodi/TambahProdi')
 const Prodi = () => import('@/views/prodi/Prodi')
+const DetailProdi = () => import('@/views/prodi/DetailProdi')
 
 // Views = Matkul
 const TambahMatkul = () => import('@/views/mata kuliah/TambahMatkul')
 const Matkul = () => import('@/views/mata kuliah/Matkul')
+const DetailMatkul = () => import('@/views/mata kuliah/DetailMatkul')
 
 // Views - Kalendar Akademik
 const TambahKalendarAkademik = () => import('@/views/kalendar akademik/TambahKalendarAkademik')
 const KalendarAkademik = () => import('@/views/kalendar akademik/KalendarAkademik')
+const DetailKalendar = () => import('@/views/kalendar akademik/DetailKalendar')
 
 // Views - Semester
 const TambahSemester = () => import('@/views/semester/TambahSemester')
 const Semester = () => import('@/views/semester/Semester')
+const DetailSemester = () => import('@/views/semester/DetailSemester')
 
 //Views - Sertifikat
 const TambahSertifikat = () => import('@/views/sertifikat/TambahSertifikat')
 const Sertifikat = () => import('@/views/sertifikat/Sertifikat')
+const DetailSertifikat = () => import('@/views/sertifikat/DetailSertifikat')
+
+//Views - Ampu
+const DetailAmpu = () => import('@/views/semester/DetailAmpu')
 
 Vue.use(Router)
 
@@ -140,7 +150,7 @@ function configRoutes() {
               component: RoleRequest
             },
             {
-              path: 'account/:id',
+              path: 'detail/:id',
               meta: {
                 label: 'Account Details'
               },
@@ -177,12 +187,12 @@ function configRoutes() {
               component: TambahMahasiswa
             },
             {
-              path: 'mahasiswa/:id',
+              path: 'detail/:id',
               meta: {
                 label: 'Mahasiswa Details'
               },
               name: 'Detail Mahasiswa',
-              component: null
+              component: DetailMahasiswa
             }
           ]
         },
@@ -209,12 +219,12 @@ function configRoutes() {
               component: TambahCivitas
             },
             {
-              path: 'civitas/:id',
+              path: 'detail/:id',
               meta: {
                 label: 'Civitas Details'
               },
               name: 'Detail Civitas',
-              component: null
+              component: DetailCivitas
             }
           ]
         },
@@ -239,6 +249,36 @@ function configRoutes() {
               path: 'tambah',
               name: 'Tambah Prodi',
               component: TambahProdi
+            },
+            {
+              path: 'detail/:id',
+              meta: {
+                label: 'Prodi Details'
+              },
+              name: 'Detail Prodi',
+              component: DetailProdi
+            }
+          ]
+        },
+        {
+          path: 'ampu',
+          redirect: '/ampu',
+          meta: {
+            label: 'Ampu'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: 'detail/:id',
+              meta: {
+                label: 'Ampu Details'
+              },
+              name: 'Detail Ampu',
+              component: DetailAmpu
             }
           ]
         },
@@ -263,6 +303,14 @@ function configRoutes() {
               path: 'tambah',
               name: 'Tambah Mata Kuliah',
               component: TambahMatkul
+            },
+            {
+              path: 'detail/:id',
+              meta: {
+                label: 'Matakuliah Details'
+              },
+              name: 'Detail Matakuliah',
+              component: DetailMatkul
             }
           ]
         },
@@ -287,6 +335,14 @@ function configRoutes() {
               path: 'tambah',
               name: 'Tambah Kalendar Akademik',
               component: TambahKalendarAkademik
+            },
+            {
+              path: 'detail/:id',
+              meta: {
+                label: 'Kalendar Akademik Details'
+              },
+              name: 'Detail Kalendar Akademik',
+              component: DetailKalendar
             }
           ]
         },
@@ -312,7 +368,14 @@ function configRoutes() {
               name: 'Tambah Semester',
               component: TambahSemester
             },
-
+            {
+              path: 'detail/:id',
+              meta: {
+                label: 'Semester Details'
+              },
+              name: 'Detail Semester',
+              component: DetailSemester
+            }
           ]
         },
         {
@@ -337,7 +400,14 @@ function configRoutes() {
               name: 'Tambah Sertifikat',
               component: TambahSertifikat
             },
-
+            {
+              path: 'detail/:id',
+              meta: {
+                label: 'Sertifikat Details'
+              },
+              name: 'Detail Sertifikat',
+              component: DetailSertifikat
+            }
           ]
         },
         {
@@ -360,16 +430,16 @@ function configRoutes() {
             }
           ]
         },
-        {
-          path: 'charts',
-          name: 'Charts',
-          component: Charts
-        },
-        {
-          path: 'widgets',
-          name: 'Widgets',
-          component: Widgets
-        },
+        // {
+        //   path: 'charts',
+        //   name: 'Charts',
+        //   component: Charts
+        // },
+        // {
+        //   path: 'widgets',
+        //   name: 'Widgets',
+        //   component: Widgets
+        // },
         // {
         //   path: 'users',
         //   meta: {
@@ -396,126 +466,126 @@ function configRoutes() {
         //     }
         //   ]
         // },
-        {
-          path: 'base',
-          redirect: '/base/cards',
-          name: 'Base',
-          component: {
-            render(c) { return c('router-view') }
-          },
-          children: [
-            {
-              path: 'cards',
-              name: 'Cards',
-              component: Cards
-            },
-            {
-              path: 'forms',
-              name: 'Forms',
-              component: Forms
-            },
-            {
-              path: 'switches',
-              name: 'Switches',
-              component: Switches
-            },
-            {
-              path: 'tables',
-              name: 'Tables',
-              component: Tables
-            },
-            {
-              path: 'tabs',
-              name: 'Tabs',
-              component: Tabs
-            },
-            {
-              path: 'breadcrumbs',
-              name: 'Breadcrumbs',
-              component: Breadcrumbs
-            },
-            {
-              path: 'carousels',
-              name: 'Carousels',
-              component: Carousels
-            },
-            {
-              path: 'collapses',
-              name: 'Collapses',
-              component: Collapses
-            },
-            {
-              path: 'jumbotrons',
-              name: 'Jumbotrons',
-              component: Jumbotrons
-            },
-            {
-              path: 'list-groups',
-              name: 'List Groups',
-              component: ListGroups
-            },
-            {
-              path: 'navs',
-              name: 'Navs',
-              component: Navs
-            },
-            {
-              path: 'navbars',
-              name: 'Navbars',
-              component: Navbars
-            },
-            {
-              path: 'paginations',
-              name: 'Paginations',
-              component: Paginations
-            },
-            {
-              path: 'popovers',
-              name: 'Popovers',
-              component: Popovers
-            },
-            {
-              path: 'progress-bars',
-              name: 'Progress Bars',
-              component: ProgressBars
-            },
-            {
-              path: 'tooltips',
-              name: 'Tooltips',
-              component: Tooltips
-            }
-          ]
-        },
-        {
-          path: 'buttons',
-          redirect: '/buttons/standard-buttons',
-          name: 'Buttons',
-          component: {
-            render(c) { return c('router-view') }
-          },
-          children: [
-            {
-              path: 'standard-buttons',
-              name: 'Standard Buttons',
-              component: StandardButtons
-            },
-            {
-              path: 'button-groups',
-              name: 'Button Groups',
-              component: ButtonGroups
-            },
-            {
-              path: 'dropdowns',
-              name: 'Dropdowns',
-              component: Dropdowns
-            },
-            {
-              path: 'brand-buttons',
-              name: 'Brand Buttons',
-              component: BrandButtons
-            }
-          ]
-        },
+        // {
+        //   path: 'base',
+        //   redirect: '/base/cards',
+        //   name: 'Base',
+        //   component: {
+        //     render(c) { return c('router-view') }
+        //   },
+        //   children: [
+        //     {
+        //       path: 'cards',
+        //       name: 'Cards',
+        //       component: Cards
+        //     },
+        //     {
+        //       path: 'forms',
+        //       name: 'Forms',
+        //       component: Forms
+        //     },
+        //     {
+        //       path: 'switches',
+        //       name: 'Switches',
+        //       component: Switches
+        //     },
+        //     {
+        //       path: 'tables',
+        //       name: 'Tables',
+        //       component: Tables
+        //     },
+        //     {
+        //       path: 'tabs',
+        //       name: 'Tabs',
+        //       component: Tabs
+        //     },
+        //     {
+        //       path: 'breadcrumbs',
+        //       name: 'Breadcrumbs',
+        //       component: Breadcrumbs
+        //     },
+        //     {
+        //       path: 'carousels',
+        //       name: 'Carousels',
+        //       component: Carousels
+        //     },
+        //     {
+        //       path: 'collapses',
+        //       name: 'Collapses',
+        //       component: Collapses
+        //     },
+        //     {
+        //       path: 'jumbotrons',
+        //       name: 'Jumbotrons',
+        //       component: Jumbotrons
+        //     },
+        //     {
+        //       path: 'list-groups',
+        //       name: 'List Groups',
+        //       component: ListGroups
+        //     },
+        //     {
+        //       path: 'navs',
+        //       name: 'Navs',
+        //       component: Navs
+        //     },
+        //     {
+        //       path: 'navbars',
+        //       name: 'Navbars',
+        //       component: Navbars
+        //     },
+        //     {
+        //       path: 'paginations',
+        //       name: 'Paginations',
+        //       component: Paginations
+        //     },
+        //     {
+        //       path: 'popovers',
+        //       name: 'Popovers',
+        //       component: Popovers
+        //     },
+        //     {
+        //       path: 'progress-bars',
+        //       name: 'Progress Bars',
+        //       component: ProgressBars
+        //     },
+        //     {
+        //       path: 'tooltips',
+        //       name: 'Tooltips',
+        //       component: Tooltips
+        //     }
+        //   ]
+        // },
+        // {
+        //   path: 'buttons',
+        //   redirect: '/buttons/standard-buttons',
+        //   name: 'Buttons',
+        //   component: {
+        //     render(c) { return c('router-view') }
+        //   },
+        //   children: [
+        //     {
+        //       path: 'standard-buttons',
+        //       name: 'Standard Buttons',
+        //       component: StandardButtons
+        //     },
+        //     {
+        //       path: 'button-groups',
+        //       name: 'Button Groups',
+        //       component: ButtonGroups
+        //     },
+        //     {
+        //       path: 'dropdowns',
+        //       name: 'Dropdowns',
+        //       component: Dropdowns
+        //     },
+        //     {
+        //       path: 'brand-buttons',
+        //       name: 'Brand Buttons',
+        //       component: BrandButtons
+        //     }
+        //   ]
+        // },
         {
           path: 'icons',
           redirect: '/icons/coreui-icons',
@@ -635,7 +705,6 @@ router.beforeEach((to, from, next) => {
         .getAccount(accounts[0])
         .call({ from: accounts[0] })
         .then(function (result) {
-          console.log("Result is : " + result[1]);
           if (!result[1]) next('/get-started')
           else next()
         })

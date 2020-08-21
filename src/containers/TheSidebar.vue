@@ -33,22 +33,17 @@ export default {
       sidebarMenu: this.$options.nav["tes"],
     };
   },
-  mounted() {
+  beforeMount() {
     let context = this
-    console.log(nav)
     web3.eth.getAccounts().then((accounts) => {
-      console.log("test:" + accounts[0]);
       AccountManager.methods
         .getRole(accounts[0])
         .call({ from: accounts[0] })
         .then(function (result) {
-          console.log(web3.utils.hexToUtf8(result))
           switch(web3.utils.hexToUtf8(result)){
             case 'admin': context.sidebarMenu = nav["admin"];break;
             default : context.sidebarMenu = nav["def"];break;
           }
-          context.$forceUpdate()
-          console.log(context)
         });
     });
   },

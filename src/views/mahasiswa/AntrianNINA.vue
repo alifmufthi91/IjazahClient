@@ -6,15 +6,37 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="this.mahasiswas"
+            :items="filteredItems"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
+            sorter
+            columnFilter
             @page-change="pageChange"
           >
+            <template #id-filter>
+              <input class="form-control form-control-sm" :value="filterNim" @change="setFilterId" />
+            </template>
+            <template #id="data">
+              <td>{{ hexToString(data.item.id) }}</td>
+            </template>
+            <template #name-filter>
+              <input
+                class="form-control form-control-sm"
+                :value="filterNama"
+                @change="setFilterNama"
+              />
+            </template>
             <template #name="data">
               <td>{{ hexToString(data.item.name) }}</td>
+            </template>
+            <template #prodi-filter>
+              <input
+                class="form-control form-control-sm"
+                :value="filterProdi"
+                @change="setFilterProdi"
+              />
             </template>
             <template #prodi="data">
               <td>{{ hexToString(data.item.prodi) }}</td>
@@ -22,13 +44,10 @@
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
-                  <CButton
-                    color="primary"
-                    class="mr-3"
-                    size="sm"
-                    @click="detailClicked(data.item)"
-                  >Detail</CButton>
-                  <CButton color="success" class="mr-3" size="sm">Edit</CButton>
+                  <CButtonGroup>
+                    <CButton color="primary" size="sm" @click="detailClicked(data.item)">Detail</CButton>
+                    <CButton color="info" size="sm">Edit</CButton>
+                  </CButtonGroup>
                 </CCol>
               </td>
             </template>
@@ -51,6 +70,7 @@ export default {
           id
           name
           prodi
+          isLulus
         }
       }
     `,
@@ -61,10 +81,13 @@ export default {
         { key: "id" },
         { key: "name" },
         { key: "prodi" },
-        { key: "Status Kelulusan" },
-        { key: "action", label: "Aksi" },
+        { key: "isLulus",label: "Status Kelulusan", filter: false },
+        { key: "action", label: "Aksi", sorter: false, filter: false },
       ],
       activePage: 1,
+      filterNim: "",
+      filterNama: "",
+      filterProdi: "",
     };
   },
   watch: {
@@ -77,6 +100,29 @@ export default {
       },
     },
   },
+  mounted() {
+    this.$apollo.queries.mahasiswas.refetch();
+  },
+  computed: {
+    computedItems() {
+      return this.mahasiswas;
+    },
+    filteredItems() {
+      if (!this.mahasiswas) return []
+      return this.computedItems.filter((item) => {
+        if (!this.filterNim && !this.filterNama && !this.filterProdi)
+          return true;
+        const id = item.id;
+        const nama = item.name;
+        const prodi = item.prodi;
+        return (
+          web3.utils.hexToUtf8(id).toLowerCase().includes(this.filterNim.toLowerCase()) &&
+          web3.utils.hexToUtf8(nama).toLowerCase().includes(this.filterNama.toLowerCase()) &&
+          web3.utils.hexToUtf8(prodi).toLowerCase().includes(this.filterProdi.toLowerCase())
+        );
+      });
+    },
+  },
   methods: {
     pageChange(val) {
       this.$router.push({ query: { page: val } });
@@ -87,6 +133,18 @@ export default {
     hexToString(str) {
       if(web3.utils.isHexStrict(str))
       return web3.utils.hexToUtf8(str);
+    },
+    setFilterId(e) {
+      console.log(e.target.value);
+      this.filterNim = e.target.value;
+    },
+    setFilterNama(e) {
+      console.log(e.target.value);
+      this.filterNama = e.target.value;
+    },
+    setFilterProdi(e) {
+      console.log(e.target.value);
+      this.filterProdi = e.target.value;
     },
   },
 };

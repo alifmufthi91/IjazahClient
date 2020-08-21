@@ -104,7 +104,6 @@ export default {
         .getAccount(accounts[0])
         .call({ from: accounts[0] })
         .then(function (result) {
-          console.log("Result is : " + result[0]);
           if (result) {
             user.address = result[0];
             user.name = web3.utils.hexToUtf8(result[2]);

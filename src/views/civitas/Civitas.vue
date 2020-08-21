@@ -203,7 +203,7 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "civitas/" + `${item.id}` });
+      this.$router.replace({ path: "civitas/detail/" + `${item.id}` });
     },
     setFilterId(e) {
       console.log(e.target.value);

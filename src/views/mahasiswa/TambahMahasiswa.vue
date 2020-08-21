@@ -185,8 +185,6 @@ export default {
         tempatLahir: String(),
         tanggalLahir: null,
         prodi: String(),
-        statusMahasiswa: "Aktif",
-        statusKelulusan: false,
         noTelp: String(),
         email: String(),
         foto: String(),
@@ -259,7 +257,6 @@ export default {
       let isReady = true;
       Object.keys(val)
         .filter((attribute) => {
-          if (attribute == "statusKelulusan") return false;
           return attribute;
         })
         .forEach((attribute) => {

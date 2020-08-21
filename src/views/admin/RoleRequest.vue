@@ -6,18 +6,48 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="this.accounts"
+            :items="filteredItems"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
+            sorter
+            columnFilter
             @page-change="pageChange"
           >
+          <template #id-filter>
+              <input
+                class="form-control form-control-sm"
+                :value="filterAlamat"
+                @change="setFilterAlamat"
+              />
+            </template>
+            <template #name-filter>
+              <input
+                class="form-control form-control-sm"
+                :value="filterNama"
+                @change="setFilterNama"
+              />
+            </template>
             <template #name="data">
               <td class="font-weight-bold">{{ hexToString(data.item.name) }}</td>
             </template>
+            <template #role-filter>
+              <input
+                class="form-control form-control-sm"
+                :value="filterRole"
+                @change="setFilterRole"
+              />
+            </template>
             <template #role="data">
               <td>{{ hexToString(data.item.role) }}</td>
+            </template>
+            <template #nomorInduk-filter>
+              <input
+                class="form-control form-control-sm"
+                :value="filterNomorId"
+                @change="setFilterNI"
+              />
             </template>
             <template #nomorInduk="data">
               <td>{{ hexToString(data.item.nomorInduk) }}</td>
@@ -111,10 +141,14 @@ export default {
         { key: "id", label: "Alamat" },
         { key: "role" },
         { key: "nomorInduk", label: "Nomor Induk" },
-        { key: "verified", label: "Verified" },
-        { key: "action", label: "Aksi" },
+        { key: "verified", label: "Verified", filter: false },
+        { key: "action", label: "Aksi", sorter: false, filter: false },
       ],
       activePage: 1,
+      filterNama: "",
+      filterAlamat: "",
+      filterRole: "",
+      filterNomorId: "",
       confirmModal: false,
       selectedUser: {
         id: String(),
@@ -170,6 +204,9 @@ export default {
       },
     },
   },
+  mounted() {
+    this.$apollo.queries.accounts.refetch();
+  },
   computed: {
     jenisVerify() {
       console.log("role :" + this.selectedUser.givenRole);
@@ -182,6 +219,37 @@ export default {
           return "civitas";
       }
     },
+    computedItems() {
+      return this.accounts;
+    },
+    filteredItems() {
+      if (!this.accounts) return [];
+      return this.computedItems.filter((item) => {
+        if (!this.filterNama && !this.filterAlamat && !this.filterRole && !this.filterNomorId)
+          return true;
+        const nama = item.name;
+        const alamat = item.id;
+        const role = item.role;
+        const nomorId = item.nomorInduk;
+        return (
+          web3.utils
+            .hexToUtf8(nama)
+            .toLowerCase()
+            .includes(this.filterNama.toLowerCase()) &&
+          alamat
+            .toLowerCase()
+            .includes(this.filterAlamat.toLowerCase()) &&
+          web3.utils
+            .hexToUtf8(role)
+            .toLowerCase()
+            .includes(this.filterRole.toLowerCase()) &&
+          web3.utils
+            .hexToUtf8(nomorId)
+            .toLowerCase()
+            .includes(this.filterNomorId.toLowerCase())
+        );
+      });
+    },
   },
   methods: {
     getBadge(status) {
@@ -191,6 +259,18 @@ export default {
     getVerified(status) {
       if (status) return "Terverifikasi";
       return "Belum Diverifikasi";
+    },
+    setFilterNama(e) {
+      this.filterNama = e.target.value;
+    },
+    setFilterAlamat(e) {
+      this.filterAlamat = e.target.value;
+    },
+    setFilterRole(e) {
+      this.filterRole = e.target.value;
+    },
+    setFilterNI(e) {
+      this.filterNomorId = e.target.value;
     },
     pageChange(val) {
       this.$router.push({ query: { page: val } });

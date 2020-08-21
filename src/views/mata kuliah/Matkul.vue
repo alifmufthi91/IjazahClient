@@ -6,13 +6,22 @@
         <CCardBody>
           <CDataTable
             hover
-            :items="this.mataKuliahs"
+            :items="filteredItems"
             :fields="fields"
             :items-per-page="5"
             :active-page="activePage"
             :pagination="{ doubleArrows: false, align: 'center'}"
+            sorter
+            columnFilter
             @page-change="pageChange"
           >
+          <template #namaMatkul-filter>
+              <input
+                class="form-control form-control-sm"
+                :value="filterNama"
+                @change="setFilterNama"
+              />
+            </template>
           <template #namaMatkul="data">
               <td>
                 {{ hexToString(data.item.namaMatkul) }}
@@ -26,13 +35,10 @@
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
-                  <CButton
-                    color="primary"
-                    class="mr-3"
-                    size="sm"
-                    @click="detailClicked(data.item)"
-                  >Detail</CButton>
-                  <CButton color="success" class="mr-3" size="sm">Edit</CButton>
+                  <CButtonGroup>
+                    <CButton color="primary" size="sm" @click="detailClicked(data.item)">Detail</CButton>
+                    <CButton color="info" size="sm">Edit</CButton>
+                  </CButtonGroup>
                 </CCol>
               </td>
             </template>
@@ -62,12 +68,13 @@ export default {
   data() {
     return {
       fields: [
-        { key: "id" },
+        { key: "id", filter: false },
         { key: "namaMatkul" },
-        { key: "timeCreated", label:"Waktu Dibuat"},
-        { key: "action", label: "Aksi" }
+        { key: "timeCreated", label:"Waktu Dibuat", filter: false},
+        { key: "action", label: "Aksi", sorter: false, filter: false }
       ],
-      activePage: 1
+      activePage: 1,
+      filterNama: "",
     };
   },
   watch: {
@@ -80,16 +87,43 @@ export default {
       }
     }
   },
+  mounted() {
+    this.$apollo.queries.mataKuliahs.refetch();
+  },
+  computed: {
+    computedItems() {
+      return this.mataKuliahs;
+    },
+    filteredItems() {
+      if (!this.mataKuliahs) return [];
+      return this.computedItems.filter((item) => {
+        if (
+          !this.filterNama
+        )
+          return true;
+        const nama = item.namaMatkul;
+        return (
+          web3.utils
+            .hexToUtf8(nama)
+            .toLowerCase()
+            .includes(this.filterNama.toLowerCase())
+        );
+      });
+    },
+  },
   methods: {
     pageChange(val) {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "matkul/" + `${item.id}` });
+      this.$router.replace({ path: "matkul/detail/" + `${item.id}` });
     },
     hexToString(str) {
       if(web3.utils.isHexStrict(str))
       return web3.utils.hexToUtf8(str)
+    },
+    setFilterNama(e) {
+      this.filterNama = e.target.value;
     },
     timestampToDate(time) {
       return new Date(time * 1000)
