@@ -125,7 +125,6 @@ export default {
               .then(function (result) {
                 calendar.tahunAjar = web3.utils.hexToUtf8(result[0]);
                 calendar.ganjil = result[1];
-                console.log(calendar);
               });
           }
         });

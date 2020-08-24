@@ -41,12 +41,25 @@
             <template #prodi="data">
               <td>{{ hexToString(data.item.prodi) }}</td>
             </template>
+            <template #isAssignedNINA="data">
+              <td>
+                <CBadge
+                  :color="data.item.isAssignedNINA?'info':'warning'"
+                >{{ data.item.isAssignedNINA?'Sudah':'Menunggu' }}</CBadge>
+              </td>
+            </template>
+            <template #isUpdatedNINAData="data">
+              <td>
+                <CBadge
+                  :color="data.item.isUpdatedNINAData?'success':'danger'"
+                >{{ data.item.isUpdatedNINAData?'Updated':'Menunggu' }}</CBadge>
+              </td>
+            </template>
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
                   <CButtonGroup>
                     <CButton color="primary" size="sm" @click="detailClicked(data.item)">Detail</CButton>
-                    <CButton color="info" size="sm">Edit</CButton>
                   </CButtonGroup>
                 </CCol>
               </td>
@@ -55,22 +68,82 @@
         </CCardBody>
       </CCard>
     </CCol>
+    <!-- <CModal
+      :show.sync="updateModal"
+      :no-close-on-backdrop="true"
+      :centered="true"
+      title="Update Nomor Ijazah"
+      size="lg"
+      color="success"
+    >
+      <CRow>
+        <CCol sm="4">
+          <CInput label="Nama" readonly :value.sync="mahasiswaIpfs.nama" />
+        </CCol>
+        <CCol sm="4">
+          <CInput label="NIM" readonly :value.sync="mahasiswaIpfs.nim" />
+        </CCol>
+        <CCol sm="4">
+          <CInput label="Jenis Kelamin" readonly :value.sync="mahasiswaIpfs.jenisKelamin" />
+        </CCol>
+        <CCol sm="4">
+          <CInput label="Tempat Lahir" readonly :value.sync="mahasiswaIpfs.tempatLahir" />
+        </CCol>
+        <CCol sm="4">
+          <CInput label="Tanggal Lahir" readonly :value.sync="mahasiswaIpfs.tanggalLahir" />
+        </CCol>
+        <CCol sm="4">
+          <CInput label="NIK" readonly :value.sync="mahasiswaIpfs.nik" />
+        </CCol>
+        <CCol sm="4">
+          <CInput label="Prodi" readonly :value.sync="mahasiswaIpfs.prodi" />
+        </CCol>
+        <CCol sm="4">
+          <CInput label="No. Telepon" readonly :value.sync="mahasiswaIpfs.noTelp" />
+        </CCol>
+        <CCol sm="4">
+          <CInput label="Email" readonly :value.sync="mahasiswaIpfs.email" />
+        </CCol>
+      </CRow>
+      <template #header>
+        <h6 class="modal-title">Update Data ke IPFS</h6>
+        <CButtonClose @click="lulusModal = false" class="text-white" />
+      </template>
+      <template #footer>
+        <CButton @click="confirmLulus(false)" color="danger">Kembali</CButton>
+        <CButton @click="confirmLulus(true)" color="success">Konfirmasi</CButton>
+      </template>
+    </CModal> -->
   </CRow>
 </template>
 
 <script>
 import gql from "graphql-tag";
+import CivitasHelper from "@/contracts/CivitasHelper";
+
+const ipfsClient = require("ipfs-http-client");
+const ipfs = ipfsClient({
+  host: "ipfs.infura.io",
+  port: 5001,
+  protocol: "https",
+});
 
 export default {
   name: "InfoMahasiswa",
   apollo: {
     mahasiswas: gql`
       query {
-        mahasiswas {
+        mahasiswas(
+          where: { isLulus: true }
+          orderBy: isAssignedNINA
+          orderDirection: desc
+        ) {
           id
           name
           prodi
           isLulus
+          isAssignedNINA
+          isUpdatedNINAData
         }
       }
     `,
@@ -78,16 +151,33 @@ export default {
   data() {
     return {
       fields: [
-        { key: "id" },
-        { key: "name" },
+        { key: "id", label: "NIM" },
+        { key: "name", label: "Nama" },
         { key: "prodi" },
-        { key: "isLulus",label: "Status Kelulusan", filter: false },
+        { key: "isAssignedNINA", label: "Status NINA", filter: false },
         { key: "action", label: "Aksi", sorter: false, filter: false },
       ],
       activePage: 1,
       filterNim: "",
       filterNama: "",
       filterProdi: "",
+      updateModal: false,
+      selectedMhs: {
+        name: String(),
+        id: String(),
+      },
+      mahasiswaIpfs: {
+        nama: String(),
+        nim: String(),
+        nik: String(),
+        jenisKelamin: String(),
+        tempatLahir: String(),
+        tanggalLahir: String(),
+        prodi: String(),
+        noTelp: String(),
+        email: String(),
+        foto: String(),
+      },
     };
   },
   watch: {
@@ -108,7 +198,7 @@ export default {
       return this.mahasiswas;
     },
     filteredItems() {
-      if (!this.mahasiswas) return []
+      if (!this.mahasiswas) return [];
       return this.computedItems.filter((item) => {
         if (!this.filterNim && !this.filterNama && !this.filterProdi)
           return true;
@@ -116,9 +206,18 @@ export default {
         const nama = item.name;
         const prodi = item.prodi;
         return (
-          web3.utils.hexToUtf8(id).toLowerCase().includes(this.filterNim.toLowerCase()) &&
-          web3.utils.hexToUtf8(nama).toLowerCase().includes(this.filterNama.toLowerCase()) &&
-          web3.utils.hexToUtf8(prodi).toLowerCase().includes(this.filterProdi.toLowerCase())
+          web3.utils
+            .hexToUtf8(id)
+            .toLowerCase()
+            .includes(this.filterNim.toLowerCase()) &&
+          web3.utils
+            .hexToUtf8(nama)
+            .toLowerCase()
+            .includes(this.filterNama.toLowerCase()) &&
+          web3.utils
+            .hexToUtf8(prodi)
+            .toLowerCase()
+            .includes(this.filterProdi.toLowerCase())
         );
       });
     },
@@ -128,24 +227,64 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "mahasiswa/" + `${item.id}` });
+      this.$router.push({ path: "detail/" + `${item.id}` });
     },
     hexToString(str) {
-      if(web3.utils.isHexStrict(str))
-      return web3.utils.hexToUtf8(str);
+      if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);
     },
     setFilterId(e) {
-      console.log(e.target.value);
       this.filterNim = e.target.value;
     },
     setFilterNama(e) {
-      console.log(e.target.value);
       this.filterNama = e.target.value;
     },
     setFilterProdi(e) {
-      console.log(e.target.value);
       this.filterProdi = e.target.value;
     },
+    // luluskanMahasiswa() {
+    //   console.log(this.selectedMhs);
+    //   let mahasiswa = this.selectedMhs;
+    //   web3.eth.getAccounts().then((accounts) => {
+    //     CivitasHelper.methods
+    //       .setMahasiswaLulus(mahasiswa.id, true)
+    //       .send({ from: accounts[0] })
+    //       .on("error", function (error, receipt) {
+    //         console.log(error);
+    //       })
+    //       .on("transactionHash", function (transactionHash) {
+    //         console.log(transactionHash.contractAddress);
+    //       });
+    //   });
+    // },
+    // getMahasiswaData(mahasiswa) {
+    //   let context = this;
+    //   web3.eth.getAccounts().then((accounts) => {
+    //     CivitasHelper.methods
+    //       .getMahasiswa(mahasiswa.id)
+    //       .call({ from: accounts[0] })
+    //       .then(function (result) {
+    //         ipfs
+    //           .cat("/ipfs/" + web3.utils.hexToUtf8(result[1]))
+    //           .then((data) => {
+    //             context.mahasiswaIpfs = JSON.parse(data.toString());
+    //             console.log(context.mahasiswaIpfs);
+    //           });
+    //       });
+    //   });
+    // },
+    // openUpdateModal: function (mahasiswa) {
+    //   this.updateModal = true;
+    //   this.selectedMhs = mahasiswa;
+    //   console.log(mahasiswa);
+    //   this.getMahasiswaData(this.selectedMhs);
+    // },
+    // confirmLulus: function (confirm) {
+    //   console.log(confirm);
+    //   this.lulusModal = false;
+    //   if (confirm) {
+    //     this.luluskanMahasiswa();
+    //   }
+    // },
   },
 };
 </script>

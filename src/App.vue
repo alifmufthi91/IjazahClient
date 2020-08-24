@@ -15,8 +15,8 @@ export default {
   },
   created() {
     window.ethereum.on('accountsChanged', (accounts) => {
-      console.log(accounts[0])
-      this.componentKey += 1
+      this.componentKey += 1;
+      if(this.$router.currentRoute.path != "/dashboard") this.$router.push("/dashboard");
     })
   }
 }

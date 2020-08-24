@@ -1,7 +1,30 @@
 import web3 from '@/js/web3';
-const address = '0xd8a0f29096c484b7e68592b677f18a6df9b996b0';
+const address = '0x7CC6c878b1B06696Beb83d8F244C19d5C52a58D3';
 const abi =
 [
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "idCertificate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "assignedSigner",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes9",
+				"name": "role",
+				"type": "bytes9"
+			}
+		],
+		"name": "assignSigner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
 	{
 		"inputs": [
 			{
@@ -252,6 +275,87 @@ const abi =
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "riwayatId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "semesterId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "ampuId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "dosenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes21",
+				"name": "dosenNip",
+				"type": "bytes21"
+			},
+			{
+				"internalType": "bytes2",
+				"name": "nilai",
+				"type": "bytes2"
+			}
+		],
+		"name": "changeNilaiRiwayatStudi",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes12",
+				"name": "ownerNim",
+				"type": "bytes12"
+			},
+			{
+				"internalType": "bytes16",
+				"name": "jenisSertifikat",
+				"type": "bytes16"
+			},
+			{
+				"internalType": "uint8",
+				"name": "signRequired",
+				"type": "uint8"
+			},
+			{
+				"internalType": "bytes",
+				"name": "ipfsHash",
+				"type": "bytes"
+			},
+			{
+				"internalType": "address[]",
+				"name": "signerList",
+				"type": "address[]"
+			},
+			{
+				"internalType": "bytes9[]",
+				"name": "roleList",
+				"type": "bytes9[]"
+			}
+		],
+		"name": "createSertifikat",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -318,6 +422,75 @@ const abi =
 		],
 		"name": "InterfaceUpdated",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "semesterId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "ampuId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "dosenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes21",
+				"name": "dosenNip",
+				"type": "bytes21"
+			},
+			{
+				"internalType": "bytes12",
+				"name": "mahasiswaNim",
+				"type": "bytes12"
+			},
+			{
+				"internalType": "bytes2",
+				"name": "nilai",
+				"type": "bytes2"
+			}
+		],
+		"name": "pengisianNilaiMatkul",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "certificateId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes17",
+				"name": "noIjazah",
+				"type": "bytes17"
+			}
+		],
+		"name": "penomoranIjazah",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "certificateId",
+				"type": "uint256"
+			}
+		],
+		"name": "publishCertificate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -403,21 +576,21 @@ const abi =
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "idCertificate",
+				"name": "certificateId",
 				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "assignedSigner",
-				"type": "address"
 			},
 			{
 				"internalType": "bytes9",
 				"name": "role",
 				"type": "bytes9"
+			},
+			{
+				"internalType": "bytes",
+				"name": "signature",
+				"type": "bytes"
 			}
 		],
-		"name": "assignSigner",
+		"name": "signCertificate",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -426,36 +599,16 @@ const abi =
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "riwayatId",
+				"name": "certificateId",
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint256",
-				"name": "semesterId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "ampuId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "dosenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes21",
-				"name": "dosenNip",
-				"type": "bytes21"
-			},
-			{
-				"internalType": "bytes2",
-				"name": "nilai",
-				"type": "bytes2"
+				"internalType": "bytes",
+				"name": "signature",
+				"type": "bytes"
 			}
 		],
-		"name": "changeNilaiRiwayatStudi",
+		"name": "signCertificateByOwner",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -464,41 +617,60 @@ const abi =
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "owner",
+				"name": "newAddress",
 				"type": "address"
-			},
+			}
+		],
+		"name": "updateAccountManager",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
-				"internalType": "bytes12",
-				"name": "ownerNim",
-				"type": "bytes12"
-			},
+				"internalType": "address",
+				"name": "newAddress",
+				"type": "address"
+			}
+		],
+		"name": "updateAkademikHelper",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
-				"internalType": "bytes16",
-				"name": "jenisSertifikat",
-				"type": "bytes16"
-			},
-			{
-				"internalType": "uint8",
-				"name": "signRequired",
-				"type": "uint8"
+				"internalType": "uint256",
+				"name": "idCertificate",
+				"type": "uint256"
 			},
 			{
 				"internalType": "bytes",
-				"name": "ipfsHash",
+				"name": "newIpfsHash",
 				"type": "bytes"
 			},
 			{
-				"internalType": "address[]",
-				"name": "signerList",
-				"type": "address[]"
-			},
-			{
-				"internalType": "bytes9[]",
-				"name": "roleList",
-				"type": "bytes9[]"
+				"internalType": "bool",
+				"name": "isUpdateNINAData",
+				"type": "bool"
 			}
 		],
-		"name": "createSertifikat",
+		"name": "updateCertificateData",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newAddress",
+				"type": "address"
+			}
+		],
+		"name": "updateCivitasHelper",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -586,6 +758,25 @@ const abi =
 				"internalType": "bytes",
 				"name": "",
 				"type": "bytes"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "certificateId",
+				"type": "uint256"
+			}
+		],
+		"name": "getNomorIjazah",
+		"outputs": [
+			{
+				"internalType": "bytes17",
+				"name": "",
+				"type": "bytes17"
 			}
 		],
 		"stateMutability": "view",
@@ -702,178 +893,6 @@ const abi =
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "semesterId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "ampuId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "dosenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes21",
-				"name": "dosenNip",
-				"type": "bytes21"
-			},
-			{
-				"internalType": "bytes12",
-				"name": "mahasiswaNim",
-				"type": "bytes12"
-			},
-			{
-				"internalType": "bytes2",
-				"name": "nilai",
-				"type": "bytes2"
-			}
-		],
-		"name": "pengisianNilaiMatkul",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "certificateId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes17",
-				"name": "noIjazah",
-				"type": "bytes17"
-			}
-		],
-		"name": "penomoranIjazah",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "certificateId",
-				"type": "uint256"
-			}
-		],
-		"name": "publishCertificate",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "certificateId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes9",
-				"name": "role",
-				"type": "bytes9"
-			},
-			{
-				"internalType": "bytes",
-				"name": "signature",
-				"type": "bytes"
-			}
-		],
-		"name": "signCertificate",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "certificateId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "signature",
-				"type": "bytes"
-			}
-		],
-		"name": "signCertificateByOwner",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newAddress",
-				"type": "address"
-			}
-		],
-		"name": "updateAccountManager",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newAddress",
-				"type": "address"
-			}
-		],
-		"name": "updateAkademikHelper",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "idCertificate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "newIpfsHash",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bool",
-				"name": "isUpdateNINAData",
-				"type": "bool"
-			}
-		],
-		"name": "updateCertificateData",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newAddress",
-				"type": "address"
-			}
-		],
-		"name": "updateCivitasHelper",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
 				"name": "certificateId",
 				"type": "uint256"
 			},
@@ -901,9 +920,9 @@ const abi =
 		"name": "verifyCertificate",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "address",
 				"name": "",
-				"type": "bool"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -930,9 +949,9 @@ const abi =
 		"name": "verifyCertificateOwner",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "address",
 				"name": "",
-				"type": "bool"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",

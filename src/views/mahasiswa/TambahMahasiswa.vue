@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import CivitasHelper from "../../contracts/CivitasHelper";
+import CivitasHelper from "@/contracts/CivitasHelper";
 import gql from "graphql-tag";
 
 const ipfsClient = require("ipfs-http-client");
@@ -194,27 +194,22 @@ export default {
   computed: {
     prodiOptions() {
       let arrProdi = [];
-      console.log(this.prodis);
       this.prodis.forEach((prodi) => {
         arrProdi.push({
           label: web3.utils.hexToUtf8(prodi.namaProdi),
           value: web3.utils.hexToUtf8(prodi.namaProdi),
         });
       });
-      console.log(arrProdi);
       return arrProdi;
     },
   },
   methods: {
     createMahasiswa: function () {
-      console.log("is Data : " + this.isDataReady(this.mahasiswa));
       if (this.isDataReady(this.mahasiswa)) {
         let data = this.mahasiswa;
         let file = Buffer.from(JSON.stringify(data));
         ipfs.add(file).then((ipfsHash) => {
           web3.eth.getAccounts().then((accounts) => {
-            console.log(this.mahasiswa);
-            console.log(ipfsHash);
             let hash = ipfsHash[0].hash;
             return CivitasHelper.methods
               .createMahasiswa(
@@ -226,24 +221,19 @@ export default {
               .send({ from: accounts[0] })
               .on("error", function (error, receipt) {
                 console.log(error);
-                this.showAlert(false);
               })
-              .on("receipt", function (receipt) {
-                console.log(receipt.contractAddress);
-                this.showAlert(true);
+              .on("transactionHash", function (hash) {
+                console.log(hash);
               });
           });
         });
       }
     },
     previewFiles(event) {
-      console.log(event[0]);
       this.image = event[0];
     },
     uploadImage: function () {
-      console.log(this.image);
       ipfs.add(this.image).then((ipfsHash) => {
-        console.log(ipfsHash);
         let hash = ipfsHash[0].hash;
         this.mahasiswa.foto = hash;
         ipfs.cat("/ipfs/" + hash).then((data) => {
@@ -260,10 +250,8 @@ export default {
           return attribute;
         })
         .forEach((attribute) => {
-          console.log(attribute + " " + val[attribute]);
           if (val[attribute] == null || val[attribute] == "") {
             isReady = false;
-            console.log("wrong");
           }
         });
       return isReady;
@@ -275,7 +263,6 @@ export default {
       return val ? true : false;
     },
     confirmRegister: function (confirm) {
-      console.log(confirm);
       this.confirmModal = false;
       if (confirm) {
         this.createMahasiswa();

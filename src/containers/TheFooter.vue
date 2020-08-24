@@ -2,7 +2,10 @@
   <CFooter :fixed="false">
     <div>
       <a href="#" target="_blank">Ijazah-Client</a>
-      <span class="ml-1">by KienzStudio.</span>
+      <span> by KienzStudio.</span>
+      <CLink class="ml-2" to="/theme/colors">Colors</CLink>
+      <span> and</span>
+      <CLink to="/theme/typography"> Typography</CLink>
     </div>
     <div class="ml-auto">
       <span class="mr-1">Powered by</span>

@@ -107,7 +107,7 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "kalendar-akademik/detail/" + `${item.id}` });
+      this.$router.push({ path: "kalendar-akademik/detail/" + `${item.id}` });
     },
     semester(val) {
       return val.ganjil ? "Ganjil" : "Genap";

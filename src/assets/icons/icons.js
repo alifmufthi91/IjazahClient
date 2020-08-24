@@ -79,7 +79,14 @@ import {
   cilXCircle,
   cil3d,
   cilHome,
-  cilX
+  cilX,
+  cilClipboard,
+  cilEducation,
+  cilGroup,
+  cilBadge,
+  cilContact,
+  cilDescription,
+  cilCalendarCheck
 
 } from '@coreui/icons'
 import { logo } from './logo'
@@ -135,7 +142,14 @@ export const iconsSet = Object.assign(
     cilXCircle,
     cil3d,
     cilHome,
-    cilX
+    cilX,
+    cilClipboard,
+    cilEducation,
+    cilGroup,
+    cilBadge,
+    cilContact,
+    cilDescription,
+    cilCalendarCheck
   },
   {
     cifUs,

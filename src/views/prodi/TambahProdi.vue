@@ -58,7 +58,7 @@
             <CCardFooter>
               <CRow class="justify-content-center">
                 <CCol sm="4">
-                  <CButton color="danger" block @click="confirmModal = true">Kembali</CButton>
+                  <CButton color="danger" block @click="goBack">Kembali</CButton>
                 </CCol>
                 <CCol sm="4">
                   <CButton color="success" block @click="confirmModal = true">Tambah Prodi</CButton>
@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import AkademikHelper from "../../contracts/AkademikHelper";
+import AkademikHelper from "@/contracts/AkademikHelper";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -120,15 +120,14 @@ export default {
     };
   },
   methods: {
+    goBack(){
+      this.$router.go(-1);
+    },
     createProdi: function () {
       let data = this.prodi;
       let file = Buffer.from(JSON.stringify(data))
       ipfs.add(file).then((ipfsHash) => {
         let hash = ipfsHash[0].hash;
-        console.log(hash);
-        console.log(web3.utils.utf8ToHex(this.prodi.nama)+' '+
-              web3.utils.utf8ToHex(this.prodi.namaJurusan)+' '+
-              web3.utils.utf8ToHex(hash))
         web3.eth.getAccounts().then((accounts) => {
           return AkademikHelper.methods
             .createProdi(
@@ -138,10 +137,10 @@ export default {
             )
             .send({ from: accounts[0] })
             .on("error", function (error, receipt) {
-              this.showAlert(false)
+              console.log(error)
             })
-            .on("receipt", function (receipt) {
-              this.showAlert(true)
+            .on("transactionHash", function (transactionHash) {
+              console.log(transactionHash)
             });
         });
       });
@@ -150,8 +149,6 @@ export default {
       return val ? val.length > 1 : false;
     },
     confirmRegister: function (confirm) {
-      console.log(confirm);
-      console.log(this.prodi);
       this.confirmModal = false;
       if (confirm) {
         this.createProdi();

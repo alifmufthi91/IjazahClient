@@ -2,7 +2,7 @@
   <CRow>
     <CCol col="12">
       <CCard>
-        <CCardHeader>Mahasiswa Detail</CCardHeader>
+        <CCardHeader>Informasi Mahasiswa</CCardHeader>
         <CCardBody>
           <h5>Data On-Chain</h5>
           <CDataTable striped small fixed :items="dataContract" :fields="fields" />
@@ -30,6 +30,18 @@
               </CCard>
             </CCol>
           </CRow>
+          <h5>Riwayat Studi (Subgraph)</h5>
+          <CDataTable striped small fixed :items="riwayatStudis" :fields="studiFields">
+            <template #mataKuliah="data">
+              <td>{{ data.item.ampu?hexToUtf8(data.item.ampu.namaMatkul):'' }}</td>
+            </template>
+            <template #nilai="data">
+              <td>{{ hexToUtf8(data.item.nilai) }}</td>
+            </template>
+            <template #timeUpdated="data">
+              <td>{{ unixToDate(data.item.timeUpdated) }}</td>
+            </template>
+          </CDataTable>
         </CCardBody>
         <CCardFooter>
           <CButton color="primary" @click="goBack">Back</CButton>
@@ -61,6 +73,20 @@ export const GET_MAHASISWA = gql`
   }
 `;
 
+export const GET_STUDI = gql`
+  query riwayatStudis($nim: ID!) {
+    riwayatStudis(where: { nim: $nim }) {
+      id
+      ampu {
+        id
+        namaMatkul
+      }
+      nilai
+      timeUpdated
+    }
+  }
+`;
+
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
   host: "ipfs.infura.io",
@@ -69,7 +95,7 @@ const ipfs = ipfsClient({
 });
 
 export default {
-  name: "MahasiswaDetail",
+  name: "InfoMahasiswa",
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       vm.usersOpened = from.fullPath;
@@ -87,6 +113,7 @@ export default {
       dataContract: null,
       dataIpfs: null,
       previewImage: null,
+      riwayatStudis: null,
     };
   },
   computed: {
@@ -96,9 +123,20 @@ export default {
           key: "key",
           label: "Informasi",
           _classes: "font-weight-bold text-capitalize",
-          _style: 'width:25%'
+          _style: "width:25%",
         },
         { key: "value", label: "Nilai" },
+      ];
+    },
+    studiFields() {
+      return [
+        {
+          key: "id",
+          _style: "width:5%",
+        },
+        { key: "mataKuliah" },
+        { key: "nilai", _style: "width:5%" },
+        { key: "timeUpdated" },
       ];
     },
     mhsDataSubgraph() {
@@ -146,43 +184,73 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
+    hexToUtf8(hex){
+      return web3.utils.hexToUtf8(hex)
+    },
+    unixToDate(unix){
+      const date = new Date(unix * 1000)
+      return date.toString();
+    }
   },
   beforeMount() {
     let context = this;
     web3.eth.getAccounts().then((accounts) => {
       CivitasHelper.methods
-        .getMahasiswa(this.$route.params.id)
+        .getNIMMahasiswa(accounts[0])
         .call({ from: accounts[0] })
         .then(function (result) {
           if (result) {
-            context.mahasiswaData.nim = web3.utils.hexToUtf8(result[0]);
-            context.mahasiswaData.ipfsHash = web3.utils.hexToUtf8(result[1]);
-            context.dataContract = context.mhsDataOnChain;
-            ipfs.cat("/ipfs/" + context.mahasiswaData.ipfsHash).then((data) => {
-              context.mahasiswaIpfs = JSON.parse(data.toString());
-              context.dataIpfs = context.mhsDataIpfs;
-              ipfs.cat("/ipfs/" + context.mahasiswaIpfs.foto).then((data) => {
-                let blob = new Blob([data], { type: "image/png" });
-                let url = URL.createObjectURL(blob);
-                context.previewImage = url;
+            context.$apollo
+              .query({
+                query: GET_MAHASISWA,
+                variables: {
+                  nim: result,
+                },
+              })
+              .then((response) => {
+                context.mahasiswa = response.data.mahasiswa;
+                context.dataSubgraph = context.visibleDataSubgraph;
               });
-            });
+            CivitasHelper.methods
+              .getMahasiswa(result)
+              .call({ from: accounts[0] })
+              .then(function (result) {
+                if (result) {
+                  context.mahasiswaData.nim = web3.utils.hexToUtf8(result[0]);
+                  context.mahasiswaData.ipfsHash = web3.utils.hexToUtf8(
+                    result[1]
+                  );
+                  context.dataContract = context.mhsDataOnChain;
+                  ipfs
+                    .cat("/ipfs/" + context.mahasiswaData.ipfsHash)
+                    .then((data) => {
+                      context.mahasiswaIpfs = JSON.parse(data.toString());
+                      context.dataIpfs = context.mhsDataIpfs;
+                      ipfs
+                        .cat("/ipfs/" + context.mahasiswaIpfs.foto)
+                        .then((data) => {
+                          let blob = new Blob([data], { type: "image/png" });
+                          let url = URL.createObjectURL(blob);
+                          context.previewImage = url;
+                        });
+                    });
+                }
+              });
+            context.$apollo
+              .query({
+                query: GET_STUDI,
+                variables: {
+                  nim: result,
+                },
+              })
+              .then((response) => {
+                context.riwayatStudis = response.data.riwayatStudis;
+              });
           }
         });
     });
-    this.$apollo
-      .query({
-        query: GET_MAHASISWA,
-        variables: {
-          nim: this.$route.params.id,
-        },
-      })
-      .then((response) => {
-        this.mahasiswa = response.data.mahasiswa;
-        this.dataSubgraph = this.visibleDataSubgraph;
-      });
   },
 };
 </script>

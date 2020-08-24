@@ -165,9 +165,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.usersOpened
-        ? this.$router.push(this.usersOpened)
-        : this.$router.push("/dashboard");
+      this.$router.go(-1)
     },
     detailClicked(item) {
       this.$router.push({
@@ -192,7 +190,6 @@ export default {
             ipfs.cat("/ipfs/" + context.semesterData.ipfsHash).then((data) => {
               context.semesterIpfs = JSON.parse(data.toString());
               context.dataIpfs = context.visibleDataIpfs;
-              console.log(context.visibleDataAmpu);
               context.dataAmpu = context.visibleDataAmpu;
             });
           }

@@ -42,7 +42,13 @@ export default {
         .then(function (result) {
           switch(web3.utils.hexToUtf8(result)){
             case 'admin': context.sidebarMenu = nav["admin"];break;
-            default : context.sidebarMenu = nav["def"];break;
+            case 'mahasiswa': context.sidebarMenu = nav["mahasiswa"];break;
+            case 'pd2': context.sidebarMenu = nav["civitas"];break;
+            case 'kajur': context.sidebarMenu = nav["civitas"];break;
+            case 'rektor': context.sidebarMenu = nav["civitas"];break;
+            case 'dikti': context.sidebarMenu = nav["dikti"];break;
+            case 'dosen': context.sidebarMenu = nav["dosen"];break;
+            default : context.sidebarMenu = nav["tes"];break;
           }
         });
     });

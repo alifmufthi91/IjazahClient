@@ -58,22 +58,15 @@
                             <CCol sm="4">
                               <CInput disabled label="Prodi" :value="pemilik.data.prodi" />
                             </CCol>
-                            <CCol sm="4">
+                            <CCol sm="6">
                               <CInput
                                 disabled
                                 label="Jenis Kelamin"
                                 :value="pemilik.data.jenisKelamin"
                               />
                             </CCol>
-                            <CCol sm="4">
+                            <CCol sm="6">
                               <CInput disabled label="NIK" :value="pemilik.data.nik" />
-                            </CCol>
-                            <CCol sm="4">
-                              <CInput
-                                disabled
-                                label="Status Lulus"
-                                :value="pemilik.data.statusKelulusan.toString()"
-                              />
                             </CCol>
                           </CRow>
                           <CRow class="justify-content-center">
@@ -196,7 +189,7 @@
             <CCardFooter>
               <CRow class="justify-content-center">
                 <CCol sm="4">
-                  <CButton color="danger" block @click="confirmModal = true">Kembali</CButton>
+                  <CButton color="danger" block @click="goBack">Kembali</CButton>
                 </CCol>
                 <CCol sm="4">
                   <CButton color="success" block @click="confirmModal = true">Tambah Sertifikat</CButton>
@@ -229,8 +222,8 @@
 </template>
 
 <script>
-import CivitasHelper from "../../contracts/CivitasHelper";
-import SertifikatHelper from "../../contracts/SertifikatHelper";
+import CivitasHelper from "@/contracts/CivitasHelper";
+import SertifikatHelper from "@/contracts/SertifikatHelper";
 import gql from "graphql-tag";
 
 export const GET_CIVITAS = gql`
@@ -290,10 +283,6 @@ export default {
           label: "Dosen",
         },
         {
-          value: "dikti",
-          label: "Dikti",
-        },
-        {
           value: "pd2",
           label: "PD II",
         },
@@ -331,7 +320,6 @@ export default {
   computed: {
     fileUrl() {
       const gateway = "https://gateway.ipfs.io/ipfs/" + this.uploadedSertifikat;
-      console.log(gateway);
       return gateway;
     },
     documentFormat() {
@@ -339,35 +327,23 @@ export default {
     },
   },
   methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
     createSertifikat: function () {
       let pemilik = this.pemilik;
       if (this.isDataReady()) {
         let listSigners = [];
         let listRole = [];
         this.listSigners.forEach((signer) => {
-          console.log(signer.id + signer.role);
           listSigners.push(signer.id);
           listRole.push(web3.utils.utf8ToHex(signer.role));
         });
         let data = this.packSertifikat();
-        console.log(listSigners);
-        console.log(listRole);
         let file = Buffer.from(JSON.stringify(data));
         ipfs.add(file).then((ipfsHash) => {
           const hash = ipfsHash[0].hash;
-          console.log(hash);
           web3.eth.getAccounts().then((accounts) => {
-            console.log(
-              pemilik.address,
-              " ",
-              pemilik.nim,
-              " ",
-              data.jenis,
-              " ",
-              listSigners.length,
-              " ",
-              hash
-            );
             return SertifikatHelper.methods
               .createSertifikat(
                 pemilik.address,
@@ -380,10 +356,10 @@ export default {
               )
               .send({ from: accounts[0] })
               .on("error", function (error, receipt) {
-                this.showAlert(false);
+                console.log(error)
               })
-              .on("receipt", function (receipt) {
-                this.showAlert(true);
+              .on("transactionHash", function (hash) {
+                console.log(hash)
               });
           });
         });
@@ -409,7 +385,6 @@ export default {
           .getMahasiswa(web3.utils.utf8ToHex(nim))
           .call({ from: accounts[0] })
           .then(function (result) {
-            console.log(result);
             pemilik.nim = result[0];
             pemilik.hash = result[1];
             if (pemilik.hash != null) {
@@ -433,10 +408,8 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response);
           if (!response.data.mahasiswa.linkedAccount) return false;
           this.pemilik.address = response.data.mahasiswa.linkedAccount.id;
-          console.log(this.pemilik.address);
         });
     },
     updateCivitasOptions(index) {
@@ -449,7 +422,6 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response);
           let newArr = [];
           response.data.civitas.forEach((civitas) => {
             newArr.push({
@@ -459,21 +431,17 @@ export default {
           });
           this.listCivitasOptions[index] = newArr;
           this.$forceUpdate();
-          console.log(this.listCivitasOptions);
         });
     },
     uploadSertifikat: function () {
       this.isUploadingFile = true;
-      console.log(this.sertifikat.file);
       ipfs.add(this.sertifikat.file).then((ipfsHash) => {
-        console.log(ipfsHash);
         let hash = ipfsHash[0].hash;
         this.uploadedSertifikat = hash;
         this.isUploadingFile = false;
       });
     },
     civitasOptions(index) {
-      console.log("id" + index);
       return this.listCivitasOptions[index];
     },
     validator(val) {
@@ -506,7 +474,6 @@ export default {
       this.listSigners.splice(index, 1);
     },
     previewFiles(event) {
-      console.log(event[0]);
       this.sertifikat.file = event[0];
     },
     isStringEmpty(str) {
@@ -515,7 +482,6 @@ export default {
     isDataReady() {
       let isReady = true;
       let arrSigner = [];
-      console.log("check data");
       if (
         this.isStringEmpty(this.pemilik.address) ||
         this.isStringEmpty(this.pemilik.nim) ||
@@ -534,7 +500,6 @@ export default {
           isReady = false;
         arrSigner.push(signer.id);
       });
-      console.log(arrSigner);
       return isReady;
     },
   },

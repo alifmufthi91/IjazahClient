@@ -2,7 +2,7 @@
   <CRow>
     <CCol col="12" xl="12">
       <CCard>
-        <CCardHeader>Info Semester</CCardHeader>
+        <CCardHeader>Daftar Antrian Kelulusan</CCardHeader>
         <CCardBody>
           <CDataTable
             hover
@@ -15,15 +15,21 @@
             columnFilter
             @page-change="pageChange"
           >
-            <template #kelas-filter>
+            <template #id-filter>
+              <input class="form-control form-control-sm" :value="filterNim" @change="setFilterId" />
+            </template>
+            <template #id="data">
+              <td>{{ hexToString(data.item.id) }}</td>
+            </template>
+            <template #name-filter>
               <input
                 class="form-control form-control-sm"
-                :value="filterKelas"
-                @change="setFilterKelas"
+                :value="filterNama"
+                @change="setFilterNama"
               />
             </template>
-            <template #kelas="data">
-              <td>{{ hexToString(data.item.kelas) }}</td>
+            <template #name="data">
+              <td>{{ hexToString(data.item.name) }}</td>
             </template>
             <template #prodi-filter>
               <input
@@ -35,28 +41,20 @@
             <template #prodi="data">
               <td>{{ hexToString(data.item.prodi) }}</td>
             </template>
-            <template #statusPenilaian="data">
-              <td>{{ data.item.statusPenilaian?'BUKA':'TUTUP' }}</td>
+            <template #isLulus="data">
+              <td><CBadge :color="data.item.isLulus?'success':'danger'">{{ data.item.isLulus?'Lulus':'Belum' }}</CBadge></td>
             </template>
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-left">
                   <CButtonGroup>
                     <CButton color="primary" size="sm" @click="detailClicked(data.item)">Detail</CButton>
-                    <CButton color="info" size="sm">Edit</CButton>
                     <CButton
-                      v-if="!data.item.statusPenilaian"
                       color="success"
                       class="mr-3"
                       size="sm"
-                      @click="openStatusModal(data.item)"
-                    >Buka Penilaian</CButton>
-                    <CButton
-                      v-if="data.item.statusPenilaian"
-                      color="secondary"
-                      size="sm"
-                      @click="openStatusModal(data.item)"
-                    >Tutup Penilaian</CButton>
+                      @click="openLulusModal(data.item)"
+                    >Luluskan</CButton>
                   </CButtonGroup>
                 </CCol>
               </td>
@@ -66,29 +64,26 @@
       </CCard>
     </CCol>
     <CModal
-      :show.sync="changeStatusModal"
+      :show.sync="lulusModal"
       :no-close-on-backdrop="true"
       :centered="true"
-      title="Ubah Status Penilaian"
+      title="Luluskan Mahasiswa"
       md="8"
       color="success"
     >
       <CRow>
         <CCol>
-          <CInput label="Kelas" horizontal readonly :value="hexToString(selectedSemester.kelas)" />
-          <CInput label="Prodi" horizontal readonly :value="hexToString(selectedSemester.prodi)" />
-          <CInput label="Semester Ke" horizontal readonly :value="selectedSemester.semesterKe" />
-          <CInput label="Status Asal" horizontal readonly :value="selectedSemester.statusPenilaian?'BUKA':'TUTUP'" />
-          <CInput label="Status Menjadi" horizontal readonly :value="!selectedSemester.statusPenilaian?'BUKA':'TUTUP'" />
+          <CInput label="Name" horizontal readonly :value="hexToString(selectedMhs.name)" />
+          <CInput label="NIM" horizontal readonly :value="hexToString(selectedMhs.id)" />
         </CCol>
       </CRow>
       <template #header>
-        <h6 class="modal-title">Ubah Status Penilaian</h6>
-        <CButtonClose @click="changeStatusModal = false" class="text-white" />
+        <h6 class="modal-title">Luluskan Mahasiswa</h6>
+        <CButtonClose @click="lulusModal = false" class="text-white" />
       </template>
       <template #footer>
-        <CButton @click="confirmChangeStatus(false)" color="danger">Kembali</CButton>
-        <CButton @click="confirmChangeStatus(true)" color="success">Konfirmasi</CButton>
+        <CButton @click="confirmLulus(false)" color="danger">Kembali</CButton>
+        <CButton @click="confirmLulus(true)" color="success">Konfirmasi</CButton>
       </template>
     </CModal>
   </CRow>
@@ -96,19 +91,19 @@
 
 <script>
 import gql from "graphql-tag";
-import AkademikHelper from "@/contracts/AkademikHelper";
+import CivitasHelper from "@/contracts/CivitasHelper";
+
 
 export default {
-  name: "InfoSemester",
+  name: "PelulusanMahasiswa",
   apollo: {
-    semesters: gql`
+    mahasiswas: gql`
       query {
-        semesters {
+        mahasiswas(where:{isLulus:false}){
           id
-          semesterKe
+          name
           prodi
-          kelas
-          statusPenilaian
+          isLulus
         }
       }
     `,
@@ -116,17 +111,20 @@ export default {
   data() {
     return {
       fields: [
-        { key: "id", filter: false},
-        { key: "semesterKe", label:"Semester", filter: false },
+        { key: "id", label: "NIM" },
+        { key: "name" },
         { key: "prodi" },
-        { key: "kelas" },
-        { key: "statusPenilaian", label:"Status", filter: false },
+        { key: "isLulus",label: "Status Kelulusan", filter: false },
         { key: "action", label: "Aksi", sorter: false, filter: false },
       ],
       activePage: 1,
-      selectedSemester: { },
-      changeStatusModal: false,
-      filterKelas: "",
+      selectedMhs: {
+        id: String(),
+        name: String()
+      },
+      lulusModal: false,
+      filterNim: "",
+      filterNama: "",
       filterProdi: "",
     };
   },
@@ -141,21 +139,23 @@ export default {
     },
   },
   mounted() {
-    this.$apollo.queries.semesters.refetch();
+    this.$apollo.queries.mahasiswas.refetch();
   },
   computed: {
     computedItems() {
-      return this.semesters;
+      return this.mahasiswas;
     },
     filteredItems() {
-      if (!this.semesters) return []
+      if (!this.mahasiswas) return []
       return this.computedItems.filter((item) => {
-        if (!this.filterKelas && !this.filterProdi)
+        if (!this.filterNim && !this.filterNama && !this.filterProdi)
           return true;
-        const kelas = item.kelas;
+        const id = item.id;
+        const nama = item.name;
         const prodi = item.prodi;
         return (
-          web3.utils.hexToUtf8(kelas).toLowerCase().includes(this.filterKelas.toLowerCase()) &&
+          web3.utils.hexToUtf8(id).toLowerCase().includes(this.filterNim.toLowerCase()) &&
+          web3.utils.hexToUtf8(nama).toLowerCase().includes(this.filterNama.toLowerCase()) &&
           web3.utils.hexToUtf8(prodi).toLowerCase().includes(this.filterProdi.toLowerCase())
         );
       });
@@ -166,41 +166,45 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.push({ path: "semester/detail/" + `${item.id}` });
+      this.$router.push({ path: "mahasiswa/detail/" + `${item.id}` });
+    },
+    editClicked(item) {
+      this.$router.push({ path: "mahasiswa/edit/" + `${item.id}` });
     },
     hexToString(str) {
       if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);
     },
-    setFilterKelas(e) {
-      this.filterKelas = e.target.value;
+    setFilterId(e) {
+      this.filterNim = e.target.value;
+    },
+    setFilterNama(e) {
+      this.filterNama = e.target.value;
     },
     setFilterProdi(e) {
       this.filterProdi = e.target.value;
     },
-    changeStatus() {
-      const semester = this.selectedSemester;
-      const status = !semester.statusPenilaian;
+    luluskanMahasiswa() {
+      let mahasiswa = this.selectedMhs;
       web3.eth.getAccounts().then((accounts) => {
-        AkademikHelper.methods
-          .ubahStatusNilaiSemester(semester.id, status)
+        CivitasHelper.methods
+          .setMahasiswaLulus(mahasiswa.id, true)
           .send({ from: accounts[0] })
           .on("error", function (error, receipt) {
             console.log(error);
           })
           .on("transactionHash", function (transactionHash) {
-            console.log(transactionHash);
-            this.$apollo.queries.semesters.refetch();
+            console.log(transactionHash.contractAddress);
           });
       });
     },
-    openStatusModal: function (semester) {
-      this.changeStatusModal = true;
-      this.selectedSemester = semester;
+    openLulusModal: function (mahasiswa) {
+      this.lulusModal = true;
+      this.selectedMhs = mahasiswa;
     },
-    confirmChangeStatus: function (confirm) {
-      this.changeStatusModal = false;
+    confirmLulus: function (confirm) {
+      this.lulusModal = false;
       if (confirm) {
-        this.changeStatus();
+        this.luluskanMahasiswa();
       }
     },
   },

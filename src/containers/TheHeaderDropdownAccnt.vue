@@ -18,7 +18,7 @@
     <CDropdownHeader tag="div" class="text-center" color="light">
       <strong>Account</strong>
     </CDropdownHeader>
-    <CDropdownItem>
+    <!-- <CDropdownItem>
       <CIcon name="cil-bell"/> Updates
       <CBadge color="info" class="ml-auto">{{ itemsCount }}</CBadge>
     </CDropdownItem>
@@ -58,8 +58,8 @@
     <CDropdownDivider/>
     <CDropdownItem>
       <CIcon name="cil-shield-alt" /> Lock Account
-    </CDropdownItem>
-    <CDropdownItem>
+    </CDropdownItem> -->
+    <CDropdownItem :to="{ name: 'Getting Started'}">
       <CIcon name="cil-lock-locked" /> Logout
     </CDropdownItem>
   </CDropdown>

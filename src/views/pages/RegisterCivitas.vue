@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import AccountManager from "../../contracts/AccountManager";
+import AccountManager from "@/contracts/AccountManager";
 export default {
   name: "RegisterCivitas",
   data() {
@@ -189,7 +189,6 @@ export default {
     createAccount: function () {
       let self = this;
       web3.eth.getAccounts().then((accounts) => {
-        console.log(web3.utils.utf8ToHex(self.id));
         if (self.isMahasiswa) self.role = "mahasiswa";
         return AccountManager.methods
           .createAccount(
@@ -200,11 +199,9 @@ export default {
           .send({ from: accounts[0] })
           .on("error", function (error, receipt) {
             console.log(error);
-            self.showAlert(false);
           })
-          .on("receipt", function (receipt) {
-            console.log(receipt.contractAddress);
-            self.showAlert(true);
+          .on("transactionHash", function (transactionHash) {
+            console.log(transactionHash);
           });
       });
     },
@@ -219,7 +216,6 @@ export default {
       else return val ? val.length >= 1 && val.length <= 21 : false;
     },
     confirmRegister: function (confirm) {
-      console.log(confirm);
       this.confirmModal = false;
       if (confirm) {
         this.createAccount();

@@ -74,19 +74,11 @@
 </template>
 
 <script>
-import MainChartExample from "./charts/MainChartExample";
-import WidgetsDropdown from "./widgets/WidgetsDropdown";
-import WidgetsBrand from "./widgets/WidgetsBrand";
 import AccountManager from "@/contracts/AccountManager";
 import AppVue from "../App.vue";
 
 export default {
   name: "Home",
-  components: {
-    MainChartExample,
-    WidgetsDropdown,
-    WidgetsBrand
-  },
   data() {
     return {
       isRegistered: false,
@@ -107,7 +99,6 @@ export default {
           .getAccount(accounts[0])
           .call({ from: accounts[0] })
           .then(function(result) {
-            console.log("Result is : " + result[0]);
             if (result[0] != 0) {
               self.user.address = result[0];
               self.user.name = web3.utils.hexToUtf8(result[2]);

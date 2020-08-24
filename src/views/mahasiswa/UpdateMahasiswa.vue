@@ -8,7 +8,7 @@
             closeButton
             color="success"
             fade
-          >Menambahkan Civitas Baru Berhasil.</CAlert>
+          >Update Data Mahasiswa Berhasil.</CAlert>
           <CAlert :show.sync="dismissFail" closeButton color="danger" fade>
             <strong>Permintaan Gagal</strong>
             : {{dismissFail}}
@@ -18,37 +18,37 @@
           <CCard class="mx-4 mb-5">
             <CCardBody class="p-4">
               <CForm>
-                <h2 class="mb-3">Tambah Civitas</h2>
+                <h2 class="mb-3">Edit Mahasiswa</h2>
                 <CRow>
-                  <CCol sm="8">
+                  <CCol sm="8" v-if="this.isDataLoaded">
                     <CInput
                       label="Nama Lengkap"
                       required
                       :is-valid="validator"
                       invalid-feedback="Data tidak boleh kosong."
-                      :value.sync="civitas.nama"
+                      :value.sync="mahasiswa.nama"
                     />
                     <CSelect
                       label="Jenis Kelamin"
                       :options="genderOptions"
                       placeholder="Pilih Jenis Kelamin"
-                      :is-valid="inputValidator(this.civitas.jenisKelamin)"
-                      :value.sync="civitas.jenisKelamin"
+                      :is-valid="inputValidator(this.mahasiswa.jenisKelamin)"
+                      :value.sync="mahasiswa.jenisKelamin"
                       required
                     />
                     <CInput
-                      label="NIP"
+                      label="NIM"
                       required
                       :is-valid="validator"
                       invalid-feedback="Data tidak boleh kosong."
-                      :value.sync="civitas.nip"
+                      :value.sync="mahasiswa.nim"
                     />
                     <CInput
                       label="NIK"
                       required
                       :is-valid="validator"
                       invalid-feedback="Data tidak boleh kosong."
-                      :value.sync="civitas.nik"
+                      :value.sync="mahasiswa.nik"
                     />
                     <CRow>
                       <CCol sm="8">
@@ -57,15 +57,15 @@
                           placeholder="Kota Lahir"
                           :is-valid="validator"
                           invalid-feedback="Data tidak boleh kosong."
-                          :value.sync="civitas.tempatLahir"
+                          :value.sync="mahasiswa.tempatLahir"
                         />
                       </CCol>
                       <CCol sm="4">
                         <CInput
                           label="Tanggal Lahir"
                           type="date"
-                          :is-valid="inputValidator(this.civitas.tanggalLahir)"
-                          :value.sync="civitas.tanggalLahir"
+                          :is-valid="inputValidator(this.mahasiswa.tanggalLahir)"
+                          :value.sync="mahasiswa.tanggalLahir"
                         />
                       </CCol>
                     </CRow>
@@ -74,27 +74,28 @@
                       required
                       :is-valid="validator"
                       invalid-feedback="Data tidak boleh kosong."
-                      :value.sync="civitas.email"
+                      :value.sync="mahasiswa.email"
                     />
                     <CInput
                       label="No. Telepon"
                       required
                       :is-valid="validator"
                       invalid-feedback="Data tidak boleh kosong."
-                      :value.sync="civitas.noTelp"
+                      :value.sync="mahasiswa.noTelp"
                     />
                     <CSelect
-                      label="Dosen Aktif?"
-                      :options="dosenAktifOptions"
-                      placeholder="Pilih Status Mengajar"
-                      :is-valid="inputValidator(this.civitas.isDosen.toString())"
-                      :value.sync="civitas.isDosen"
+                      label="Prodi"
+                      :options="prodiOptions"
+                      placeholder="Pilih Prodi"
+                      :is-valid="inputValidator(this.mahasiswa.prodi)"
+                      :value.sync="mahasiswa.prodi"
                       required
+                      v-if="this.prodis"
                     />
                   </CCol>
-                  <CCol>
+                  <CCol v-if="this.previewImage">
                     <CCard class="mt-4">
-                      <CCardHeader>Upload Foto</CCardHeader>
+                      <CCardHeader>Ganti Foto</CCardHeader>
                       <CCardBody class="p-1 m-2">
                         <div v-if="previewImage == null">
                           <svg
@@ -117,9 +118,29 @@
                     </CCard>
                   </CCol>
                 </CRow>
-                <CButton color="success" block @click="confirmModal = true">Buat Civitas</CButton>
               </CForm>
             </CCardBody>
+            <CCardFooter>
+              <CRow class="justify-content-center">
+                <CCol sm="4">
+                  <CButton color="danger" block @click="goBack">Kembali</CButton>
+                </CCol>
+                <CCol sm="4">
+                  <CButton
+                    v-if="!isDataReady||!previewImage"
+                    color="success"
+                    block
+                    disabled
+                  >Konfirmasi Edit</CButton>
+                  <CButton
+                    v-if="isDataReady&&previewImage"
+                    color="success"
+                    block
+                    @click="confirmModal = true"
+                  >Konfirmasi Edit</CButton>
+                </CCol>
+              </CRow>
+            </CCardFooter>
           </CCard>
         </CCol>
       </CRow>
@@ -157,60 +178,135 @@ const ipfs = ipfsClient({
 });
 
 export default {
-  name: "TambahCivitas",
+  name: "TambahMahasiswa",
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.usersOpened = from.fullPath;
+    });
+  },
+  apollo: {
+    prodis: gql`
+      query {
+        prodis {
+          id
+          namaProdi
+        }
+      }
+    `,
+  },
   data() {
     return {
+      usersOpened: null,
       genderOptions: ["Laki-laki", "Perempuan"],
-      dosenAktifOptions: [
-        { label: "Ya", value: true },
-        { label: "Tidak", value: false },
-      ],
       confirmModal: false,
-      successModal: false,
       dismissSuccess: 0,
       dismissFail: 0,
       image: null,
       previewImage: null,
-      civitas: {
+      mahasiswaData: {},
+      mahasiswa: {
         nama: String(),
-        nip: String(),
+        nim: String(),
         nik: String(),
         jenisKelamin: String(),
         tempatLahir: String(),
         tanggalLahir: null,
-        statusPegawai: "Aktif",
-        isDosen: false,
+        prodi: String(),
         noTelp: String(),
         email: String(),
         foto: String(),
       },
+      isDataLoaded: false,
     };
   },
+  computed: {
+    prodiOptions() {
+      let arrProdi = [];
+      this.prodis.forEach((prodi) => {
+        arrProdi.push({
+          label: web3.utils.hexToUtf8(prodi.namaProdi),
+          value: web3.utils.hexToUtf8(prodi.namaProdi),
+        });
+      });
+      return arrProdi;
+    },
+  },
+  beforeMount() {
+    let context = this;
+    web3.eth.getAccounts().then((accounts) => {
+      CivitasHelper.methods
+        .getMahasiswa(this.$route.params.id)
+        .call({ from: accounts[0] })
+        .then(function (result) {
+          if (result) {
+            context.mahasiswaData.nim = web3.utils.hexToUtf8(result[0]);
+            context.mahasiswaData.ipfsHash = web3.utils.hexToUtf8(result[1]);
+            context.isDataLoaded = true;
+            ipfs.cat("/ipfs/" + context.mahasiswaData.ipfsHash).then((data) => {
+              context.mahasiswa = JSON.parse(data.toString());
+              ipfs.cat("/ipfs/" + context.mahasiswa.foto).then((data) => {
+                let blob = new Blob([data], { type: "image/png" });
+                let url = URL.createObjectURL(blob);
+                context.previewImage = url;
+              });
+            });
+          }
+        });
+    });
+  },
   methods: {
-    createCivitas: function () {
-      let showAlert = this.showAlert;
-      if (this.isDataReady(this.civitas)) {
-        let data = this.civitas;
+    goBack() {
+      this.$router.go(-1)
+    },
+    updateMahasiswa: function () {
+      if (this.isDataReady(this.mahasiswa)) {
+        const mahasiswaData = this.mahasiswaData;
+        let data = this.mahasiswa;
         let file = Buffer.from(JSON.stringify(data));
         ipfs.add(file).then((ipfsHash) => {
           web3.eth.getAccounts().then((accounts) => {
             let hash = ipfsHash[0].hash;
-            return CivitasHelper.methods
-              .createCivitas(
-                web3.utils.utf8ToHex(this.civitas.nip),
-                web3.utils.utf8ToHex(this.civitas.nama),
-                web3.utils.utf8ToHex(hash),
-                this.civitas.isDosen
-              )
-              .send({ from: accounts[0] })
-              .on("error", function (error, receipt) {
-                console.log(error);
-                showAlert(false);
-              })
-              .on("transactionHash", function (hash) {
-                console.log(hash);
-                showAlert(true);
-              });
+            if (data.nim != mahasiswaData.nim) {
+              CivitasHelper.methods
+                .updateNIMMahasiswa(
+                  web3.utils.utf8ToHex(mahasiswaData.nim),
+                  web3.utils.utf8ToHex(data.nim)
+                )
+                .send({ from: accounts[0] })
+                .on("error", function (error, receipt) {
+                  console.log(error);
+                })
+                .on("transactionHash", function (receipt) {
+                  console.log(receipt);
+                });
+              CivitasHelper.methods
+                .updateMahasiswaData(
+                  web3.utils.utf8ToHex(data.nim),
+                  web3.utils.utf8ToHex(data.nama),
+                  web3.utils.utf8ToHex(hash)
+                )
+                .send({ from: accounts[0] })
+                .on("error", function (error, receipt) {
+                  console.log(error);
+                })
+                .on("transactionHash", function (receipt) {
+                  console.log(receipt);
+                });
+            } else {
+              CivitasHelper.methods
+                .updateMahasiswaData(
+                  web3.utils.utf8ToHex(data.nim),
+                  web3.utils.utf8ToHex(data.nama),
+                  web3.utils.utf8ToHex(hash)
+                )
+                .send({ from: accounts[0] })
+                .on("error", function (error, receipt) {
+                  console.log(error);
+                })
+                .on("transactionHash", function (receipt) {
+                  console.log(receipt);
+                });
+            }
           });
         });
       }
@@ -221,7 +317,7 @@ export default {
     uploadImage: function () {
       ipfs.add(this.image).then((ipfsHash) => {
         let hash = ipfsHash[0].hash;
-        this.civitas.foto = hash;
+        this.mahasiswa.foto = hash;
         ipfs.cat("/ipfs/" + hash).then((data) => {
           let blob = new Blob([data], { type: "image/png" });
           let url = URL.createObjectURL(blob);
@@ -233,12 +329,13 @@ export default {
       let isReady = true;
       Object.keys(val)
         .filter((attribute) => {
-          if (attribute == "isDosen")
-            return false;
           return attribute;
         })
         .forEach((attribute) => {
-          if (val[attribute] == null || val[attribute] == "") {
+          if (
+            val[attribute] == null ||
+            (val[attribute] == "" && attribute != "statusKelulusan")
+          ) {
             isReady = false;
           }
         });
@@ -248,12 +345,12 @@ export default {
       return val ? val.length > 1 : false;
     },
     inputValidator(val) {
-        return val? true : false;
+      return val ? true : false;
     },
     confirmRegister: function (confirm) {
       this.confirmModal = false;
       if (confirm) {
-        this.createCivitas();
+        this.updateMahasiswa();
       }
     },
     showAlert: function (isSuccess) {

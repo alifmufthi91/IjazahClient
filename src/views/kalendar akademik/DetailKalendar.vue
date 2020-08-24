@@ -94,9 +94,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.usersOpened
-        ? this.$router.push(this.usersOpened)
-        : this.$router.push("/dashboard");
+      this.$router.go(-1)
     },
   },
   beforeMount() {

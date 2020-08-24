@@ -6,8 +6,9 @@
       <h4 color="bg-primary" class="c-sidebar-brand-full">IjazahClient</h4>
       <!-- <CIcon name="logo" height="48" alt="Logo" /> -->
     </CHeaderBrand>
-    <CHeaderNav class="d-md-down-none mr-auto">
-      <CHeaderNavItem class="px-3">
+     <CHeaderNav class="d-md-down-none mr-auto">
+       <CBreadcrumbRouter class="border-0 mb-0" />
+      <!-- <CHeaderNavItem class="px-3">
         <CHeaderNavLink to="/dashboard">Dashboard</CHeaderNavLink>
       </CHeaderNavItem>
       <CHeaderNavItem class="px-3">
@@ -15,10 +16,10 @@
       </CHeaderNavItem>
       <CHeaderNavItem class="px-3">
         <CHeaderNavLink>Settings</CHeaderNavLink>
-      </CHeaderNavItem>
-    </CHeaderNav>
+      </CHeaderNavItem> -->
+    </CHeaderNav> 
     <CHeaderNav class="mr-4">
-      <CHeaderNavItem class="d-md-down-none mx-2">
+      <!-- <CHeaderNavItem class="d-md-down-none mx-2">
         <CHeaderNavLink>
           <CIcon name="cil-bell" />
         </CHeaderNavLink>
@@ -32,12 +33,9 @@
         <CHeaderNavLink>
           <CIcon name="cil-envelope-open" />
         </CHeaderNavLink>
-      </CHeaderNavItem>
+      </CHeaderNavItem> -->
       <TheHeaderDropdownAccnt />
     </CHeaderNav>
-    <CSubheader class="px-3">
-      <CBreadcrumbRouter class="border-0 mb-0" />
-    </CSubheader>
   </CHeader>
 </template>
 

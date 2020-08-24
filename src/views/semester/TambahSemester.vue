@@ -136,7 +136,7 @@
             <CCardFooter>
               <CRow class="justify-content-center">
                 <CCol sm="4">
-                  <CButton color="danger" block @click="confirmModal = true">Kembali</CButton>
+                  <CButton color="danger" block @click="goBack">Kembali</CButton>
                 </CCol>
                 <CCol sm="4">
                   <CButton color="success" block @click="confirmModal = true">Tambah Semester</CButton>
@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import AkademikHelper from "../../contracts/AkademikHelper";
+import AkademikHelper from "@/contracts/AkademikHelper";
 import gql from "graphql-tag";
 
 const ipfsClient = require("ipfs-http-client");
@@ -242,31 +242,26 @@ export default {
           value: prodi.id,
         });
       });
-      console.log(this.prodis);
       return arrProdi;
     },
     matkulOptions() {
       let arrMatkul = [];
-      console.log(this.mataKuliahs);
       this.mataKuliahs.forEach((matkul) => {
         arrMatkul.push({
           label: web3.utils.hexToUtf8(matkul.namaMatkul),
           value: Number(matkul.id),
         });
       });
-      console.log(arrMatkul)
       return arrMatkul;
     },
     dosenOptions() {
       let arrDosen = [];
-      console.log(this.dosens);
       this.dosens.forEach((dosen) => {
         arrDosen.push({
           label: web3.utils.hexToUtf8(dosen.name),
           value: Number(dosen.id),
         });
       });
-      console.log(arrDosen)
       return arrDosen;
     },
     ready() {
@@ -281,9 +276,11 @@ export default {
     },
   },
   methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
     createSemester: function () {
       let data = this.semester;
-      console.log(data)
       if (
         this.isDataReady(this.semester) &&
         this.isPerkuliahanReady(this.listMatkul)
@@ -292,12 +289,12 @@ export default {
         let daftarMatkul = [];
         let daftarSks = [];
         let sks = 0;
-        data.ampu = []
+        data.ampu = [];
         data.totalSks = 0;
         this.listMatkul.forEach((matkul) => {
           sks = matkul.sks;
-          data.totalSks+=sks;
-          data.ampu.push({'matkul':matkul.matkul,'sks':sks, 'dosen':[]})
+          data.totalSks += sks;
+          data.ampu.push({ matkul: matkul.matkul, sks: sks, dosen: [] });
           matkul.dosen.forEach((dosen) => {
             daftarMatkul.push(matkul.matkul);
             daftarDosen.push(dosen.id);
@@ -306,42 +303,29 @@ export default {
             data.ampu[data.ampu.length - 1].dosen.push(dosen.id);
           });
         });
-        console.log('daftarMtk: '+daftarMatkul)
-        console.log('daftarDsn: '+daftarDosen)
-        console.log('daftarSKs: '+daftarSks)
         let file = Buffer.from(JSON.stringify(data));
         ipfs.add(file).then((ipfsHash) => {
-        let hash = ipfsHash[0].hash;
-        console.log(hash);
-        console.log(
-          "ke"+ data.semesterKe +
-            " hash" +
-            web3.utils.utf8ToHex(hash) +
-            " prodi" +
-            this.prodis[data.prodi].namaProdi +
-            " kelas" +
-            web3.utils.utf8ToHex(data.kelas)
-        );
-        web3.eth.getAccounts().then((accounts) => {
-          return AkademikHelper.methods
-            .createSemester(
-              data.semesterKe,
-              web3.utils.utf8ToHex(hash),
-              daftarDosen,
-              daftarMatkul,
-              daftarSks,
-              this.prodis[data.prodi].namaProdi,
-              web3.utils.utf8ToHex(data.kelas)
-            )
-            .send({ from: accounts[0] })
-            .on("error", function (error, receipt) {
-              this.showAlert(false);
-            })
-            .on("receipt", function (receipt) {
-              this.showAlert(true);
-            });
+          let hash = ipfsHash[0].hash;
+          web3.eth.getAccounts().then((accounts) => {
+            return AkademikHelper.methods
+              .createSemester(
+                data.semesterKe,
+                web3.utils.utf8ToHex(hash),
+                daftarDosen,
+                daftarMatkul,
+                daftarSks,
+                this.prodis[data.prodi].namaProdi,
+                web3.utils.utf8ToHex(data.kelas)
+              )
+              .send({ from: accounts[0] })
+              .on("error", function (error, receipt) {
+                console.log(error)
+              })
+              .on("transactionHash", function (transactionHash) {
+                console.log(transactionHash)
+              });
+          });
         });
-      });
       }
     },
     validator(val) {
@@ -393,18 +377,16 @@ export default {
     isDataReady(val) {
       let isReady = true;
       Object.keys(val).forEach((attribute) => {
-        console.log(attribute + " " + val[attribute]);
         if (typeof val[attribute] == "string") {
           if (val[attribute] == "") {
             isReady = false;
           }
-        }else if(val[attribute] == null) {
+        } else if (val[attribute] == null) {
           isReady = false;
-        }else if(val["semesterKe"] == 0){
+        } else if (val["semesterKe"] == 0) {
           isReady = false;
         }
       });
-      console.log(isReady)
       return isReady;
     },
     isPerkuliahanReady(val) {
@@ -416,7 +398,7 @@ export default {
           if (dosen.id == null || arrDosen.includes(dosen.id)) {
             isReady = false;
           }
-          arrDosen.push(dosen.id)
+          arrDosen.push(dosen.id);
         });
         if (
           matkul.matkul == null ||
@@ -427,7 +409,6 @@ export default {
         }
         arrMatkul.push(matkul.matkul);
       });
-      console.log(isReady)
       return isReady;
     },
   },
@@ -440,7 +421,7 @@ export default {
         .call({ from: accounts[0] })
         .then(function (result) {
           if (result) {
-            semester.idKalendar = result
+            semester.idKalendar = result;
             AkademikHelper.methods
               .getKalendarAkademik(result)
               .call({ from: accounts[0] })

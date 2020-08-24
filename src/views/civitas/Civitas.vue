@@ -172,7 +172,6 @@ export default {
     },
   },
   mounted() {
-    console.log("test");
     this.$apollo.queries.civitas.refetch();
   },
   computed: {
@@ -203,21 +202,18 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "civitas/detail/" + `${item.id}` });
+      this.$router.push({ path: "civitas/detail/" + `${item.id}` });
     },
     setFilterId(e) {
-      console.log(e.target.value);
       this.filterNip = e.target.value;
     },
     setFilterNama(e) {
-      console.log(e.target.value);
       this.filterNama = e.target.value;
     },
     hexToString(str) {
       if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);
     },
     linkCivitas() {
-      console.log(this.selectedCivitas);
       let civitas = this.selectedCivitas;
       web3.eth.getAccounts().then((accounts) => {
         CivitasHelper.methods
@@ -226,13 +222,12 @@ export default {
           .on("error", function (error, receipt) {
             console.log(error);
           })
-          .on("receipt", function (receipt) {
-            console.log(receipt.contractAddress);
+          .on("transactionHash", function (hash) {
+            console.log(hash);
           });
       });
     },
     unlinkCivitas() {
-      console.log(this.selectedCivitas);
       let civitas = this.selectedCivitas;
       web3.eth.getAccounts().then((accounts) => {
         CivitasHelper.methods
@@ -241,8 +236,8 @@ export default {
           .on("error", function (error, receipt) {
             console.log(error);
           })
-          .on("receipt", function (receipt) {
-            console.log(receipt.contractAddress);
+          .on("transactionHash", function (hash) {
+            console.log(hash);
           });
       });
     },
@@ -256,14 +251,12 @@ export default {
       this.selectedCivitas = civitas;
     },
     confirmLink: function (confirm) {
-      console.log(confirm);
       this.linkModal = false;
       if (confirm) {
         this.linkCivitas();
       }
     },
     confirmUnlink: function (confirm) {
-      console.log(confirm);
       this.unlinkModal = false;
       if (confirm) {
         this.unlinkCivitas();
@@ -271,7 +264,6 @@ export default {
     },
     getAccountById() {
       this.accountOptions = [];
-      console.log(this.selectedCivitas);
       this.$apollo
         .query({
           query: GET_ACCOUNTS,
@@ -280,7 +272,6 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response);
           response.data.accounts.forEach((account) => {
             this.accountOptions.push({
               label:

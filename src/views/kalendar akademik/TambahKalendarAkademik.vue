@@ -42,7 +42,7 @@
             <CCardFooter>
               <CRow class="justify-content-center">
                 <CCol sm="4">
-                  <CButton color="danger" block @click="confirmModal = true">Kembali</CButton>
+                  <CButton color="danger" block @click="goBack">Kembali</CButton>
                 </CCol>
                 <CCol sm="4">
                   <CButton color="success" block @click="confirmModal = true">Tambah Kalendar</CButton>
@@ -75,12 +75,18 @@
 </template>
 
 <script>
-import AkademikHelper from "../../contracts/AkademikHelper";
+import AkademikHelper from "@/contracts/AkademikHelper";
 
 export default {
   name: "TambahKalendarAkademik",
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.usersOpened = from.fullPath;
+    });
+  },
   data() {
     return {
+      usersOpened: null,
       semesterOptions: [
         {
           label: "Ganjil",
@@ -102,6 +108,9 @@ export default {
     };
   },
   methods: {
+    goBack() {
+      this.$router.go(-1)
+    },
     createKalendarAkademik: function () {
       web3.eth.getAccounts().then((accounts) => {
         return AkademikHelper.methods
@@ -111,19 +120,16 @@ export default {
           )
           .send({ from: accounts[0] })
           .on("error", function (error, receipt) {
-            this.showAlert(false);
+            console.log(error)
           })
-          .on("receipt", function (receipt) {
-            this.showAlert(true);
+          .on("transactionHash", function (transactionHash) {
+            console.log(transactionHash)
           });
       });
     },
     confirmRegister: function (confirm) {
-      console.log(confirm);
-      console.log(this.prodi);
       this.confirmModal = false;
       if (confirm) {
-          console.log(this.kalendarAkademik)
         this.createKalendarAkademik();
       }
     },

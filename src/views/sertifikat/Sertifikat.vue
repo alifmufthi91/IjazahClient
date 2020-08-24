@@ -36,13 +36,13 @@
               <td>{{ hexToString(data.item.jenis) }}</td>
             </template>
             <template #tandaTangan="data">
-              <td>{{ data.item.signedTimes+'/'+data.item.signRequired }}</td>
+              <td>{{ formattedSigners(data.item) }}</td>
             </template>
             <template #isSignedByOwner="data">
-              <td>{{ data.item.isSignedByOwner?'SUDAH':'BELUM' }}</td>
+              <td><CBadge :color="data.item.isSignedByOwner?'info':'danger'" >{{ data.item.isSignedByOwner?'SUDAH':'BELUM' }}</CBadge></td>
             </template>
             <template #isPublished="data">
-              <td>{{ data.item.isPublished?'SUDAH':'BELUM' }}</td>
+              <td><CBadge :color="data.item.isPublished?'info':'danger'"> {{ data.item.isPublished?'SUDAH':'BELUM' }}</CBadge></td>
             </template>
             <template #action="data">
               <td>
@@ -96,7 +96,7 @@
 
 <script>
 import gql from "graphql-tag";
-import SertifikatHelper from "../../contracts/SertifikatHelper";
+import SertifikatHelper from "@/contracts/SertifikatHelper";
 
 export default {
   name: "InfoSertifikat",
@@ -170,22 +170,22 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "sertifikat/detail/" + `${item.id}` });
+      this.$router.push({ path: "sertifikat/detail/" + `${item.id}` });
     },
     hexToString(str) {
       if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);
     },
+    formattedSigners(item){
+      return item.signedTimes+'/'+item.signRequired
+    },
     setFilterNIM(e) {
-      console.log(e.target.value);
       this.filterNIM = e.target.value;
     },
     setFilterJenis(e) {
-      console.log(e.target.value);
       this.filterJenis = e.target.value;
     },
     publishSertifikat() {
       const sertifikat = this.selectedSertifikat;
-      console.log(sertifikat)
       web3.eth.getAccounts().then((accounts) => {
         SertifikatHelper.methods
           .publishCertificate(sertifikat.id)
@@ -193,8 +193,8 @@ export default {
           .on("error", function (error, receipt) {
             console.log(error);
           })
-          .on("receipt", function (receipt) {
-            console.log(receipt.contractAddress);
+          .on("transactionHash", function (transactionHash) {
+            console.log(transactionHash);
             this.$apollo.queries.sertifikats.refetch();
           });
       });
@@ -204,7 +204,6 @@ export default {
       this.selectedSertifikat = sertifikat;
     },
     confirmPublish: function (confirm) {
-      console.log(confirm);
       this.publishModal = false;
       if (confirm) {
         this.publishSertifikat();

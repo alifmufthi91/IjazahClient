@@ -60,13 +60,14 @@
             <template #action="data">
               <td>
                 <CCol class="mb-3 mb-xl-0 text-center">
+                  <CButtonGroup>
                   <CButton
                     color="success"
-                    class="mr-3"
                     size="sm"
                     @click="openConfirmModal(data.item)"
                   >Terima</CButton>
-                  <CButton color="danger" class="mr-3" size="sm">Tolak</CButton>
+                  <CButton color="danger" size="sm">Tolak</CButton>
+                  </CButtonGroup>
                 </CCol>
               </td>
             </template>
@@ -209,7 +210,6 @@ export default {
   },
   computed: {
     jenisVerify() {
-      console.log("role :" + this.selectedUser.givenRole);
       switch (this.selectedUser.givenRole) {
         case "mahasiswa":
           return "mahasiswa";
@@ -276,14 +276,12 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "account/" + `${item.id}` });
+      this.$router.push({ path: "account/" + `${item.id}` });
     },
     confirmVerify: function (confirm) {
-      console.log(confirm);
       this.confirmModal = false;
       if (confirm) {
         this.verifyAccount();
-        console.log(this.selectedUser);
       }
     },
     verifyAccount: function () {
@@ -299,8 +297,19 @@ export default {
             .on("error", function (error, receipt) {
               console.log(error);
             })
-            .on("receipt", function (receipt) {
-              console.log(receipt.contractAddress);
+            .on("transactionHash", function (hash) {
+              console.log(hash);
+            });
+        } else if(self.selectedUser.givenRole == "dikti"){
+          self.verify[self.jenisVerify](
+            self.selectedUser.id
+          )
+            .send({ from: accounts[0] })
+            .on("error", function (error, receipt) {
+              console.log(error);
+            })
+            .on("transactionHash", function (hash) {
+              console.log(hash);
             });
         } else {
           self.verify[self.jenisVerify](
@@ -313,8 +322,8 @@ export default {
             .on("error", function (error, receipt) {
               console.log(error);
             })
-            .on("receipt", function (receipt) {
-              console.log(receipt.contractAddress);
+            .on("transactionHash", function (hash) {
+              console.log(hash);
             });
         }
       });

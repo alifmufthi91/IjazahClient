@@ -83,7 +83,6 @@ export default {
     createDIKTIAccount: function() {
       let self = this;
       web3.eth.getAccounts().then(accounts => {
-        console.log(this.fullName);
         AccountManager.methods
           .createAccount(
             web3.utils.utf8ToHex(this.fullName),
@@ -92,7 +91,6 @@ export default {
           )
           .send({ from: accounts[0] })
           .on("receipt", function(rec) {
-            console.log(rec);
             self.showAlert(true);
           })
           .on("error", function(error, receipt) {
@@ -107,7 +105,6 @@ export default {
       else return val ? val.length >= 4 && val.length <=32 : false
     },
     confirmRegister: function(confirm) {
-      console.log(confirm);
       this.confirmModal = false;
       if (confirm) {
         this.createDIKTIAccount();

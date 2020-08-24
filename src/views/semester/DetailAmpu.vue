@@ -23,7 +23,7 @@ import AkademikHelper from "@/contracts/AkademikHelper";
 
 export const GET_AMPU = gql`
   query ampu($id: ID!) {
-    ampu(id: $id) { 
+    ampu(id: $id) {
       id
       idMatkul
       idDosen
@@ -50,7 +50,7 @@ export default {
       ampuData: {
         idDosen: null,
         idMatkul: null,
-        idSemester: null
+        idSemester: null,
       },
       dataContract: null,
     };
@@ -58,7 +58,12 @@ export default {
   computed: {
     fields() {
       return [
-        { key: "key", label: "Informasi", _classes:"font-weight-bold text-capitalize", _style: 'width:25%'},
+        {
+          key: "key",
+          label: "Informasi",
+          _classes: "font-weight-bold text-capitalize",
+          _style: "width:25%",
+        },
         { key: "value", label: "Nilai" },
       ];
     },
@@ -84,9 +89,7 @@ export default {
           param.value = new Date(param.value * 1000);
           return param;
         }
-        if (
-          web3.utils.isHexStrict(param.value)
-        ) {
+        if (web3.utils.isHexStrict(param.value)) {
           param.value = web3.utils.hexToUtf8(param.value);
         }
         if (param.value == null || param.key == "__typename") {
@@ -98,9 +101,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.usersOpened
-        ? this.$router.push(this.usersOpened)
-        : this.$router.push("/dashboard");
+      this.$router.go(-1);
     },
   },
   beforeMount() {

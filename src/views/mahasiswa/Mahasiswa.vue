@@ -46,7 +46,7 @@
                 <CCol class="mb-3 mb-xl-0 text-left">
                   <CButtonGroup>
                     <CButton color="primary" size="sm" @click="detailClicked(data.item)">Detail</CButton>
-                    <CButton color="info" size="sm">Edit</CButton>
+                    <CButton color="info" size="sm" @click="editClicked(data.item)">Edit</CButton>
                     <CButton
                       v-if="!data.item.linkedAccount"
                       color="success"
@@ -213,25 +213,24 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "mahasiswa/detail/" + `${item.id}` });
+      this.$router.push({ path: "mahasiswa/detail/" + `${item.id}` });
+    },
+    editClicked(item) {
+      this.$router.push({ path: "mahasiswa/edit/" + `${item.id}` });
     },
     hexToString(str) {
       if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);
     },
     setFilterId(e) {
-      console.log(e.target.value);
       this.filterNim = e.target.value;
     },
     setFilterNama(e) {
-      console.log(e.target.value);
       this.filterNama = e.target.value;
     },
     setFilterProdi(e) {
-      console.log(e.target.value);
       this.filterProdi = e.target.value;
     },
     linkMahasiswa() {
-      console.log(this.selectedMhs);
       let mahasiswa = this.selectedMhs;
       web3.eth.getAccounts().then((accounts) => {
         CivitasHelper.methods
@@ -240,13 +239,12 @@ export default {
           .on("error", function (error, receipt) {
             console.log(error);
           })
-          .on("receipt", function (receipt) {
-            console.log(receipt.contractAddress);
+          .on("transactionHash", function (transactionHash) {
+            console.log(transactionHash);
           });
       });
     },
     unlinkMahasiswa() {
-      console.log(this.selectedMhs);
       let mahasiswa = this.selectedMhs;
       web3.eth.getAccounts().then((accounts) => {
         CivitasHelper.methods
@@ -255,31 +253,27 @@ export default {
           .on("error", function (error, receipt) {
             console.log(error);
           })
-          .on("receipt", function (receipt) {
-            console.log(receipt.contractAddress);
+          .on("transactionHash", function (transactionHash) {
+            console.log(transactionHash);
           });
       });
     },
     openLinkModal: function (mahasiswa) {
       this.linkModal = true;
       this.selectedMhs = mahasiswa;
-      console.log(mahasiswa);
       this.getAccountById();
     },
     openUnlinkModal: function (mahasiswa) {
       this.unlinkModal = true;
       this.selectedMhs = mahasiswa;
-      console.log(mahasiswa);
     },
     confirmLink: function (confirm) {
-      console.log(confirm);
       this.linkModal = false;
       if (confirm) {
         this.linkMahasiswa();
       }
     },
     confirmUnlink: function (confirm) {
-      console.log(confirm);
       this.unlinkModal = false;
       if (confirm) {
         this.unlinkMahasiswa();
@@ -287,7 +281,6 @@ export default {
     },
     getAccountById() {
       this.accountOptions = [];
-      console.log(this.selectedMhs.id);
       this.$apollo
         .query({
           query: GET_ACCOUNTS,
@@ -296,7 +289,6 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response);
           response.data.accounts.forEach((account) => {
             this.accountOptions.push({
               label:

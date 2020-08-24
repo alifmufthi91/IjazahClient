@@ -69,7 +69,7 @@ export default {
           key: "key",
           label: "Informasi",
           _classes: "font-weight-bold text-capitalize",
-          _style: 'width:25%'
+          _style: "width:25%",
         },
         { key: "value", label: "Nilai" },
       ];
@@ -116,9 +116,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.usersOpened
-        ? this.$router.push(this.usersOpened)
-        : this.$router.push("/dashboard");
+      this.$router.go(-1);
     },
   },
   beforeMount() {
@@ -147,7 +145,6 @@ export default {
         },
       })
       .then((response) => {
-        console.log(response);
         this.prodi = response.data.prodi;
         this.dataSubgraph = this.visibleDataSubgraph;
       });

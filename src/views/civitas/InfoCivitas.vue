@@ -2,7 +2,7 @@
   <CRow>
     <CCol col="12">
       <CCard>
-        <CCardHeader>Civitas Detail</CCardHeader>
+        <CCardHeader>Informasi Civitas Akademika</CCardHeader>
         <CCardBody>
           <h5>Data On-Chain</h5>
           <CDataTable striped small fixed :items="dataContract" :fields="fields" />
@@ -66,7 +66,7 @@ const ipfs = ipfsClient({
 });
 
 export default {
-  name: "CivitasDetail",
+  name: "InfoCivitas",
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       vm.usersOpened = from.fullPath;
@@ -93,7 +93,7 @@ export default {
           key: "key",
           label: "Informasi",
           _classes: "font-weight-bold text-capitalize",
-          _style: 'width:25%'
+          _style: "width:25%",
         },
         { key: "value", label: "Nilai" },
       ];
@@ -143,43 +143,58 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
   },
   beforeMount() {
     let context = this;
     web3.eth.getAccounts().then((accounts) => {
       CivitasHelper.methods
-        .getCivitas(this.$route.params.id)
+        .getNIPCivitas(accounts[0])
         .call({ from: accounts[0] })
         .then(function (result) {
           if (result) {
-            context.civitasData.nip = web3.utils.hexToUtf8(result[0]);
-            context.civitasData.ipfsHash = web3.utils.hexToUtf8(result[1]);
-            context.dataContract = context.cvtDataOnChain;
-            ipfs.cat("/ipfs/" + context.civitasData.ipfsHash).then((data) => {
-              context.civitasIpfs = JSON.parse(data.toString());
-              context.dataIpfs = context.cvtDataIpfs;
-              ipfs.cat("/ipfs/" + context.civitasIpfs.foto).then((data) => {
-                let blob = new Blob([data], { type: "image/png" });
-                let url = URL.createObjectURL(blob);
-                context.previewImage = url;
-              });
+            web3.eth.getAccounts().then((accounts) => {
+              CivitasHelper.methods
+                .getCivitas(result)
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (result) {
+                    context.civitasData.nip = web3.utils.hexToUtf8(result[0]);
+                    context.civitasData.ipfsHash = web3.utils.hexToUtf8(
+                      result[1]
+                    );
+                    context.dataContract = context.cvtDataOnChain;
+                    ipfs
+                      .cat("/ipfs/" + context.civitasData.ipfsHash)
+                      .then((data) => {
+                        context.civitasIpfs = JSON.parse(data.toString());
+                        context.dataIpfs = context.cvtDataIpfs;
+                        ipfs
+                          .cat("/ipfs/" + context.civitasIpfs.foto)
+                          .then((data) => {
+                            let blob = new Blob([data], { type: "image/png" });
+                            let url = URL.createObjectURL(blob);
+                            context.previewImage = url;
+                          });
+                      });
+                  }
+                });
             });
+            context.$apollo
+              .query({
+                query: GET_CIVITAS,
+                variables: {
+                  nip: result,
+                },
+              })
+              .then((response) => {
+                context.civita = response.data.civita;
+                context.dataSubgraph = context.visibleDataSubgraph;
+              });
           }
         });
     });
-    this.$apollo
-      .query({
-        query: GET_CIVITAS,
-        variables: {
-          nip: this.$route.params.id,
-        },
-      })
-      .then((response) => {
-        this.civita = response.data.civita;
-        this.dataSubgraph = this.visibleDataSubgraph;
-      });
   },
 };
 </script>

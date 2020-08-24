@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import AccountManager from '@/contracts/AccountManager'
+import CivitasHelper from '@/contracts/CivitasHelper'
+import Roles from '@/js/roles'
 
 // Containers
 const TheContainer = () => import('@/containers/TheContainer')
@@ -12,53 +14,13 @@ const GetStarted = () => import('@/views/GettingStarted')
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
 
-// const Charts = () => import('@/views/charts/Charts')
-// const Widgets = () => import('@/views/widgets/Widgets')
-
-// Views - Components
-// const Cards = () => import('@/views/base/Cards')
-// const Forms = () => import('@/views/base/Forms')
-// const Switches = () => import('@/views/base/Switches')
-// const Tables = () => import('@/views/base/Tables')
-// const Tabs = () => import('@/views/base/Tabs')
-// const Breadcrumbs = () => import('@/views/base/Breadcrumbs')
-// const Carousels = () => import('@/views/base/Carousels')
-// const Collapses = () => import('@/views/base/Collapses')
-// const Jumbotrons = () => import('@/views/base/Jumbotrons')
-// const ListGroups = () => import('@/views/base/ListGroups')
-// const Navs = () => import('@/views/base/Navs')
-// const Navbars = () => import('@/views/base/Navbars')
-// const Paginations = () => import('@/views/base/Paginations')
-// const Popovers = () => import('@/views/base/Popovers')
-// const ProgressBars = () => import('@/views/base/ProgressBars')
-// const Tooltips = () => import('@/views/base/Tooltips')
-
-// Views - Buttons
-// const StandardButtons = () => import('@/views/buttons/StandardButtons')
-// const ButtonGroups = () => import('@/views/buttons/ButtonGroups')
-// const Dropdowns = () => import('@/views/buttons/Dropdowns')
-// const BrandButtons = () => import('@/views/buttons/BrandButtons')
-
-// Views - Icons
-const CoreUIIcons = () => import('@/views/icons/CoreUIIcons')
-const Brands = () => import('@/views/icons/Brands')
-const Flags = () => import('@/views/icons/Flags')
-
-// Views - Notifications
-const Alerts = () => import('@/views/notifications/Alerts')
-const Badges = () => import('@/views/notifications/Badges')
-const Modals = () => import('@/views/notifications/Modals')
-
 // Views - Pages
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 // const Login = () => import('@/views/pages/Login')
 const RegisterDIKTI = () => import('@/views/pages/RegisterDIKTI')
 const RegisterCivitas = () => import('@/views/pages/RegisterCivitas')
-
-// Users
-// const Users = () => import('@/views/users/Users')
-// const User = () => import('@/views/users/User')
+const Verifikasi = () => import('@/views/pages/Verifikasi')
 
 // Views Admin/Account
 const ManageRole = () => import('@/views/admin/ManageRole')
@@ -73,11 +35,15 @@ const Mahasiswa = () => import('@/views/mahasiswa/Mahasiswa')
 const AntrianNINA = () => import('@/views/mahasiswa/AntrianNINA')
 const TambahMahasiswa = () => import('@/views/mahasiswa/TambahMahasiswa')
 const DetailMahasiswa = () => import('@/views/mahasiswa/DetailMahasiswa')
+const EditMahasiswa = () => import('@/views/mahasiswa/UpdateMahasiswa')
+const InfoMahasiswa = () => import('@/views/mahasiswa/InfoMahasiswa')
+const MahasiswaLulus = () => import('@/views/mahasiswa/MahasiswaLulus')
 
 // Views - Civitas
 const Civitas = () => import('@/views/civitas/Civitas')
 const TambahCivitas = () => import('@/views/civitas/TambahCivitas')
 const DetailCivitas = () => import('@/views/civitas/DetailCivitas')
+const InfoCivitas = () => import('@/views/civitas/InfoCivitas')
 
 // Views - Prodi
 const TambahProdi = () => import('@/views/prodi/TambahProdi')
@@ -103,9 +69,16 @@ const DetailSemester = () => import('@/views/semester/DetailSemester')
 const TambahSertifikat = () => import('@/views/sertifikat/TambahSertifikat')
 const Sertifikat = () => import('@/views/sertifikat/Sertifikat')
 const DetailSertifikat = () => import('@/views/sertifikat/DetailSertifikat')
+const SertifikatOwner = () => import('@/views/sertifikat/SertifikatOwner')
+const Signatures = () => import('@/views/sertifikat/Signature')
+const SertifikatDikti = () => import('@/views/sertifikat/SertifikatDikti')
 
 //Views - Ampu
 const DetailAmpu = () => import('@/views/semester/DetailAmpu')
+const AmpuDosen = () => import('@/views/semester/AmpuDosen')
+const AmpuDosenAll = () => import('@/views/semester/AmpuDosenAll')
+const Ampu = () => import('@/views/semester/Ampu')
+const PenilaianAmpuDosen = () => import('@/views/semester/PenilaianAmpuDosen')
 
 Vue.use(Router)
 
@@ -120,12 +93,36 @@ function configRoutes() {
         {
           path: 'dashboard',
           name: '',
-          component: Dashboard
+          component: Dashboard,
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .getAccount(accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result[1]) next('/get-started')
+                  else next()
+                })
+            })
+          }
         },
         {
           path: 'edit-account',
           name: 'Edit Account',
-          component: EditAccount
+          component: EditAccount,
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .getAccount(accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result[1]) next('/get-started')
+                  else next()
+                })
+            })
+          }
         },
         {
           path: 'accounts',
@@ -137,6 +134,18 @@ function configRoutes() {
             render(c) {
               return c('router-view')
             }
+          },
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.admin, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
           },
           children: [
             {
@@ -170,6 +179,18 @@ function configRoutes() {
               return c('router-view')
             }
           },
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.admin, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
+          },
           children: [
             {
               path: '',
@@ -180,6 +201,11 @@ function configRoutes() {
               path: 'antrian-nina',
               name: 'Antrian NINA',
               component: AntrianNINA
+            },
+            {
+              path: 'antrian-lulus',
+              name: 'Antrian Lulus',
+              component: MahasiswaLulus
             },
             {
               path: 'tambah',
@@ -193,6 +219,14 @@ function configRoutes() {
               },
               name: 'Detail Mahasiswa',
               component: DetailMahasiswa
+            },
+            {
+              path: 'edit/:id',
+              meta: {
+                label: 'Edit Mahasiswa'
+              },
+              name: 'Edit Mahasiswa',
+              component: EditMahasiswa
             }
           ]
         },
@@ -206,6 +240,18 @@ function configRoutes() {
             render(c) {
               return c('router-view')
             }
+          },
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.admin, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
           },
           children: [
             {
@@ -238,6 +284,18 @@ function configRoutes() {
             render(c) {
               return c('router-view')
             }
+          },
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.admin, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
           },
           children: [
             {
@@ -273,6 +331,11 @@ function configRoutes() {
           },
           children: [
             {
+              path: '',
+              name: 'Info Ampu',
+              component: Ampu
+            },
+            {
               path: 'detail/:id',
               meta: {
                 label: 'Ampu Details'
@@ -292,6 +355,18 @@ function configRoutes() {
             render(c) {
               return c('router-view')
             }
+          },
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.admin, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
           },
           children: [
             {
@@ -325,6 +400,18 @@ function configRoutes() {
               return c('router-view')
             }
           },
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.admin, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
+          },
           children: [
             {
               path: '',
@@ -357,6 +444,18 @@ function configRoutes() {
               return c('router-view')
             }
           },
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.admin, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
+          },
           children: [
             {
               path: '',
@@ -384,6 +483,18 @@ function configRoutes() {
           meta: {
             label: 'Sertifikat'
           },
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.admin, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
+          },
           component: {
             render(c) {
               return c('router-view')
@@ -399,6 +510,132 @@ function configRoutes() {
               path: 'tambah',
               name: 'Tambah Sertifikat',
               component: TambahSertifikat
+            },
+            {
+              path: 'detail/:id',
+              meta: {
+                label: 'Sertifikat Details'
+              },
+              name: 'Detail Sertifikat',
+              component: DetailSertifikat
+            }
+          ]
+        },
+        {
+          path: 'my-signature',
+          name: 'Daftar Tanda Tangan',
+          component: Signatures,
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .getAccount(accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result[1]) next('/get-started');
+                  else CivitasHelper.methods
+                    .getNIPCivitas(accounts[0])
+                    .call({ from: accounts[0] })
+                    .then(function (result) {
+                      if (result == "0x000000000000000000000000000000000000000000") next('/get-started');
+                      else next()
+                    })
+                })
+            })
+          }
+        },
+        {
+          path: 'verifikasi-signed',
+          name: 'Verifikasi Sertifikat',
+          component: Verifikasi,
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .getAccount(accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result[1]) next('/get-started')
+                  else next()
+                })
+            })
+          }
+        },
+        {
+          path: 'my-perkuliahan',
+          redirect: '/my-perkuliahan/active',
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.dosen, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: 'active',
+              name: 'Perkuliahan Semester Ini',
+              component: AmpuDosen
+            },
+            {
+              path: 'all',
+              name: 'Daftar Matakuliah',
+              component: AmpuDosenAll
+            },
+            {
+              path: 'penilaian/:id',
+              meta: {
+                label: 'Penilaian Matakuliah'
+              },
+              name: 'Penilaian Ampu',
+              component: PenilaianAmpuDosen
+            }
+          ]
+        },
+        {
+          path: 'my-sertifikat',
+          redirect: '/my-sertifikat',
+          meta: {
+            label: 'Sertifikat Saya'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .getAccount(accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result[1]) next('/get-started');
+                  else CivitasHelper.methods
+                    .getNIMMahasiswa(accounts[0])
+                    .call({ from: accounts[0] })
+                    .then(function (result) {
+                      if (result == "0x000000000000000000000000000000000000000000") next('/get-started');
+                      else next()
+                    })
+                })
+            })
+          },
+          children: [
+            {
+              path: '',
+              name: 'Daftar Sertifikat Dimiliki',
+              component: SertifikatOwner
             },
             {
               path: 'detail/:id',
@@ -430,212 +667,63 @@ function configRoutes() {
             }
           ]
         },
-        // {
-        //   path: 'charts',
-        //   name: 'Charts',
-        //   component: Charts
-        // },
-        // {
-        //   path: 'widgets',
-        //   name: 'Widgets',
-        //   component: Widgets
-        // },
-        // {
-        //   path: 'users',
-        //   meta: {
-        //     label: 'Users'
-        //   },
-        //   component: {
-        //     render(c) {
-        //       return c('router-view')
-        //     }
-        //   },
-        //   children: [
-        //     {
-        //       path: '',
-        //       name: 'Users',
-        //       component: ManageRole
-        //     },
-        //     {
-        //       path: ':id',
-        //       meta: {
-        //         label: 'User Details'
-        //       },
-        //       name: 'User',
-        //       component: User
-        //     }
-        //   ]
-        // },
-        // {
-        //   path: 'base',
-        //   redirect: '/base/cards',
-        //   name: 'Base',
-        //   component: {
-        //     render(c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'cards',
-        //       name: 'Cards',
-        //       component: Cards
-        //     },
-        //     {
-        //       path: 'forms',
-        //       name: 'Forms',
-        //       component: Forms
-        //     },
-        //     {
-        //       path: 'switches',
-        //       name: 'Switches',
-        //       component: Switches
-        //     },
-        //     {
-        //       path: 'tables',
-        //       name: 'Tables',
-        //       component: Tables
-        //     },
-        //     {
-        //       path: 'tabs',
-        //       name: 'Tabs',
-        //       component: Tabs
-        //     },
-        //     {
-        //       path: 'breadcrumbs',
-        //       name: 'Breadcrumbs',
-        //       component: Breadcrumbs
-        //     },
-        //     {
-        //       path: 'carousels',
-        //       name: 'Carousels',
-        //       component: Carousels
-        //     },
-        //     {
-        //       path: 'collapses',
-        //       name: 'Collapses',
-        //       component: Collapses
-        //     },
-        //     {
-        //       path: 'jumbotrons',
-        //       name: 'Jumbotrons',
-        //       component: Jumbotrons
-        //     },
-        //     {
-        //       path: 'list-groups',
-        //       name: 'List Groups',
-        //       component: ListGroups
-        //     },
-        //     {
-        //       path: 'navs',
-        //       name: 'Navs',
-        //       component: Navs
-        //     },
-        //     {
-        //       path: 'navbars',
-        //       name: 'Navbars',
-        //       component: Navbars
-        //     },
-        //     {
-        //       path: 'paginations',
-        //       name: 'Paginations',
-        //       component: Paginations
-        //     },
-        //     {
-        //       path: 'popovers',
-        //       name: 'Popovers',
-        //       component: Popovers
-        //     },
-        //     {
-        //       path: 'progress-bars',
-        //       name: 'Progress Bars',
-        //       component: ProgressBars
-        //     },
-        //     {
-        //       path: 'tooltips',
-        //       name: 'Tooltips',
-        //       component: Tooltips
-        //     }
-        //   ]
-        // },
-        // {
-        //   path: 'buttons',
-        //   redirect: '/buttons/standard-buttons',
-        //   name: 'Buttons',
-        //   component: {
-        //     render(c) { return c('router-view') }
-        //   },
-        //   children: [
-        //     {
-        //       path: 'standard-buttons',
-        //       name: 'Standard Buttons',
-        //       component: StandardButtons
-        //     },
-        //     {
-        //       path: 'button-groups',
-        //       name: 'Button Groups',
-        //       component: ButtonGroups
-        //     },
-        //     {
-        //       path: 'dropdowns',
-        //       name: 'Dropdowns',
-        //       component: Dropdowns
-        //     },
-        //     {
-        //       path: 'brand-buttons',
-        //       name: 'Brand Buttons',
-        //       component: BrandButtons
-        //     }
-        //   ]
-        // },
         {
-          path: 'icons',
-          redirect: '/icons/coreui-icons',
-          name: 'CoreUI Icons',
-          component: {
-            render(c) { return c('router-view') }
-          },
-          children: [
-            {
-              path: 'coreui-icons',
-              name: 'Icons library',
-              component: CoreUIIcons
-            },
-            {
-              path: 'brands',
-              name: 'Brands',
-              component: Brands
-            },
-            {
-              path: 'flags',
-              name: 'Flags',
-              component: Flags
-            }
-          ]
+          path: '/info-mahasiswa',
+          name: 'Info Mahasiswa',
+          component: InfoMahasiswa,
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.mahasiswa, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
+          }
         },
         {
-          path: 'notifications',
-          redirect: '/notifications/alerts',
-          name: 'Notifications',
-          component: {
-            render(c) { return c('router-view') }
+          path: '/info-civitas',
+          name: 'Info Civitas',
+          component: InfoCivitas,
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .getAccount(accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result[1]) next('/get-started');
+                  else CivitasHelper.methods
+                    .getNIPCivitas(accounts[0])
+                    .call({ from: accounts[0] })
+                    .then(function (result) {
+                      if (result == "0x000000000000000000000000000000000000000000") next('/get-started');
+                      else next()
+                    })
+                })
+            })
           },
-          children: [
-            {
-              path: 'alerts',
-              name: 'Alerts',
-              component: Alerts
-            },
-            {
-              path: 'badges',
-              name: 'Badges',
-              component: Badges
-            },
-            {
-              path: 'modals',
-              name: 'Modals',
-              component: Modals
-            }
-          ]
-        }
+        },
+        {
+          path: '/dikti-antrian-ijazah',
+          name: 'Antrian Nomor Ijazah',
+          component: SertifikatDikti,
+          beforeEnter: (to, from, next) => {
+            web3.eth.getAccounts().then(accounts => {
+              if (accounts.length < 1) next('/get-started')
+              AccountManager.methods
+                .hasRole(Roles.dikti, accounts[0])
+                .call({ from: accounts[0] })
+                .then(function (result) {
+                  if (!result) next('/get-started')
+                  else next()
+                })
+            })
+          }
+        },
       ]
     },
     {
@@ -655,17 +743,17 @@ function configRoutes() {
           name: 'Page500',
           component: Page500
         },
-        // {
-        //   path: 'login',
-        //   name: 'Login',
-        //   component: Login
-        // }
       ]
     },
     {
       path: '/register-DIKTI',
       name: 'Register DIKTI',
       component: RegisterDIKTI
+    },
+    {
+      path: '/verifikasi',
+      name: 'Verifikasi Sertifikat',
+      component: Verifikasi
     },
     {
       path: '/register-civitas',
@@ -691,27 +779,5 @@ const router = new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: configRoutes()
 })
-
-router.beforeEach((to, from, next) => {
-  switch (to.name) {
-    case 'Getting Started': next(); break;
-    case 'Register Civitas': next(); break;
-    case 'Register DIKTI': next(); break;
-    case 'Page404': next(); break;
-    case 'Page500': next(); break;
-    default: web3.eth.getAccounts().then(accounts => {
-      if (accounts.length < 1) next('/get-started')
-      AccountManager.methods
-        .getAccount(accounts[0])
-        .call({ from: accounts[0] })
-        .then(function (result) {
-          if (!result[1]) next('/get-started')
-          else next()
-        })
-    })
-  }
-})
-
-
 
 export default router

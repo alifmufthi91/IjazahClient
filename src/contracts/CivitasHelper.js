@@ -1,5 +1,5 @@
 import web3 from '@/js/web3';
-const address = '0x493b3d16d39f4bf4e0fb9b190d0c40b5edc78b1a';
+const address = '0x5066352f9C0872ce6f55e288b7E2ee1b7C7C864A';
 const abi =
 [
 	{
@@ -601,6 +601,11 @@ const abi =
 				"internalType": "bytes",
 				"name": "",
 				"type": "bytes"
+			},
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",

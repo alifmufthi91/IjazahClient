@@ -101,14 +101,13 @@ export default {
             console.log(error);
             self.goBack()
           })
-          .on("receipt", function(receipt) {
-            console.log(receipt.contractAddress);
+          .on("transactionHash", function(hash) {
+            console.log(hash);
             self.goBack()
           })
       })
     },
     confirmChange: function(confirm) {
-      console.log(confirm);
       this.confirmModal = false;
       if (confirm) {
         this.updateName();

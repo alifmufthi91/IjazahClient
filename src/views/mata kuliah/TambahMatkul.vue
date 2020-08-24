@@ -51,7 +51,7 @@
             <CCardFooter>
               <CRow class="justify-content-center">
                 <CCol sm="4">
-                  <CButton color="danger" block @click="confirmModal = true">Kembali</CButton>
+                  <CButton color="danger" block @click="goBack">Kembali</CButton>
                 </CCol>
                 <CCol sm="4">
                   <CButton color="success" block @click="confirmModal = true">Tambah Mata kuliah</CButton>
@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import AkademikHelper from "../../contracts/AkademikHelper";
+import AkademikHelper from "@/contracts/AkademikHelper";
 import gql from "graphql-tag";
 
 const ipfsClient = require("ipfs-http-client");
@@ -97,15 +97,15 @@ const ipfs = ipfsClient({
 export default {
   name: "TambahProdi",
   apollo: {
-      prodis: gql`
-        query {
-          prodis {
-            id
-            namaProdi
-          }
+    prodis: gql`
+      query {
+        prodis {
+          id
+          namaProdi
         }
-      `
-    },
+      }
+    `,
+  },
   data() {
     return {
       jenjangOptions: ["D4", "D3", "S2"],
@@ -116,31 +116,32 @@ export default {
       matkul: {
         nama: String(),
         idProdi: null,
-        kodeMatkul: String()
+        kodeMatkul: String(),
       },
     };
   },
   computed: {
     prodiOptions() {
-        let arrProdi = []
-        console.log(this.prodis)
-        this.prodis.forEach(prodi => {
-            arrProdi.push({'label':web3.utils.hexToUtf8(prodi.namaProdi),'value':prodi.id})
+      let arrProdi = [];
+      this.prodis.forEach((prodi) => {
+        arrProdi.push({
+          label: web3.utils.hexToUtf8(prodi.namaProdi),
+          value: prodi.id,
         });
-        arrProdi.push({'label':'Umum','value':null})
-        console.log(arrProdi)
-        return arrProdi
-    }
+      });
+      arrProdi.push({ label: "Umum", value: null });
+      return arrProdi;
+    },
   },
   methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
     createMatkul: function () {
       let data = this.matkul;
-      let file = Buffer.from(JSON.stringify(data))
+      let file = Buffer.from(JSON.stringify(data));
       ipfs.add(file).then((ipfsHash) => {
         let hash = ipfsHash[0].hash;
-        console.log(hash);
-        console.log(web3.utils.utf8ToHex(this.matkul.nama)+' '+
-              web3.utils.utf8ToHex(hash))
         web3.eth.getAccounts().then((accounts) => {
           return AkademikHelper.methods
             .createMatkul(
@@ -149,10 +150,10 @@ export default {
             )
             .send({ from: accounts[0] })
             .on("error", function (error, receipt) {
-              this.showAlert(false)
+              console.log(error)
             })
-            .on("receipt", function (receipt) {
-              this.showAlert(true)
+            .on("transactionHash", function (transactionHash) {
+              console.log(transactionHash)
             });
         });
       });
@@ -161,7 +162,6 @@ export default {
       return val ? val.length > 1 : false;
     },
     confirmRegister: function (confirm) {
-      console.log(confirm);
       this.confirmModal = false;
       if (confirm) {
         this.createMatkul();

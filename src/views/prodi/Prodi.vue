@@ -127,7 +127,7 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.replace({ path: "prodi/detail/" + `${item.id}` });
+      this.$router.push({ path: "prodi/detail/" + `${item.id}` });
     },
     hexToString(str) {
       if(web3.utils.isHexStrict(str))

@@ -115,9 +115,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.usersOpened
-        ? this.$router.push(this.usersOpened)
-        : this.$router.push("/dashboard");
+      this.$router.go(-1)
     },
   },
   beforeMount() {
@@ -146,7 +144,6 @@ export default {
         },
       })
       .then((response) => {
-        console.log(response);
         this.mataKuliah = response.data.mataKuliah;
         this.dataSubgraph = this.visibleDataSubgraph;
       });
