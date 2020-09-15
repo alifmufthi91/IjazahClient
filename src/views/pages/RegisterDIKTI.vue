@@ -76,47 +76,51 @@ export default {
       confirmModal: false,
       successModal: false,
       dismissSuccess: 0,
-      dismissFail: 0
+      dismissFail: 0,
     };
   },
   methods: {
-    createDIKTIAccount: function() {
+    createDIKTIAccount: function () {
       let self = this;
-      web3.eth.getAccounts().then(accounts => {
-        AccountManager.methods
-          .createAccount(
-            web3.utils.utf8ToHex(this.fullName),
-            web3.utils.utf8ToHex(""),
-            web3.utils.utf8ToHex("dikti")
-          )
-          .send({ from: accounts[0] })
-          .on("receipt", function(rec) {
-            self.showAlert(true);
-          })
-          .on("error", function(error, receipt) {
-            console.log(error);
-            self.showAlert(false);
-          });
-      });
+      if (this.validator(this.fullName)) {
+        web3.eth.getAccounts().then((accounts) => {
+          AccountManager.methods
+            .createAccount(
+              web3.utils.utf8ToHex(this.fullName),
+              web3.utils.utf8ToHex(""),
+              web3.utils.utf8ToHex("dikti")
+            )
+            .send({ from: accounts[0] })
+            .on("receipt", function (rec) {
+              self.showAlert(true);
+            })
+            .on("error", function (error, receipt) {
+              console.log(error);
+              self.showAlert(false);
+            });
+        });
+      }else{
+        alert("Input tidak valid.")
+      }
     },
-    validator (val) {
+    validator(val) {
       var letters = /^[A-Za-z]([-']?[A-Za-z]+)*( [A-Za-z]([-']?[A-Za-z]+)*){0,3}$/gm;
-      if(val == null || !val.match(letters)) return false
-      else return val ? val.length >= 4 && val.length <=32 : false
+      if (val == null || !val.match(letters)) return false;
+      else return val ? val.length >= 4 && val.length <= 32 : false;
     },
-    confirmRegister: function(confirm) {
+    confirmRegister: function (confirm) {
       this.confirmModal = false;
       if (confirm) {
         this.createDIKTIAccount();
       }
     },
-    showAlert: function(isSuccess) {
+    showAlert: function (isSuccess) {
       if (isSuccess) {
         this.dismissSuccess = 5;
       } else {
         this.dismissFail = 5;
       }
-    }
-  }
+    },
+  },
 };
 </script>

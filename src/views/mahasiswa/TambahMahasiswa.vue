@@ -227,6 +227,8 @@ export default {
               });
           });
         });
+      }else{
+        alert("Input tidak valid");
       }
     },
     previewFiles(event) {

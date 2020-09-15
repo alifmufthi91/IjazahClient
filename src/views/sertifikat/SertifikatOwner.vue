@@ -91,7 +91,7 @@
         </CCol>
       </CRow>
       <template #header>
-        <h6 class="modal-title">Publish Sertifikat</h6>
+        <h6 class="modal-title">Tandatangani Sertifikat</h6>
         <CButtonClose @click="signModal = false" class="text-white" />
       </template>
       <template #footer>
@@ -200,7 +200,7 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.push({ path: "sertifikat/detail/" + `${item.id}` });
+      this.$router.push({ path: "my-sertifikat/detail/" + `${item.id}` });
     },
     hexToString(str) {
       if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);

@@ -12,5 +12,7 @@ if (window.ethereum) {
   window.web3 = new Web3(web3.currentProvider);
 } else { // Non-dapp browsers...
   console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+  window.web3 = new Web3();
+  alert("Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!");
 }
 export default web3;

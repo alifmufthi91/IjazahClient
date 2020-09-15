@@ -139,24 +139,42 @@ export default {
     },
     createMatkul: function () {
       let data = this.matkul;
-      let file = Buffer.from(JSON.stringify(data));
-      ipfs.add(file).then((ipfsHash) => {
-        let hash = ipfsHash[0].hash;
-        web3.eth.getAccounts().then((accounts) => {
-          return AkademikHelper.methods
-            .createMatkul(
-              web3.utils.utf8ToHex(this.matkul.nama),
-              web3.utils.utf8ToHex(hash)
-            )
-            .send({ from: accounts[0] })
-            .on("error", function (error, receipt) {
-              console.log(error)
-            })
-            .on("transactionHash", function (transactionHash) {
-              console.log(transactionHash)
-            });
+      if (this.isDataReady(data)) {
+        let file = Buffer.from(JSON.stringify(data));
+        ipfs.add(file).then((ipfsHash) => {
+          let hash = ipfsHash[0].hash;
+          web3.eth.getAccounts().then((accounts) => {
+            return AkademikHelper.methods
+              .createMatkul(
+                web3.utils.utf8ToHex(this.matkul.nama),
+                web3.utils.utf8ToHex(hash)
+              )
+              .send({ from: accounts[0] })
+              .on("error", function (error, receipt) {
+                console.log(error);
+              })
+              .on("transactionHash", function (transactionHash) {
+                console.log(transactionHash);
+              });
+          });
         });
-      });
+      } else {
+        alert("Input tidak valid");
+      }
+    },
+    isDataReady(val) {
+      let isReady = true;
+      Object.keys(val)
+        .filter((attribute) => {
+          if (attribute == "idProdi") return null;
+          return attribute;
+        })
+        .forEach((attribute) => {
+          if (val[attribute] == null || val[attribute] == "") {
+            isReady = false;
+          }
+        });
+      return isReady;
     },
     validator(val) {
       return val ? val.length > 1 : false;

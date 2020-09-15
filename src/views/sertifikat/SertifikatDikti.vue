@@ -260,6 +260,8 @@ export default {
               this.$apollo.queries.sertifikats.refetch();
             });
         });
+      }else{
+        alert("Input tidak valid");
       }
     },
     openPenomoranModal: function (sertifikat) {

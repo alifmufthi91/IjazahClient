@@ -245,6 +245,8 @@ export default {
               }
             });
         });
+      }else{
+        alert("Input tidak valid");
       }
     },
     isDataReady() {

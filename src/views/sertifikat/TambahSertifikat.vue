@@ -363,6 +363,8 @@ export default {
               });
           });
         });
+      }else{
+        alert("Input tidak valid");
       }
     },
     packSertifikat: function () {
@@ -399,6 +401,7 @@ export default {
       });
     },
     getMahasiswaAddress: function () {
+      this.pemilik.address = null;
       if (!this.pemilik.nim) return false;
       this.$apollo
         .query({

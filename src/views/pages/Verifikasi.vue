@@ -270,7 +270,7 @@ export default {
             });
         });
       } else {
-        console.log("data is not ready");
+        alert("Input tidak valid");
       }
     },
     isDataReady(index) {

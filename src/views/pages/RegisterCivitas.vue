@@ -188,22 +188,27 @@ export default {
   methods: {
     createAccount: function () {
       let self = this;
-      web3.eth.getAccounts().then((accounts) => {
-        if (self.isMahasiswa) self.role = "mahasiswa";
-        return AccountManager.methods
-          .createAccount(
-            web3.utils.utf8ToHex(self.fullName),
-            web3.utils.utf8ToHex(self.id),
-            web3.utils.utf8ToHex(self.role)
-          )
-          .send({ from: accounts[0] })
-          .on("error", function (error, receipt) {
-            console.log(error);
-          })
-          .on("transactionHash", function (transactionHash) {
-            console.log(transactionHash);
-          });
-      });
+      if (this.validatorId(self.id) && this.validatorNama(self.fullName)) {
+        web3.eth.handleRevert = true;
+        web3.eth.getAccounts().then((accounts) => {
+          if (self.isMahasiswa) self.role = "mahasiswa";
+          return AccountManager.methods
+            .createAccount(
+              web3.utils.utf8ToHex(self.fullName),
+              web3.utils.utf8ToHex(self.id),
+              web3.utils.utf8ToHex(self.role)
+            )
+            .send({ from: accounts[0] })
+            .on("error", function (error, receipt) {
+              console.log(error);
+            })
+            .on("transactionHash", function (transactionHash) {
+              console.log(transactionHash);
+            });
+        });
+      }else{
+        alert("Input tidak valid.")
+      }
     },
     validatorNama(val) {
       var letters = /^[A-Za-z]([-']?[A-Za-z]+)*( [A-Za-z]([-']?[A-Za-z]+)*){0,3}$/gm;
