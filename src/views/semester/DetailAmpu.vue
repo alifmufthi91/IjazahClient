@@ -25,10 +25,16 @@ export const GET_AMPU = gql`
   query ampu($id: ID!) {
     ampu(id: $id) {
       id
-      idMatkul
-      idDosen
+      matkul{
+        id
+      }
+      dosen{
+        id
+      }
       namaMatkul
-      idSemester
+      semester{
+        id
+      }
       prodi
       kelas
       timeCreated
@@ -91,6 +97,10 @@ export default {
         }
         if (web3.utils.isHexStrict(param.value)) {
           param.value = web3.utils.hexToUtf8(param.value);
+        }
+        if(param.key == "dosen" || param.key == "semester" || param.key == "matkul"){
+          console.log(param.value.id)
+          param.value = param.value.id;
         }
         if (param.value == null || param.key == "__typename") {
           return null;

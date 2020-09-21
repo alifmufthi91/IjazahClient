@@ -166,7 +166,10 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.push({ path: "semester/detail/" + `${item.id}` });
+      this.$router.push({
+        name: "Detail Semester",
+        params: { id: item.id },
+      });
     },
     hexToString(str) {
       if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);

@@ -96,7 +96,10 @@ function configRoutes() {
           component: Dashboard,
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .getAccount(accounts[0])
                 .call({ from: accounts[0] })
@@ -113,7 +116,10 @@ function configRoutes() {
           component: EditAccount,
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .getAccount(accounts[0])
                 .call({ from: accounts[0] })
@@ -137,7 +143,10 @@ function configRoutes() {
           },
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.admin, accounts[0])
                 .call({ from: accounts[0] })
@@ -181,7 +190,10 @@ function configRoutes() {
           },
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.admin, accounts[0])
                 .call({ from: accounts[0] })
@@ -243,7 +255,10 @@ function configRoutes() {
           },
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.admin, accounts[0])
                 .call({ from: accounts[0] })
@@ -287,7 +302,10 @@ function configRoutes() {
           },
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.admin, accounts[0])
                 .call({ from: accounts[0] })
@@ -358,7 +376,10 @@ function configRoutes() {
           },
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.admin, accounts[0])
                 .call({ from: accounts[0] })
@@ -402,7 +423,10 @@ function configRoutes() {
           },
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.admin, accounts[0])
                 .call({ from: accounts[0] })
@@ -446,7 +470,10 @@ function configRoutes() {
           },
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.admin, accounts[0])
                 .call({ from: accounts[0] })
@@ -485,7 +512,10 @@ function configRoutes() {
           },
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.admin, accounts[0])
                 .call({ from: accounts[0] })
@@ -527,7 +557,10 @@ function configRoutes() {
           component: Signatures,
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .getAccount(accounts[0])
                 .call({ from: accounts[0] })
@@ -550,7 +583,10 @@ function configRoutes() {
           component: Verifikasi,
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .getAccount(accounts[0])
                 .call({ from: accounts[0] })
@@ -566,7 +602,10 @@ function configRoutes() {
           redirect: '/my-perkuliahan/active',
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.dosen, accounts[0])
                 .call({ from: accounts[0] })
@@ -615,7 +654,10 @@ function configRoutes() {
           },
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .getAccount(accounts[0])
                 .call({ from: accounts[0] })
@@ -642,7 +684,7 @@ function configRoutes() {
               meta: {
                 label: 'Sertifikat Details'
               },
-              name: 'Detail Sertifikat',
+              name: 'Detail Sertifikat Owned',
               component: DetailSertifikat
             }
           ]
@@ -669,11 +711,14 @@ function configRoutes() {
         },
         {
           path: '/info-mahasiswa',
-          name: 'Info Mahasiswa',
+          name: 'Info My Mahasiswa',
           component: InfoMahasiswa,
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.mahasiswa, accounts[0])
                 .call({ from: accounts[0] })
@@ -686,11 +731,14 @@ function configRoutes() {
         },
         {
           path: '/info-civitas',
-          name: 'Info Civitas',
+          name: 'Info My Civitas',
           component: InfoCivitas,
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .getAccount(accounts[0])
                 .call({ from: accounts[0] })
@@ -713,7 +761,10 @@ function configRoutes() {
           component: SertifikatDikti,
           beforeEnter: (to, from, next) => {
             web3.eth.getAccounts().then(accounts => {
-              if (accounts.length < 1) next('/get-started')
+              if (accounts.length < 1) {
+                next('/get-started');
+                return false;
+              }
               AccountManager.methods
                 .hasRole(Roles.dikti, accounts[0])
                 .call({ from: accounts[0] })
@@ -752,7 +803,7 @@ function configRoutes() {
     },
     {
       path: '/verifikasi',
-      name: 'Verifikasi Sertifikat',
+      name: 'Verifikasi Sertifikat Frontpage',
       component: Verifikasi
     },
     {

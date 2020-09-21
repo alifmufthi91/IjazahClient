@@ -48,7 +48,7 @@
                 </CRow>
                 <CRow class="align-items-center mt-3">
                   <CCol sm="6" class="mb-3 mb-xl-0 text-center">
-                    <CButton color="success" shape="pill">Verifikasi Sertifikat</CButton>
+                    <CButton color="success" shape="pill" to="verifikasi">Verifikasi Sertifikat</CButton>
                   </CCol>
                   <CCol sm="6" class="mb-3 mb-xl-0 text-center">
                     <CButton
@@ -86,19 +86,19 @@ export default {
       user: {
         name: null,
         verified: null,
-        address: null
-      }
+        address: null,
+      },
     };
   },
   methods: {
     getAccount() {
       let self = this;
-      web3.eth.getAccounts().then(accounts => {
-        if(accounts.length < 1) return false
+      web3.eth.getAccounts().then((accounts) => {
+        if (accounts.length < 1) return false;
         AccountManager.methods
           .getAccount(accounts[0])
           .call({ from: accounts[0] })
-          .then(function(result) {
+          .then(function (result) {
             if (result[0] != 0) {
               self.user.address = result[0];
               self.user.name = web3.utils.hexToUtf8(result[2]);
@@ -107,10 +107,10 @@ export default {
             }
           });
       });
-    }
+    },
   },
   beforeMount() {
     this.getAccount();
-  }
+  },
 };
 </script>

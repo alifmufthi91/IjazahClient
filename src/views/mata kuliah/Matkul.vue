@@ -116,7 +116,10 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.push({ path: "matkul/detail/" + `${item.id}` });
+      this.$router.push({
+        name: "Detail Matakuliah",
+        params: { id: item.id },
+      });
     },
     hexToString(str) {
       if(web3.utils.isHexStrict(str))

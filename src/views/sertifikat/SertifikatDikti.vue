@@ -44,7 +44,7 @@
               <td>
                 <CCol class="mb-3 mb-xl-0 text-left">
                   <CButtonGroup>
-                    <CButton color="primary" size="sm" @click="detailClicked(data.item)">Detail</CButton>
+                    <!-- <CButton color="primary" size="sm" @click="detailClicked(data.item)">Detail</CButton> -->
                     <CButton
                       v-if="!data.item.isPublished"
                       color="success"
@@ -218,7 +218,10 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.push({ path: "sertifikat/detail/" + `${item.id}` });
+      this.$router.push({
+        name: "",
+        params: { id: item.id },
+      });
     },
     hexToString(str) {
       if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);

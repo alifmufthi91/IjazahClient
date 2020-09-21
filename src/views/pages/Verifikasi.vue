@@ -69,10 +69,12 @@
                                 </CRow>
                                 <CCol>
                                   <CInput
+                                    v-if="isVerificationSuccess[index]"
                                     label="Address Signer"
                                     :value.sync="recoveredSignAddress[index]"
                                     disabled
                                   />
+                                  <h3 v-if="!isVerificationSuccess[index]">Signature Tidak Valid!</h3>
                                   <CInput
                                     v-if="subgraphSignData[index]"
                                     label="ID Signature"
@@ -163,6 +165,7 @@ export default {
       isSignatureValid: [],
       dismissFail: 0,
       dismissMsg: "",
+      isVerificationSuccess: [],
       subgraphSignData: [],
     };
   },
@@ -176,6 +179,13 @@ export default {
     },
     previewSign(event, index) {
       const reader = new FileReader();
+      this.signatures[index] = {
+        certificateId: null,
+        sign: null,
+        role: null,
+      };
+      this.isSignatureValid[index] = null;
+      this.subgraphSignData[index] = null;
       reader.addEventListener("load", (event) => {
         const parsedResult = JSON.parse(event.target.result);
         if (parsedResult.sign && parsedResult.certificateId) {
@@ -194,6 +204,11 @@ export default {
     },
     previewSignOwner(event) {
       const reader = new FileReader();
+      this.isOwnerSignValid = null;
+      this.ownerSignature = {
+        certificateId: null,
+        sign: null,
+      };
       reader.addEventListener("load", (event) => {
         const parsedResult = JSON.parse(event.target.result);
         if (parsedResult.sign && parsedResult.certificateId) {
@@ -220,6 +235,7 @@ export default {
       this.isSignatureValid.push(false);
       this.recoveredSignAddress.push(null);
       this.subgraphSignData.push(null);
+      this.isVerificationSuccess.push(true);
       this.signatures.push({
         certificateId: null,
         sign: null,
@@ -231,6 +247,7 @@ export default {
       this.signatures.splice(index, 1);
       this.recoveredSignAddress.splice(index, 1);
       this.subgraphSignData.splice(index, 1);
+      this.isVerificationSuccess.splice(index, 1);
     },
     verifySigner(index) {
       if (this.isDataReady(index)) {
@@ -247,8 +264,7 @@ export default {
               signature.role,
               web3.utils.sha3(fileHash)
             )
-            .call({ from: accounts[0] })
-            .then(function (result) {
+            .call({ from: accounts[0] }, function (error, result) {
               if (result) {
                 context.recoveredSignAddress[index] = result;
                 context.$forceUpdate();
@@ -266,6 +282,10 @@ export default {
                     context.subgraphSignData[index] = response.data.signature;
                     context.$forceUpdate();
                   });
+                context.isVerificationSuccess[index] = true;
+              }
+              if (error) {
+                context.isVerificationSuccess[index] = false;
               }
             });
         });

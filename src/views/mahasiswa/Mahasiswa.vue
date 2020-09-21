@@ -213,10 +213,16 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.push({ path: "mahasiswa/detail/" + `${item.id}` });
+      this.$router.push({
+        name: "Detail Mahasiswa",
+        params: { id: item.id },
+      });
     },
     editClicked(item) {
-      this.$router.push({ path: "mahasiswa/edit/" + `${item.id}` });
+      this.$router.push({
+        name: "Edit Mahasiswa",
+        params: { id: item.id },
+      });
     },
     hexToString(str) {
       if (web3.utils.isHexStrict(str)) return web3.utils.hexToUtf8(str);

@@ -202,7 +202,10 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.push({ path: "civitas/detail/" + `${item.id}` });
+      this.$router.push({
+        name: "Detail Civitas",
+        params: { id: item.id },
+      });
     },
     setFilterId(e) {
       this.filterNip = e.target.value;

@@ -276,7 +276,10 @@ export default {
       this.$router.push({ query: { page: val } });
     },
     detailClicked(item) {
-      this.$router.push({ path: "account/" + `${item.id}` });
+      this.$router.push({
+        name: "Account",
+        params: { id: item.id },
+      });
     },
     confirmVerify: function (confirm) {
       this.confirmModal = false;
