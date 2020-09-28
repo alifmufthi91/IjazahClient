@@ -1,5 +1,5 @@
 import web3 from '@/js/web3';
-const address = '0x5066352f9C0872ce6f55e288b7E2ee1b7C7C864A';
+const address = '0x8c21829f9263219145174d6ce13d35216284efb8';
 const abi =
 [
 	{
@@ -487,6 +487,35 @@ const abi =
 		"inputs": [
 			{
 				"internalType": "bytes21",
+				"name": "",
+				"type": "bytes21"
+			}
+		],
+		"name": "civitasOfNIP",
+		"outputs": [
+			{
+				"internalType": "bytes21",
+				"name": "NIP",
+				"type": "bytes21"
+			},
+			{
+				"internalType": "bool",
+				"name": "isAktif",
+				"type": "bool"
+			},
+			{
+				"internalType": "bytes",
+				"name": "ipfsHash",
+				"type": "bytes"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes21",
 				"name": "nip",
 				"type": "bytes21"
 			},
@@ -746,6 +775,40 @@ const abi =
 		"inputs": [
 			{
 				"internalType": "bytes12",
+				"name": "",
+				"type": "bytes12"
+			}
+		],
+		"name": "mahasiswaOfNIM",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "isLulus",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "isAktif",
+				"type": "bool"
+			},
+			{
+				"internalType": "bytes12",
+				"name": "NIM",
+				"type": "bytes12"
+			},
+			{
+				"internalType": "bytes",
+				"name": "ipfsHash",
+				"type": "bytes"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes12",
 				"name": "NIM",
 				"type": "bytes12"
 			},
@@ -753,9 +816,27 @@ const abi =
 				"internalType": "bool",
 				"name": "statusLulus",
 				"type": "bool"
+			},
+			{
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
 			}
 		],
 		"name": "setMahasiswaLulus",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "sertifikatHelper",
+				"type": "address"
+			}
+		],
+		"name": "setSertifikatHelper",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

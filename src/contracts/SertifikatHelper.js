@@ -1,5 +1,5 @@
 import web3 from '@/js/web3';
-const address = '0x7CC6c878b1B06696Beb83d8F244C19d5C52a58D3';
+const address = '0x4602031a185253641e49d656ede336238c4019b1';
 const abi =
 [
 	{
@@ -424,6 +424,37 @@ const abi =
 		"type": "event"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes12",
+				"name": "nim",
+				"type": "bytes12"
+			},
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "isLulus",
+				"type": "bool"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timeUpdated",
+				"type": "uint256"
+			}
+		],
+		"name": "MahasiswaLulusUpdated",
+		"type": "event"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -454,6 +485,11 @@ const abi =
 				"internalType": "bytes2",
 				"name": "nilai",
 				"type": "bytes2"
+			},
+			{
+				"internalType": "uint8",
+				"name": "sks",
+				"type": "uint8"
 			}
 		],
 		"name": "pengisianNilaiMatkul",
@@ -571,6 +607,29 @@ const abi =
 		],
 		"name": "RiwayatUpdated",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes12",
+				"name": "NIM",
+				"type": "bytes12"
+			},
+			{
+				"internalType": "bool",
+				"name": "statusLulus",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint8",
+				"name": "requiredSKS",
+				"type": "uint8"
+			}
+		],
+		"name": "setMahasiswaLulus",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [
