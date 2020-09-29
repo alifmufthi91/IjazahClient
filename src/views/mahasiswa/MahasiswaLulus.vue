@@ -75,6 +75,7 @@
         <CCol>
           <CInput label="Name" horizontal readonly :value="hexToString(selectedMhs.name)" />
           <CInput label="NIM" horizontal readonly :value="hexToString(selectedMhs.id)" />
+          <CInput label="SKS Dibutuhkan" horizontal :value.sync="reqSKS" />
         </CCol>
       </CRow>
       <template #header>
@@ -91,7 +92,7 @@
 
 <script>
 import gql from "graphql-tag";
-import CivitasHelper from "@/contracts/CivitasHelper";
+import SertifikatHelper from "@/contracts/SertifikatHelper";
 
 
 export default {
@@ -126,6 +127,7 @@ export default {
       filterNim: "",
       filterNama: "",
       filterProdi: "",
+      reqSKS:Number()
     };
   },
   watch: {
@@ -191,9 +193,10 @@ export default {
     },
     luluskanMahasiswa() {
       let mahasiswa = this.selectedMhs;
+      let req = this.reqSKS;
       web3.eth.getAccounts().then((accounts) => {
-        CivitasHelper.methods
-          .setMahasiswaLulus(mahasiswa.id, true)
+        SertifikatHelper.methods
+          .setMahasiswaLulus(mahasiswa.id, true, req)
           .send({ from: accounts[0] })
           .on("error", function (error, receipt) {
             console.log(error);

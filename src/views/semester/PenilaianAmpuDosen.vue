@@ -15,6 +15,7 @@
             </CCol>
           </CRow>
           <CForm>
+            <CInput label="SKS Matakuliah" horizontal :value.sync="sks" />
             <h3 class="mb-3 mt-3">Penilaian Mahasiswa</h3>
             <CRow class="justify-content-center">
               <template v-for="(input, index) in listMahasiswa">
@@ -133,6 +134,7 @@ export default {
         idSemester: null,
       },
       ampu: null,
+      sks: 0,
       dataSubgraph: null,
       dataContract: null,
       listMahasiswa: [],
@@ -232,7 +234,8 @@ export default {
                       dosen,
                       result,
                       web3.utils.utf8ToHex(mahasiswa.id),
-                      web3.utils.utf8ToHex(mahasiswa.nilai)
+                      web3.utils.utf8ToHex(mahasiswa.nilai),
+                      context.sks
                     )
                     .send({ from: accounts[0] })
                     .on("error", function (error, receipt) {
@@ -245,12 +248,13 @@ export default {
               }
             });
         });
-      }else{
+      } else {
         alert("Input tidak valid");
       }
     },
     isDataReady() {
       let isReady = true;
+      if(this.sks == 0 ) return false;
       this.listMahasiswa.forEach((mahasiswa) => {
         if (!mahasiswa.id || !mahasiswa.nilai) {
           isReady = false;
